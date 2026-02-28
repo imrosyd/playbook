@@ -50,7 +50,13 @@ export default function ThreeColorRuleLesson() {
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-8">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Open a typical corporate slide deck and count the colors. You'll find eight, twelve, sometimes more. Each color tells the viewer's brain "this thing is different from that thing." Too many differences and the brain gives up trying to decode what the differences mean.
+                    Open a typical corporate slide deck and count the colors. You'll find eight, twelve, sometimes more. Each color signal tells the viewer's brain: "this thing is different from that thing." At three hues, the brain can maintain an effortless mapping. At five or six, the legend must be consulted repeatedly. At eight, colors stop encoding categories and start creating visual noise — the chart looks busy, not insightful.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The 3-Color Rule is not a stylistic preference — it is grounded in the cognitive science of <strong>working memory capacity and categorical color discrimination</strong>. Pre-attentive processing handles color automatically, but category matching ("which color corresponds to which label in the legend?") consumes working memory. Miller's Law shows working memory can hold approximately 7±2 items simultaneously. A 6-color chart with a legend forces the viewer to hold 6 color-to-label mappings in working memory while also reading the chart — saturating cognitive capacity before any insight is communicated.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The correct 3-color framework assigns <strong>specific semantic roles</strong> to each color: primary (the main data series — your current year, your metric, your entity of interest), secondary (context or comparison — prior year, target, or benchmark), and accent (a single highlight that draws the eye to the critical actionable insight). Accent color should appear on at most one element per chart. When everything is highlighted, nothing is highlighted. The professional discipline of restricting the accent to a single element is what creates the visual hierarchy that guides the viewer directly to the takeaway.
                 </p>
 
                 <TheoryBlock

@@ -71,23 +71,23 @@ function PreattentiveDemo() {
             .attr('cx', (d) => d.x)
             .attr('cy', (d) => d.y)
             .attr('r', 16)
-            .attr('fill', (d) => (highlight && d.isTarget ? '#ef4444' : '#2563eb'))
-            .attr('opacity', 0.8)
+            .attr('fill', (d) => (highlight && d.isTarget ? '#dc2626' : '#cbd5e1'))
+            .attr('opacity', 0.9)
             .transition()
             .duration(300)
-            .attr('fill', (d) => (highlight && d.isTarget ? '#ef4444' : '#2563eb'));
+            .attr('fill', (d) => (highlight && d.isTarget ? '#dc2626' : '#cbd5e1'));
     }, [highlight]);
 
     return (
         <div className="text-center">
-            <svg ref={svgRef} width={280} height={280} className="mx-auto bg-slate-50 rounded-xl" />
+            <svg ref={svgRef} width={280} height={280} className="mx-auto bg-stone-50 rounded-xl" />
             <button
                 onClick={() => setHighlight(!highlight)}
-                className="mt-3 px-4 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="mt-3 px-4 py-1.5 text-xs font-medium bg-brand text-white rounded-lg hover:bg-brand-hover transition-colors"
             >
                 {highlight ? 'Remove Color Signal' : 'Add Color Signal'}
             </button>
-            <p className="text-xs text-slate-500 mt-2">
+            <p className="text-xs text-stone-500 mt-2">
                 {highlight
                     ? 'The red circle pops out instantly — pre-attentive processing at work'
                     : 'Try to find a specific circle. Without a visual differentiator, you must scan serially.'}
@@ -133,7 +133,7 @@ function AnchoringDemo() {
             .attr('width', x.bandwidth())
             .attr('y', (d) => y(d.value))
             .attr('height', (d) => ih - y(d.value))
-            .attr('fill', '#2563eb')
+            .attr('fill', '#059669')
             .attr('rx', 3)
             .attr('opacity', 0.85);
 
@@ -143,14 +143,14 @@ function AnchoringDemo() {
 
     return (
         <div className="text-center">
-            <svg ref={svgRef} width={280} height={200} className="mx-auto bg-slate-50 rounded-xl" />
+            <svg ref={svgRef} width={280} height={200} className="mx-auto bg-stone-50 rounded-xl" />
             <button
                 onClick={() => setTruncated(!truncated)}
-                className="mt-3 px-4 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="mt-3 px-4 py-1.5 text-xs font-medium bg-brand text-white rounded-lg hover:bg-brand-hover transition-colors"
             >
                 {truncated ? 'Show Full Axis (from 0)' : 'Truncate Axis (from 94)'}
             </button>
-            <p className="text-xs text-slate-500 mt-2">
+            <p className="text-xs text-stone-500 mt-2">
                 {truncated
                     ? 'Same data, but a 5% difference now looks like a 60% visual swing'
                     : 'With a zero baseline, the quarterly differences are barely visible — because they are small.'}
@@ -202,7 +202,7 @@ function CognitiveLoadDemo() {
             .attr('width', x.bandwidth())
             .attr('y', (d) => y(d))
             .attr('height', (d) => ih - y(d))
-            .attr('fill', '#2563eb')
+            .attr('fill', '#059669')
             .attr('rx', 3)
             .attr('opacity', 0.85);
 
@@ -213,7 +213,7 @@ function CognitiveLoadDemo() {
                     .attr('y', y(d) - 4)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', '9px')
-                    .attr('fill', '#374151')
+                    .attr('fill', '#57534e')
                     .text(`${d}% (+${(d * 0.12).toFixed(1)}% YoY, σ=${(d * 0.05).toFixed(1)})`);
             });
         }
@@ -224,14 +224,14 @@ function CognitiveLoadDemo() {
 
     return (
         <div className="text-center">
-            <svg ref={svgRef} width={280} height={200} className="mx-auto bg-slate-50 rounded-xl" />
+            <svg ref={svgRef} width={280} height={200} className="mx-auto bg-stone-50 rounded-xl" />
             <button
                 onClick={() => setNoisy(!noisy)}
-                className="mt-3 px-4 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="mt-3 px-4 py-1.5 text-xs font-medium bg-brand text-white rounded-lg hover:bg-brand-hover transition-colors"
             >
                 {noisy ? 'Reduce Visual Noise' : 'Add Visual Noise'}
             </button>
-            <p className="text-xs text-slate-500 mt-2">
+            <p className="text-xs text-stone-500 mt-2">
                 {noisy
                     ? 'Excessive gridlines, labels, and annotations overload working memory'
                     : 'Clean chart with minimal gridlines — cognitive resources free for analysis.'}
@@ -277,7 +277,7 @@ function PatternDemo() {
         g.append('path')
             .datum(displayData)
             .attr('fill', 'none')
-            .attr('stroke', '#2563eb')
+            .attr('stroke', '#059669')
             .attr('stroke-width', 2)
             .attr('d', line);
 
@@ -288,7 +288,7 @@ function PatternDemo() {
             .attr('cx', (_, i) => x(i))
             .attr('cy', (d) => y(d))
             .attr('r', 3)
-            .attr('fill', '#2563eb');
+            .attr('fill', '#059669');
 
         if (smoothed) {
             const pts = displayData.map((_, i) => ({ x: i, y: displayData[i] }));
@@ -310,14 +310,14 @@ function PatternDemo() {
 
     return (
         <div className="text-center">
-            <svg ref={svgRef} width={280} height={200} className="mx-auto bg-slate-50 rounded-xl" />
+            <svg ref={svgRef} width={280} height={200} className="mx-auto bg-stone-50 rounded-xl" />
             <button
                 onClick={() => setSmoothed(!smoothed)}
-                className="mt-3 px-4 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="mt-3 px-4 py-1.5 text-xs font-medium bg-brand text-white rounded-lg hover:bg-brand-hover transition-colors"
             >
                 {smoothed ? 'Show Raw Data' : 'Apply Smoothing + Trendline'}
             </button>
-            <p className="text-xs text-slate-500 mt-2">
+            <p className="text-xs text-stone-500 mt-2">
                 {smoothed
                     ? 'Smoothing + trendline creates an illusion of upward trend in random data'
                     : 'This is random noise around 50 with no actual trend.'}
@@ -341,10 +341,10 @@ export default function CognitivePrinciples() {
     return (
         <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+                <h2 className="text-3xl font-bold text-stone-900 tracking-tight">
                     How Your Brain Reads Charts
                 </h2>
-                <p className="mt-3 text-lg text-slate-500 max-w-2xl mx-auto">
+                <p className="mt-3 text-lg text-stone-500 max-w-2xl mx-auto">
                     Four cognitive mechanisms that chart designers exploit — intentionally or not — to shape
                     your perception of data.
                 </p>
@@ -359,16 +359,16 @@ export default function CognitivePrinciples() {
                             key={p.key}
                             onClick={() => setActivePrinciple(p.key)}
                             className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all duration-200 ${isActive
-                                    ? 'bg-blue-50 border-blue-300 shadow-sm'
-                                    : 'bg-white border-slate-200 hover:border-slate-300'
+                                    ? 'bg-brand-muted border-brand/40 shadow-sm'
+                                    : 'bg-white border-stone-200 hover:border-stone-300'
                                 }`}
                         >
                             <Icon
                                 size={22}
-                                className={isActive ? 'text-blue-600' : 'text-slate-400'}
+                                className={isActive ? 'text-brand' : 'text-stone-400'}
                             />
                             <span
-                                className={`text-xs font-semibold text-center ${isActive ? 'text-blue-700' : 'text-slate-600'
+                                className={`text-xs font-semibold text-center ${isActive ? 'text-brand' : 'text-stone-600'
                                     }`}
                             >
                                 {p.title}
@@ -379,20 +379,20 @@ export default function CognitivePrinciples() {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8 items-start">
-                <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+                <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
                     <div className="flex items-center gap-3 mb-4">
-                        <active.icon size={24} className="text-blue-600" />
-                        <h3 className="text-xl font-bold text-slate-900">{active.title}</h3>
+                        <active.icon size={24} className="text-brand" />
+                        <h3 className="text-xl font-bold text-stone-900">{active.title}</h3>
                     </div>
-                    <p className="text-sm text-slate-600 leading-relaxed mb-6">{active.description}</p>
-                    <div className="border-t border-slate-100 pt-4">
-                        <span className="text-xs text-slate-400 font-medium">Research Reference</span>
-                        <p className="text-xs text-slate-500 mt-1 italic">{active.citation}</p>
+                    <p className="text-sm text-stone-600 leading-relaxed mb-6">{active.description}</p>
+                    <div className="border-t border-stone-100 pt-4">
+                        <span className="text-xs text-stone-400 font-medium">Research Reference</span>
+                        <p className="text-xs text-stone-500 mt-1 italic">{active.citation}</p>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-                    <h4 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
+                <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
+                    <h4 className="text-sm font-semibold text-stone-500 uppercase tracking-wider mb-4">
                         Interactive Demonstration
                     </h4>
                     <DemoComponent />

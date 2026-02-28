@@ -118,8 +118,15 @@ export default function TypographyLesson() {
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-8">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The choice of typeface and type size is not aesthetic — it is functional. Typography carries hierarchy. Hierarchy carries authority. When a data presenter uses the same font size for the headline and the footnote, their brain communicates "all of this is equally important." The audience unconsciously agrees — and stops paying attention to any of it.
+                    The choice of typeface and type size is not aesthetic — it is functional. Typography carries hierarchy. Hierarchy carries authority. When a data presenter uses the same font size for the headline and the footnote, their brain communicates "all of this is equally important." The audience unconsciously agrees — and stops paying attention to any of it. Typographic hierarchy is the first thing a sophisticated viewer notices about a chart or slide, before reading a single data value: it signals whether the presenter has made decisions about what matters most.
                 </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The science behind this comes from eye-tracking research in reading comprehension. When viewers encounter a page with clear typographic hierarchy — large bold headline, smaller sub-headline, small body text — they process information in a <strong>structured sequence</strong>: skimming the headline, pausing at the sub-headline, then deciding whether to invest the attention required to read the body. This "skim-to-decide" pattern is the default behavior of time-constrained decision-makers. A chart that forces an executive to read every line of text before understanding the point has already lost the communication. The hierarchy must do the work of navigation automatically, directing the eye with field and weight before reading begins.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    Typeface selection plays a secondary but important role. <strong>Sans-serif fonts</strong> (Inter, Roboto, IBM Plex Sans) are optimal for screens and projected slides: their letterforms are designed for screen rendering at all sizes. <strong>Serif fonts</strong> (Georgia, Merriweather) work in dense print documents where the serifs help guide horizontal reading. The critical mistake is using decorative or novelty fonts ("creative" fonts, script typefaces) in data contexts — they add visual stimulation that competes with the data itself, and signal informality in environments that require credibility. One font family with 3–4 weight steps provides all the hierarchy variation any presentation needs.
+                </p>
+
 
                 <TheoryBlock
                     title="Why Hierarchy Aids Comprehension"

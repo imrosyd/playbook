@@ -7,11 +7,12 @@ const M = { top: 12, right: 12, bottom: 28, left: 48 };
 const IW = W - M.left - M.right;
 const IH = H - M.top - M.bottom;
 
-const PRIMARY = '#3A7D5C';
-const SECONDARY = '#D4913A';
-const ACCENT = '#2563eb';
-const MUTED = '#78716c';
+const PRIMARY = '#059669';   // brand emerald — src/lib/design-tokens.ts BRAND.primary
+const SECONDARY = '#D4913A'; // warm amber — secondary chart color
+const ACCENT = '#0891b2';    // section-02 cyan — tertiary multi-series color
+const MUTED = '#78716c';     // stone-500 — muted / neutral data
 const COLORS = [PRIMARY, SECONDARY, ACCENT, '#a855f7', '#ef4444', MUTED, '#0891b2'];
+
 
 function useSvg(draw: (svg: d3.Selection<SVGGElement, unknown, null, undefined>) => void) {
     const ref = useRef<SVGSVGElement>(null);

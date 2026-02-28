@@ -101,6 +101,87 @@ const charts: ChartSpec[] = [
     },
 ];
 
+
+// Gauge vs Bullet comparison chart
+function GaugeVsBulletChart() {
+    const value = 73, target = 80;
+
+    // Gauge arc
+    const cx = 50, cy = 48, r = 35;
+    const arcAngle = (v: number) => ((v / 100) * Math.PI) + Math.PI; // left to right
+    const toArcX = (a: number) => cx + r * Math.cos(a);
+    const toArcY = (a: number) => cy + r * Math.sin(a);
+
+    const startAngle = Math.PI; // 180°
+    const valueAngle = arcAngle(value);
+    const targetAngle = arcAngle(target);
+    const aX = toArcX(valueAngle);
+    const aY = toArcY(valueAngle);
+    const bX = toArcX(startAngle);
+    const bY = toArcY(startAngle);
+    const endX = toArcX(0); // right side
+
+    // Background arc (grey)
+    const bgPath = `M ${bX} ${bY} A ${r} ${r} 0 0 1 ${endX} ${cy}`;
+    // Value arc (green)
+    const valPath = `M ${bX} ${bY} A ${r} ${r} 0 0 1 ${aX} ${aY}`;
+
+    return (
+        <div className="grid grid-cols-2 gap-6">
+            <div>
+                <p className="text-[10px] text-stone-400 font-bold text-center uppercase tracking-wider mb-2">
+                    Gauge chart
+                </p>
+                <svg viewBox="0 0 100 60" className="w-full max-w-[140px] mx-auto">
+                    {/* Background arc */}
+                    <path d={bgPath} fill="none" stroke="#e7e5e4" strokeWidth={10} strokeLinecap="round" />
+                    {/* Green arc */}
+                    <path d={valPath} fill="none" stroke="#059669" strokeWidth={10} strokeLinecap="round" />
+                    {/* Target line */}
+                    <line
+                        x1={cx + (r - 8) * Math.cos(targetAngle)}
+                        y1={cy + (r - 8) * Math.sin(targetAngle)}
+                        x2={cx + (r + 2) * Math.cos(targetAngle)}
+                        y2={cy + (r + 2) * Math.sin(targetAngle)}
+                        stroke="#1e293b" strokeWidth={2} />
+                    <text x={cx} y={cy + 8} fill="#059669" fontSize={12} textAnchor="middle" fontWeight={900}>{value}%</text>
+                    <text x={cx} y={cy + 17} fill="#a8a29e" fontSize={5} textAnchor="middle">Target: {target}%</text>
+                </svg>
+                <div className="space-y-1 mt-2">
+                    <p className="text-[10px] text-red-600 text-center">Uses ~60% more space</p>
+                    <p className="text-[10px] text-red-600 text-center">Encodes 1 number (angle)</p>
+                    <p className="text-[10px] text-red-600 text-center">No trend context</p>
+                </div>
+            </div>
+            <div>
+                <p className="text-[10px] text-stone-400 font-bold text-center uppercase tracking-wider mb-2">
+                    Bullet chart
+                </p>
+                <svg viewBox="0 0 100 60" className="w-full max-w-[140px] mx-auto">
+                    {/* Qualitative ranges */}
+                    <rect x={10} y={20} width={80} height={18} fill="#e7e5e4" rx={2} />
+                    <rect x={10} y={20} width={64} height={18} fill="#d1d5db" rx={2} />
+                    <rect x={10} y={20} width={48} height={18} fill="#9ca3af" rx={2} />
+                    {/* Actual bar */}
+                    <rect x={10} y={24} width={(value / 100) * 80} height={10} fill="#059669" rx={2} />
+                    {/* Target line */}
+                    <line x1={10 + (target / 100) * 80} y1={17} x2={10 + (target / 100) * 80} y2={41}
+                        stroke="#1e293b" strokeWidth={2.5} />
+                    <text x={10 + (value / 100) * 80 + 3} y={32} fill="#a8a29e" fontSize={5}>{value}%</text>
+                    <text x={10 + (target / 100) * 80 - 2} y={14} fill="#1e293b" fontSize={5} textAnchor="middle">Target</text>
+                    <text x={10} y={52} fill="#a8a29e" fontSize={5}>0</text>
+                    <text x={90} y={52} fill="#a8a29e" fontSize={5} textAnchor="end">100</text>
+                </svg>
+                <div className="space-y-1 mt-2">
+                    <p className="text-[10px] text-brand text-center">Uses ~40% less space</p>
+                    <p className="text-[10px] text-brand text-center">Encodes value + target + zones</p>
+                    <p className="text-[10px] text-brand text-center">Aligns with position encoding</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function OperationalLesson() {
     return (
         <LessonPage
@@ -110,16 +191,48 @@ export default function OperationalLesson() {
                 { sectionId: 'lab', slug: 'full-lab', label: '3.5 — Full Lab: apply manipulation techniques to operational data' },
             ]}
         >
-            <div className="prose prose-stone max-w-none">
+            <div className="space-y-6">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Operational and risk charts are purpose-built for specific analytical workflows: process
-                    monitoring, project management, conversion analysis, and multi-dimensional scoring. They
-                    tend to be domain-specific and carry strong implicit assumptions about the process being
-                    visualized. <strong>The key risk is misapplying these charts to data that violates their
-                        structural assumptions</strong> — a Gantt for an Agile sprint, a control chart with too few
-                    observations, or a funnel for a non-sequential process all produce charts that look valid
-                    but mislead.
+                    Operational and risk charts are purpose-built for specific analytical workflows: process monitoring, project management, conversion analysis, and multi-dimensional scoring. Unlike general-purpose comparison or distribution charts, each operational chart type carries strong structural assumptions about the data it visualizes. A Gantt chart assumes tasks have defined start dates and fixed durations. A control chart assumes a stable, repeating process with measurable variation. A funnel chart assumes a strictly sequential process where all items enter at the top stage. <strong>Misapplying these charts to data that violates their structural assumptions produces visualizations that look authoritative but actively mislead.</strong>
                 </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The gauge chart — the half-circle dial with a needle pointing to a KPI value — is perhaps the most pervasive example of a chart optimized for aesthetics over information density. A gauge chart uses a semicircular area that could hold 5–10 bullet charts, yet encodes a single number in an angle encoding that ranks 5th in Cleveland & McGill's perceptual accuracy hierarchy. Stephen Few demonstrated that a bullet chart provides the same information (actual value, target, performance zones) in roughly 1/5 the space with superior perceptual accuracy. Gauge charts persist in dashboards not because they communicate more effectively but because they resemble familiar physical instruments and look appropriately "technical."
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    Radar/spider charts present a similar problem: the polygon area is determined as much by axis ordering as by data values. Rotating the axes of a radar chart produces a different polygon shape and area — implying different "performance" — even though none of the values change. This means that radar chart comparisons between entities or time periods can be manipulated simply by choosing an axis order that makes the desired entity's polygon appear larger, without changing any underlying data. For multi-dimensional performance comparison, a <strong>small multiple bar chart approach</strong> (one bar per dimension, displayed in a grid) offers superior accuracy with zero axis-ordering sensitivity.
+                </p>
+
+                {/* Gauge vs Bullet */}
+                <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                        Gauge vs. bullet chart: same KPI, radically different space efficiency
+                    </p>
+                    <GaugeVsBulletChart />
+                    <p className="text-[12px] text-stone-400 leading-relaxed">
+                        Both charts show a KPI of 73% against a target of 80%. The bullet chart encodes actual value, target, and three qualitative performance zones in 40% less space, using the more accurate position encoding instead of angle. The gauge chart uses the familiar dial metaphor at a severe cost in information density.
+                    </p>
+                </div>
+
+                {/* Chart assumptions guide */}
+                <div className="rounded-xl bg-amber-50 border border-amber-200 p-5">
+                    <p className="text-[11px] font-bold text-amber-700 uppercase tracking-wider mb-3">
+                        Structural assumptions that must hold for operational charts to be valid
+                    </p>
+                    <div className="space-y-2">
+                        {[
+                            { chart: 'Gantt chart', assumption: 'Tasks have defined start/end dates and fixed durations. Agile sprints with fluid scope violate this.' },
+                            { chart: 'Control chart (SPC)', assumption: 'Process is stable and repeating with a historical baseline of ≥20 data points for control limit estimation.' },
+                            { chart: 'Funnel chart', assumption: 'All items enter at stage 1 and progress forward-only through a fixed sequence. No re-entry or skipping.' },
+                            { chart: 'Radar chart', assumption: 'All axes share a meaningful common scale. Axis ordering is theoretically motivated, not arbitrary.' },
+                            { chart: 'Gauge / dial', assumption: 'A single KPI value at a moment in time is sufficient for the decision. No trend context is needed.' },
+                        ].map((d, i) => (
+                            <div key={i} className="text-[12px] space-y-0.5">
+                                <p className="font-bold text-amber-900">{d.chart}</p>
+                                <p className="text-amber-800 leading-relaxed pl-3">{d.assumption}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <ChartFamilyLesson

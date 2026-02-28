@@ -33,8 +33,8 @@ function Slider({ label, value, min, max, step, unit, onChange, warning }: Slide
     return (
         <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-slate-600">{label}</span>
-                <span className="text-xs font-bold text-slate-800 tabular-nums">
+                <span className="text-xs font-medium text-stone-600">{label}</span>
+                <span className="text-xs font-bold text-stone-800 tabular-nums">
                     {value}{unit || ''}
                 </span>
             </div>
@@ -45,9 +45,9 @@ function Slider({ label, value, min, max, step, unit, onChange, warning }: Slide
                 step={step}
                 value={value}
                 onChange={(e) => onChange(Number(e.target.value))}
-                className="w-full h-1.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-blue-600"
+                className="w-full h-1.5 bg-stone-200 rounded-full appearance-none cursor-pointer accent-brand"
                 style={{
-                    background: `linear-gradient(to right, #2563eb ${pct}%, #e2e8f0 ${pct}%)`,
+                    background: `linear-gradient(to right, #059669 ${pct}%, #e7e5e4 ${pct}%)`,
                 }}
             />
             {warning && (
@@ -68,12 +68,12 @@ function Toggle({ label, value, onChange, warning }: ToggleProps) {
     return (
         <div className="flex items-center justify-between">
             <div>
-                <span className="text-xs font-medium text-slate-600">{label}</span>
+                <span className="text-xs font-medium text-stone-600">{label}</span>
                 {warning && value && <p className="text-xs text-amber-600 mt-0.5">{warning}</p>}
             </div>
             <button
                 onClick={() => onChange(!value)}
-                className={`relative w-10 h-5 rounded-full transition-colors duration-200 ${value ? 'bg-blue-600' : 'bg-slate-300'
+                className={`relative w-10 h-5 rounded-full transition-colors duration-200 ${value ? 'bg-brand' : 'bg-stone-300'
                     }`}
             >
                 <div
@@ -94,13 +94,13 @@ interface ControlGroupProps {
 function ControlGroup({ title, defaultOpen = true, children }: ControlGroupProps) {
     const [open, setOpen] = useState(defaultOpen);
     return (
-        <div className="border-b border-slate-100 last:border-b-0">
+        <div className="border-b border-stone-100 last:border-b-0">
             <button
                 onClick={() => setOpen(!open)}
                 className="w-full flex items-center justify-between py-3 text-left"
             >
-                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{title}</span>
-                {open ? <ChevronUp size={14} className="text-slate-400" /> : <ChevronDown size={14} className="text-slate-400" />}
+                <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">{title}</span>
+                {open ? <ChevronUp size={14} className="text-stone-400" /> : <ChevronDown size={14} className="text-stone-400" />}
             </button>
             {open && <div className="pb-4 space-y-4">{children}</div>}
         </div>
@@ -142,19 +142,19 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
             : true; // always open by default per existing code
 
     return (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-slate-50">
-                <h3 className="text-sm font-semibold text-slate-800">Manipulation Controls</h3>
+        <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-stone-100 bg-stone-50">
+                <h3 className="text-sm font-semibold text-stone-800">Manipulation Controls</h3>
                 <button
                     onClick={() => onChange({ ...DEFAULT_PARAMS })}
-                    className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 transition-colors"
+                    className="flex items-center gap-1.5 text-xs text-stone-500 hover:text-brand transition-colors"
                 >
                     <RotateCcw size={12} />
                     Reset All
                 </button>
             </div>
 
-            <div className="px-4 divide-y divide-slate-100">
+            <div className="px-4 divide-y divide-stone-100">
                 {showAxisScale && (
                     <ControlGroup title="Axis & Scale" defaultOpen={axisScaleDefaultOpen}>
                         <Slider
@@ -236,7 +236,7 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                             warning={params.samplePct < 50 ? 'Small samples produce spurious patterns' : undefined}
                         />
                         <div className="space-y-1.5">
-                            <span className="text-xs font-medium text-slate-600">Outlier Handling</span>
+                            <span className="text-xs font-medium text-stone-600">Outlier Handling</span>
                             <select
                                 value={params.outlierMode}
                                 onChange={(e) => update({
@@ -252,7 +252,7 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                                         }, [])
                                         : [],
                                 })}
-                                className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                                className="w-full text-xs border border-stone-200 rounded-lg px-3 py-2 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
                             >
                                 <option value="show_all">Show All Points</option>
                                 <option value="statistical_3sd">Statistical Exclusion (&gt;3 SD)</option>
@@ -270,11 +270,11 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                 {showVisualEmphasis && (
                     <ControlGroup title="Visual Emphasis" defaultOpen={visibleGroups !== undefined && visibleGroups.visualEmphasis === true && !visibleGroups.axisScale && !visibleGroups.dataTransform && !visibleGroups.annotationTrend}>
                         <div className="space-y-1.5">
-                            <span className="text-xs font-medium text-slate-600">Sort Order</span>
+                            <span className="text-xs font-medium text-stone-600">Sort Order</span>
                             <select
                                 value={params.sortOrder}
                                 onChange={(e) => update({ sortOrder: e.target.value as ChartParams['sortOrder'] })}
-                                className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                                className="w-full text-xs border border-stone-200 rounded-lg px-3 py-2 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
                             >
                                 <option value="original">Original Order</option>
                                 <option value="value_desc">Highest First</option>
@@ -296,7 +296,7 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                             }
                         />
                         <div className="space-y-1.5">
-                            <span className="text-xs font-medium text-slate-600">Highlight Bar Index</span>
+                            <span className="text-xs font-medium text-stone-600">Highlight Bar Index</span>
                             <div className="flex flex-wrap gap-1.5">
                                 {data.slice(0, 12).map((d, i) => (
                                     <button
@@ -311,8 +311,8 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                                             });
                                         }}
                                         className={`px-2 py-1 text-xs rounded-md border transition-colors ${params.colorEmphasis.highlightedIndices.includes(i)
-                                            ? 'bg-blue-600 text-white border-blue-600'
-                                            : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
+                                            ? 'bg-brand text-white border-brand'
+                                            : 'bg-white text-stone-600 border-stone-200 hover:border-brand/40'
                                             }`}
                                     >
                                         {d.label.length > 6 ? d.label.slice(0, 6) + '..' : d.label}
@@ -321,11 +321,11 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                             </div>
                         </div>
                         <div className="space-y-1.5">
-                            <span className="text-xs font-medium text-slate-600">Highlight Rationale</span>
+                            <span className="text-xs font-medium text-stone-600">Highlight Rationale</span>
                             <select
                                 value={params.highlightRationale}
                                 onChange={(e) => update({ highlightRationale: e.target.value as ChartParams['highlightRationale'] })}
-                                className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                                className="w-full text-xs border border-stone-200 rounded-lg px-3 py-2 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
                             >
                                 <option value="none">None Declared</option>
                                 <option value="current_vs_past">Current vs Past Output</option>
@@ -344,11 +344,11 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                             onChange={(v) => update({ sourceCited: v })}
                         />
                         <div className="space-y-1.5">
-                            <span className="text-xs font-medium text-slate-600">Confidence Interval</span>
+                            <span className="text-xs font-medium text-stone-600">Confidence Interval</span>
                             <select
                                 value={params.confidenceLevel}
                                 onChange={(e) => update({ confidenceLevel: e.target.value as ChartParams['confidenceLevel'] })}
-                                className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                                className="w-full text-xs border border-stone-200 rounded-lg px-3 py-2 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
                             >
                                 <option value="none">None</option>
                                 <option value="90">90% Confidence</option>
@@ -372,7 +372,7 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                         {params.annotation.enabled && (
                             <>
                                 <div className="space-y-1.5">
-                                    <span className="text-xs font-medium text-slate-600">Annotation Text</span>
+                                    <span className="text-xs font-medium text-stone-600">Annotation Text</span>
                                     <input
                                         type="text"
                                         value={params.annotation.text}
@@ -381,7 +381,7 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                                                 annotation: { ...params.annotation, text: e.target.value },
                                             })
                                         }
-                                        className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                                        className="w-full text-xs border border-stone-200 rounded-lg px-3 py-2 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
                                     />
                                 </div>
                                 <Toggle
@@ -397,22 +397,22 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                             </>
                         )}
                         <div className="space-y-1.5">
-                            <span className="text-xs font-medium text-slate-600">Trendline</span>
+                            <span className="text-xs font-medium text-stone-600">Trendline</span>
                             <select
                                 value={params.trendline}
                                 onChange={(e) => update({ trendline: e.target.value as ChartParams['trendline'] })}
-                                className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                                className="w-full text-xs border border-stone-200 rounded-lg px-3 py-2 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
                             >
                                 <option value="none">None</option>
                                 <option value="linear">Linear Trendline</option>
                             </select>
                         </div>
                         <div className="space-y-1.5">
-                            <span className="text-xs font-medium text-slate-600">Label Mode</span>
+                            <span className="text-xs font-medium text-stone-600">Label Mode</span>
                             <select
                                 value={params.labelMode}
                                 onChange={(e) => update({ labelMode: e.target.value as ChartParams['labelMode'] })}
-                                className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                                className="w-full text-xs border border-stone-200 rounded-lg px-3 py-2 bg-white text-stone-700 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
                             >
                                 <option value="none">No Labels</option>
                                 <option value="selective">Key Values Only</option>

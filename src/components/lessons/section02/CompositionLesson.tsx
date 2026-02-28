@@ -139,6 +139,76 @@ const charts: ChartSpec[] = [
     },
 ];
 
+// Pie vs Bar accuracy comparison chart
+function PieVsBarComparisonChart() {
+    const data = [
+        { label: 'Category A', value: 38, color: '#059669' },
+        { label: 'Category B', value: 35, color: '#0d9488' },
+        { label: 'Category C', value: 17, color: '#2563eb' },
+        { label: 'Category D', value: 10, color: '#7c3aed' },
+    ];
+    const total = data.reduce((s, d) => s + d.value, 0);
+    const w = 320, h = 110, cx = 55, cy = 55, r = 48;
+    let angle = -Math.PI / 2;
+
+    // Pie slices
+    const slices = data.map(d => {
+        const startAngle = angle;
+        const delta = (d.value / total) * 2 * Math.PI;
+        angle += delta;
+        const x1 = cx + r * Math.cos(startAngle);
+        const y1 = cy + r * Math.sin(startAngle);
+        const x2 = cx + r * Math.cos(angle);
+        const y2 = cy + r * Math.sin(angle);
+        const large = delta > Math.PI ? 1 : 0;
+        return { ...d, path: `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z` };
+    });
+
+    // Bar positions
+    const barPad = { l: 130, r: 20, t: 12, b: 24 };
+    const barW = w - barPad.l - barPad.r;
+    const barH_inner = h - barPad.t - barPad.b;
+    const bH = 13;
+    const bGap = (barH_inner - data.length * bH) / (data.length + 1);
+
+    return (
+        <div className="grid grid-cols-2 gap-4">
+            <div>
+                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2 text-center">
+                    Pie chart — hard to compare B vs C
+                </p>
+                <svg viewBox={`0 0 ${cx * 2 + 10} ${cy * 2 + 10}`} className="w-full max-w-[110px] mx-auto">
+                    {slices.map((s, i) => (
+                        <path key={i} d={s.path} fill={s.color} stroke="white" strokeWidth={2} opacity={0.9} />
+                    ))}
+                    {/* Question mark on similar slices */}
+                    <text x={cx - 5} y={cy + 4} fill="white" fontSize={20} fontWeight={900} opacity={0.9}>?</text>
+                </svg>
+                <p className="text-[10px] text-red-600 text-center mt-1">35% vs 38% — indistinguishable</p>
+            </div>
+            <div>
+                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2 text-center">
+                    Bar chart — differences are clear
+                </p>
+                <svg viewBox={`0 0 ${w - 130} ${h}`} className="w-full">
+                    {data.map((d, i) => {
+                        const y = barPad.t + bGap + i * (bH + bGap);
+                        const bw = (d.value / 100) * (w - 130 - barPad.l - barPad.r) * 2.5;
+                        return (
+                            <g key={i}>
+                                <text x={0} y={y + bH / 2 + 4} fill="#78716c" fontSize={8}>{d.label}</text>
+                                <rect x={55} y={y} width={bw} height={bH} fill={d.color} rx={2} opacity={0.85} />
+                                <text x={55 + bw + 3} y={y + bH / 2 + 4} fill="#78716c" fontSize={8}>{d.value}%</text>
+                            </g>
+                        );
+                    })}
+                </svg>
+                <p className="text-[10px] text-brand text-center mt-1">38% vs 35% — clearly visible</p>
+            </div>
+        </div>
+    );
+}
+
 export default function CompositionLesson() {
     return (
         <LessonPage
@@ -148,14 +218,50 @@ export default function CompositionLesson() {
                 { sectionId: 'lab', slug: 'visual-emphasis', label: '3.3 — Visual Emphasis: how color manipulation distorts pie charts' },
             ]}
         >
-            <div className="prose prose-stone max-w-none">
+            <div className="space-y-6">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Composition charts answer "what is this made of?" by encoding the parts that make up a whole.
-                    They range from the ubiquitous but cognitively demanding pie chart to the space-efficient
-                    treemap and the narrative-friendly waterfall. The fundamental challenge is that humans are
-                    poor at comparing non-aligned areas and angles — the visual channels composition charts
-                    rely on most heavily are ranked lowest in perceptual accuracy by Cleveland & McGill.
+                    Composition charts answer "what is this made of?" by encoding the parts that comprise a whole. They range from the ubiquitous but cognitively demanding pie chart to the space-efficient treemap and the narrative-friendly waterfall. The fundamental challenge with composition charts is that <strong>angle and area</strong> — their primary encoding channels — rank 5th and 6th in Cleveland & McGill's perceptual accuracy hierarchy. Humans are systematically poor at comparing non-aligned angles and areas with precision.
                 </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    This doesn't mean pie charts are always wrong. When a single segment is dramatically larger than the others (&gt;50%), the "majority" story is immediately visible and the angle comparison weakness is irrelevant. When only 2–3 segments exist and approximate proportions are sufficient, pie charts work well for general audiences. The problem arises when multiple similar-sized segments need to be compared, or when precise proportions matter — in these cases, a sorted horizontal bar chart on a common scale will always outperform a pie in terms of the viewer's ability to read accurate values.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The most important composition chart decision is <strong>when to use bars versus sectors</strong>. Use bars when precise comparison between segments matters, when you have more than 5 categories, or when the chart will be used for data analysis. Use pie/donut when you have 2–4 segments, when part-to-whole relationship is the primary message, and when approximate proportions are sufficient. Treemaps and sunbursts are appropriate for hierarchical compositions but demand high cognitive load — use them only when the hierarchical structure itself is the story.
+                </p>
+
+                {/* Pie vs bar comparison */}
+                <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                        Same data: pie vs. bar — why bars are more accurate for close comparisons
+                    </p>
+                    <PieVsBarComparisonChart />
+                    <p className="text-[12px] text-stone-400 leading-relaxed">
+                        When segments are within 5–10% of each other, angle discrimination fails. The bar chart makes the same comparison trivially accurate. Use pie charts only when segment sizes are sufficiently different that angle comparison succeeds.
+                    </p>
+                </div>
+
+                {/* When to use each */}
+                <div className="rounded-xl bg-stone-50 border border-stone-200 p-5">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">
+                        Quick decision guide: composition chart selection
+                    </p>
+                    <div className="space-y-2">
+                        {[
+                            { condition: '2–4 segments, approximate proportions OK', chart: 'Pie or donut', ok: true },
+                            { condition: '1 segment clearly dominates (>50%)', chart: 'Pie chart', ok: true },
+                            { condition: '5+ categories', chart: 'Horizontal bar chart', ok: true },
+                            { condition: 'Precise comparison between similar segments', chart: 'Horizontal bar chart', ok: true },
+                            { condition: 'Hierarchical composition (parent + child levels)', chart: 'Treemap or sunburst', ok: true },
+                            { condition: 'Finance: cumulative contributions to total', chart: 'Waterfall chart', ok: true },
+                            { condition: 'Want to embed a KPI in the center', chart: 'Donut chart', ok: true },
+                        ].map((d, i) => (
+                            <div key={i} className="flex items-center gap-3 text-[12px]">
+                                <span className="text-stone-400 leading-relaxed flex-1">{d.condition}</span>
+                                <span className="shrink-0 text-brand font-semibold">→ {d.chart}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <ChartFamilyLesson

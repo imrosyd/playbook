@@ -66,7 +66,13 @@ export default function ColorblindLesson() {
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-8">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Approximately 1 in 12 men and 1 in 200 women have some form of color vision deficiency. In any meeting of 10 people, statistically one person cannot distinguish red from green. Using red for "bad" and green for "good" — as most presentations do — creates a chart that is literally unreadable for a portion of your audience.
+                    Approximately 1 in 12 men and 1 in 200 women have some form of color vision deficiency. In any meeting of 10 people, statistically one person cannot distinguish red from green. Using red for "bad" and green for "good" — as most presentations do — creates a chart that is literally unreadable for a portion of your audience without them ever knowing or telling you, since people with color vision deficiency rarely announce it in professional settings.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The WCAG 2.1 accessibility guidelines — adopted by governments and major institutions worldwide — mandate at Success Criterion 1.4.1 that <strong>color must not be used as the only visual means of conveying information</strong>. This standard was designed for digital interfaces, but its logic applies directly to business charts. A chart that uses only color hue to distinguish between categories fails both ethically (it excludes some viewers) and practically (printed in greyscale or viewed through a projector with color shifting, the chart becomes ambiguous to everyone).
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The solution is not to abandon color but to <strong>add redundant encodings</strong>. Add direct text labels so the category is named, not just colored. Use shapes (circle vs. triangle) in scatter plots. Use line dashing patterns in line charts. Use the Blue + Orange palette instead of Red + Green — blue and orange are distinguishable by all common colorblindness types including both deuteranopia and protanopia. Treating accessibility as a design constraint produces charts that are universally clearer, not just accessible to specific viewers.
                 </p>
 
                 <TheoryBlock

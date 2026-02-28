@@ -195,6 +195,59 @@ const charts: ChartSpec[] = [
     },
 ];
 
+// Cleveland-McGill accuracy hierarchy chart
+function AccuracyHierarchyChart() {
+    const encodings = [
+        { rank: 1, name: 'Position (common scale)', accuracy: 95, example: 'Bar chart, dot plot' },
+        { rank: 2, name: 'Position (non-aligned)', accuracy: 78, example: 'Stacked bar segments' },
+        { rank: 3, name: 'Length', accuracy: 74, example: 'Bar chart' },
+        { rank: 4, name: 'Direction / slope', accuracy: 68, example: 'Line chart' },
+        { rank: 5, name: 'Angle', accuracy: 55, example: 'Pie chart' },
+        { rank: 6, name: 'Area', accuracy: 42, example: 'Treemap, bubble' },
+        { rank: 7, name: 'Volume', accuracy: 28, example: '3D chart' },
+        { rank: 8, name: 'Color saturation', accuracy: 21, example: 'Heatmap (single hue)' },
+    ];
+    const w = 360, h = 170, pad = { l: 130, r: 60, t: 14, b: 22 };
+    const innerW = w - pad.l - pad.r;
+    const innerH = h - pad.t - pad.b;
+    const barH = 13;
+    const gap = (innerH - encodings.length * barH) / (encodings.length + 1);
+    const color = (a: number) => a >= 70 ? '#059669' : a >= 45 ? '#f59e0b' : '#ef4444';
+
+    return (
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+            {[0, 25, 50, 75, 100].map(v => (
+                <g key={v}>
+                    <line x1={pad.l + (v / 100) * innerW} x2={pad.l + (v / 100) * innerW}
+                        y1={pad.t} y2={h - pad.b} stroke="#f5f5f4" strokeWidth={1} />
+                    <text x={pad.l + (v / 100) * innerW} y={h - 4}
+                        fill="#a8a29e" fontSize={7} textAnchor="middle">{v}%</text>
+                </g>
+            ))}
+            {encodings.map((e, i) => {
+                const y = pad.t + gap + i * (barH + gap);
+                const bw = (e.accuracy / 100) * innerW;
+                const c = color(e.accuracy);
+                return (
+                    <g key={e.rank}>
+                        <text x={2} y={y + barH / 2 + 4} fill="#a8a29e" fontSize={7} fontWeight={700}>
+                            #{e.rank}
+                        </text>
+                        <text x={16} y={y + barH / 2 + 4} fill="#78716c" fontSize={7.5} textAnchor="start">
+                            {e.name}
+                        </text>
+                        <rect x={pad.l} y={y} width={bw} height={barH} fill={c} rx={2} opacity={0.85} />
+                        <text x={pad.l + bw + 4} y={y + barH / 2 + 4} fill={c} fontSize={7.5} fontWeight={700}>{e.accuracy}%</text>
+                    </g>
+                );
+            })}
+            <text x={pad.l + innerW / 2} y={pad.t - 2} fill="#78716c" fontSize={7.5} textAnchor="middle">
+                Perceptual accuracy (Cleveland & McGill, 1984)
+            </text>
+        </svg>
+    );
+}
+
 export default function ComparisonLesson() {
     return (
         <LessonPage
@@ -204,13 +257,64 @@ export default function ComparisonLesson() {
                 { sectionId: 'lab', slug: 'axis-scale', label: '3.1 — Axis & Scale: see how truncation distorts bar charts' },
             ]}
         >
-            <div className="prose prose-stone max-w-none">
+            <div className="space-y-6">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Comparison charts encode quantitative differences between discrete categories. Cleveland and McGill's 1984
-                    study established that <strong>position on a common scale</strong> (bar charts) is the most accurately
-                    perceived visual encoding. Length, angle, area, and volume follow in decreasing perceptual accuracy — a
-                    hierarchy that should guide your chart selection for any comparison task.
+                    Comparison charts encode quantitative differences between discrete categories. William Cleveland and Robert McGill's landmark 1984 study established a perceptual accuracy hierarchy for visual encodings — ranking them by how precisely humans can decode the magnitude differences they represent. <strong>Position on a common scale</strong> (the foundation of bar charts) ranked first with approximately 95% accuracy, while angle (pie charts) ranked 5th at ~55% and area (treemaps, bubble charts) ranked 6th at ~42%. This hierarchy is not aesthetic preference — it was empirically validated through controlled experiments.
                 </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The practical implications are significant. When the goal is comparison — "which category is larger, and by how much?" — bar charts on a shared baseline are the most perceptually efficient choice. The moment you deviate from position-on-common-scale (by stacking bars, using pie slices, or switching to bubble size), you introduce perceptual error. Sometimes this tradeoff is worth it for other reasons (part-to-whole relationship, spatial constraints, aesthetic context) but it should always be a conscious choice, not a default.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    Beyond the encoding channel, comparison chart accuracy is heavily influenced by the y-axis baseline. A bar chart's entire communicative power rests on the assumption that bar height is proportional to value — an assumption that requires the y-axis to start at zero. Truncating the axis to start above zero destroys this proportionality and turns the bars into a position-based encoding instead of a length-based one, effectively degrading accuracy to Cleveland & McGill's rank 2. This is why axis truncation is one of the most impactful single design decisions in comparison charts.
+                </p>
+
+                {/* Accuracy hierarchy */}
+                <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                        Cleveland & McGill (1984): visual encoding accuracy hierarchy
+                    </p>
+                    <AccuracyHierarchyChart />
+                    <p className="text-[12px] text-stone-400 leading-relaxed">
+                        This ranking is empirical, not aesthetic. For comparison tasks, always prefer encodings in the green zone (rank 1–3). Move to lower-ranked encodings only when other design constraints require it.
+                    </p>
+                </div>
+
+                {/* Bar chart elements */}
+                <div className="rounded-xl bg-stone-50 border border-stone-200 p-5">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">
+                        Design decisions that most affect comparison accuracy
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {[
+                            {
+                                decision: 'Y-axis baseline',
+                                honest: 'Start at zero — bar heights directly encode values',
+                                risk: 'Truncation makes bars appear proportionally larger/smaller than actual values',
+                            },
+                            {
+                                decision: 'Sort order',
+                                honest: 'Sort by value (descending) — highest priority comparison goes to the best spatial position',
+                                risk: 'Alphabetical or arbitrary sorting buries the most important comparisons',
+                            },
+                            {
+                                decision: 'Bar width / spacing',
+                                honest: 'Consistent widths — visual area does not add spurious information',
+                                risk: 'Variable-width bars introduce an area encoding that conflicts with height encoding',
+                            },
+                            {
+                                decision: 'Color use',
+                                honest: 'Single brand color — color is not an additional encoding channel',
+                                risk: 'Multi-color bars hijack pre-attentive attention to specific bars before the viewer reads values',
+                            },
+                        ].map((d, i) => (
+                            <div key={i} className="bg-white rounded-xl border border-stone-200 p-3 space-y-1.5">
+                                <p className="text-[12px] font-bold text-stone-800">{d.decision}</p>
+                                <p className="text-[11px] text-brand leading-relaxed">✓ {d.honest}</p>
+                                <p className="text-[11px] text-red-600 leading-relaxed">⚠ {d.risk}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <ChartFamilyLesson

@@ -138,14 +138,14 @@ export default function ManipulationLab() {
     return (
         <div className="max-w-[1400px] mx-auto">
             <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 mb-4">
-                    <FlaskConical size={14} className="text-blue-600" />
-                    <span className="text-xs font-semibold text-blue-700">Interactive Lab</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-muted border border-brand/40 mb-4">
+                    <FlaskConical size={14} className="text-brand" />
+                    <span className="text-xs font-semibold text-brand">Interactive Lab</span>
                 </div>
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+                <h2 className="text-3xl font-bold text-stone-900 tracking-tight">
                     The Manipulation Lab
                 </h2>
-                <p className="mt-3 text-lg text-slate-500 max-w-2xl mx-auto">
+                <p className="mt-3 text-lg text-stone-500 max-w-2xl mx-auto">
                     Adjust chart parameters and watch how each change affects credibility, cognitive biases,
                     and executive decision-making in real time.
                 </p>
@@ -184,7 +184,7 @@ export default function ManipulationLab() {
                                 setScenarioIndex(i);
                                 setParams({ ...DEFAULT_PARAMS });
                             }}
-                            className={`w-2 h-2 rounded-full transition-colors ${i === scenarioIndex ? 'bg-blue-600' : 'bg-slate-300'
+                            className={`w-2 h-2 rounded-full transition-colors ${i === scenarioIndex ? 'bg-brand' : 'bg-stone-300'
                                 }`}
                         />
                     ))}

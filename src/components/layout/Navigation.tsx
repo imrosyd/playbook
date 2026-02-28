@@ -20,15 +20,15 @@ export default function Navigation({ active, onNavigate }: NavigationProps) {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/60">
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200/60">
                 <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
                     <div className="flex items-center justify-between h-14">
                         <button
                             onClick={() => onNavigate('landing')}
                             className="flex items-center gap-2 group"
                         >
-                            <BarChart3 size={20} className="text-blue-600" />
-                            <span className="text-sm font-bold text-slate-800 hidden sm:inline group-hover:text-blue-600 transition-colors">
+                            <BarChart3 size={20} className="text-brand" />
+                            <span className="text-sm font-bold text-stone-800 hidden sm:inline group-hover:text-brand transition-colors">
                                 Perception Lab
                             </span>
                         </button>
@@ -42,8 +42,8 @@ export default function Navigation({ active, onNavigate }: NavigationProps) {
                                         key={item.key}
                                         onClick={() => onNavigate(item.key)}
                                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isActive
-                                                ? 'bg-blue-50 text-blue-700'
-                                                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                                                ? 'bg-brand-muted text-brand'
+                                                : 'text-stone-500 hover:text-stone-700 hover:bg-stone-50'
                                             }`}
                                     >
                                         <Icon size={14} />
@@ -59,9 +59,9 @@ export default function Navigation({ active, onNavigate }: NavigationProps) {
 
             <button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-white border border-slate-200 shadow-lg flex items-center justify-center hover:bg-slate-50 transition-colors"
+                className="fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-white border border-stone-200 shadow-lg flex items-center justify-center hover:bg-stone-50 transition-colors"
             >
-                <ChevronUp size={18} className="text-slate-600" />
+                <ChevronUp size={18} className="text-stone-600" />
             </button>
         </>
     );

@@ -120,6 +120,67 @@ const charts: ChartSpec[] = [
     },
 ];
 
+
+// Network layout sensitivity demo
+function NetworkLayoutChart() {
+    // Same network, two different force-directed layouts
+    // Nodes: A is the hub (connected to everyone), B-F are periphery
+    const nodesA = [
+        { id: 'A', x: 50, y: 50, label: 'CEO', r: 14 },
+        { id: 'B', x: 20, y: 20, label: 'CTO', r: 9 },
+        { id: 'C', x: 80, y: 20, label: 'CFO', r: 9 },
+        { id: 'D', x: 20, y: 80, label: 'CMO', r: 9 },
+        { id: 'E', x: 80, y: 80, label: 'COO', r: 9 },
+        { id: 'F', x: 50, y: 15, label: 'CRO', r: 9 },
+    ];
+    const nodesB = [
+        { id: 'B', x: 50, y: 50, label: 'CTO', r: 14 }, // same network, CTO in center
+        { id: 'A', x: 20, y: 20, label: 'CEO', r: 9 },
+        { id: 'C', x: 80, y: 25, label: 'CFO', r: 9 },
+        { id: 'D', x: 15, y: 75, label: 'CMO', r: 9 },
+        { id: 'E', x: 85, y: 75, label: 'COO', r: 9 },
+        { id: 'F', x: 50, y: 85, label: 'CRO', r: 9 },
+    ];
+    const edges = [['A', 'B'], ['A', 'C'], ['A', 'D'], ['A', 'E'], ['A', 'F'], ['B', 'C']];
+
+    const w = 100, h = 100;
+    const toSvgX = (x: number) => (x / 100) * w;
+    const toSvgY = (y: number) => (y / 100) * h;
+
+    function Layout({ nodes, title, note }: { nodes: typeof nodesA, title: string, note: string }) {
+        const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
+        return (
+            <div className="space-y-1">
+                <p className="text-[10px] text-stone-400 font-bold text-center">{title}</p>
+                <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-[140px] mx-auto">
+                    {edges.map(([a, b]) => {
+                        const na = nodeMap[a], nb = nodeMap[b];
+                        if (!na || !nb) return null;
+                        return <line key={`${a}-${b}`} x1={toSvgX(na.x)} y1={toSvgY(na.y)}
+                            x2={toSvgX(nb.x)} y2={toSvgY(nb.y)} stroke="#e7e5e4" strokeWidth={1.5} />;
+                    })}
+                    {nodes.map(n => (
+                        <g key={n.id}>
+                            <circle cx={toSvgX(n.x)} cy={toSvgY(n.y)} r={n.r}
+                                fill={n.r > 10 ? '#059669' : '#d1fae5'} stroke="white" strokeWidth={1} />
+                            <text x={toSvgX(n.x)} y={toSvgY(n.y) + 3.5} fill={n.r > 10 ? 'white' : '#064e3b'}
+                                fontSize={5.5} textAnchor="middle" fontWeight={700}>{n.label}</text>
+                        </g>
+                    ))}
+                </svg>
+                <p className="text-[10px] text-stone-500 text-center">{note}</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid grid-cols-2 gap-4">
+            <Layout nodes={nodesA} title="Layout A: CEO centered" note="Implies CEO has power" />
+            <Layout nodes={nodesB} title="Layout B: CTO centered" note="Implies CTO has power" />
+        </div>
+    );
+}
+
 export default function HierarchyLesson() {
     return (
         <LessonPage
@@ -129,15 +190,49 @@ export default function HierarchyLesson() {
                 { sectionId: 'lab', slug: 'visual-emphasis', label: '3.3 — Visual Emphasis: color and size distortion in network layouts' },
             ]}
         >
-            <div className="prose prose-stone max-w-none">
+            <div className="space-y-6">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Hierarchy and network charts encode structural relationships — how entities are connected,
-                    nested, or flow between each other. Unlike other chart families, the visual encoding here
-                    is primarily topological rather than quantitative. The Gestalt principles of
-                    <strong> connection</strong> and <strong> proximity</strong> are the dominant perceptual
-                    mechanisms. The key risk is that visual layout algorithms impose order and centrality
-                    that reflects computational convenience rather than genuine structure in the data.
+                    Hierarchy and network charts encode structural relationships — how entities are connected, nested, or flow between each other. Unlike quantitative charts where a specific axis encodes a specific variable with measurable accuracy, hierarchy charts encode topology: which nodes are connected, how deep the hierarchy is, and what flows between clusters. The Gestalt principles of <strong>connection</strong> (lines between nodes imply direct relationships) and <strong>proximity</strong> (nearby nodes appear related) are the dominant perceptual mechanisms, working automatically in the viewer's visual system before any conscious reading occurs.
                 </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The most consequential risk in hierarchy charts is that <strong>visual layout algorithms impose structure that reflects computational convenience, not genuine data hierarchy</strong>. Force-directed graph layouts (the algorithm behind most network visualizations) place nodes in positions that minimize edge crossings and distribute nodes evenly — but these positions carry no semantic meaning. A node placed in the visual center appears more important, more central, and more powerful, even if it has the same number of connections as a node at the visual periphery. The same network data with different layout seeds or algorithms produces entirely different visual narratives about which node "controls" the structure.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    Choosing the right chart for hierarchical data requires understanding the structural type of the data itself: <strong>strict hierarchies</strong> (org charts, taxonomies, file systems) suit tree diagrams; <strong>hierarchical quantitative partitions</strong> (budget allocation, file size breakdown) suit treemaps or icicle charts; <strong>flow processes</strong> (conversion funnels, energy systems, money flows) suit Sankey diagrams; and <strong>genuine graph data</strong> (social networks, dependency graphs, biological pathways) suit network graphs. Choosing the wrong structural chart type imposes a false topology on the data — a tree diagram applied to graph-structured data creates false parent-child authority relationships that do not exist.
+                </p>
+
+                {/* Network layout demo */}
+                <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                        Same network data, different center node — implies different organizational power
+                    </p>
+                    <NetworkLayoutChart />
+                    <p className="text-[12px] text-stone-400 leading-relaxed">
+                        The network connections are identical in both layouts. Only the center node changes. Layout A implies CEO is the hub of organizational power; Layout B implies CTO is. The visual "importance" of being in the center is a layout artifact — not a data property.
+                    </p>
+                </div>
+
+                {/* Chart type decision guide */}
+                <div className="rounded-xl bg-stone-50 border border-stone-200 p-5">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">
+                        Which hierarchy chart for which data structure?
+                    </p>
+                    <div className="space-y-2">
+                        {[
+                            { structure: 'Strict parent-child hierarchy (1 parent per node)', chart: 'Tree diagram / dendrogram' },
+                            { structure: 'Hierarchical space-filling partition with quantities', chart: 'Treemap or icicle chart' },
+                            { structure: 'Flow volumes between defined stages', chart: 'Sankey diagram' },
+                            { structure: 'Bidirectional flows between a small node set', chart: 'Chord diagram' },
+                            { structure: 'Graph with multiple parents or cycles', chart: 'Network graph (DAG)' },
+                            { structure: 'Hierarchical clustering result from an algorithm', chart: 'Dendrogram' },
+                        ].map((d, i) => (
+                            <div key={i} className="flex items-start gap-3 text-[12px]">
+                                <span className="text-stone-400 flex-1 leading-relaxed">{d.structure}</span>
+                                <span className="shrink-0 text-brand font-semibold">→ {d.chart}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <ChartFamilyLesson

@@ -120,6 +120,58 @@ const charts: ChartSpec[] = [
     },
 ];
 
+
+// Spurious correlation demo chart
+function SpuriousCorrelationChart() {
+    // "ice cream sales vs drowning deaths" type spurious correlation
+    const data = [
+        { month: 'Jan', iceCream: 12, drowning: 8 },
+        { month: 'Feb', iceCream: 18, drowning: 10 },
+        { month: 'Mar', iceCream: 30, drowning: 16 },
+        { month: 'Apr', iceCream: 48, drowning: 22 },
+        { month: 'May', iceCream: 68, drowning: 35 },
+        { month: 'Jun', iceCream: 90, drowning: 52 },
+        { month: 'Jul', iceCream: 98, drowning: 58 },
+        { month: 'Aug', iceCream: 94, drowning: 54 },
+        { month: 'Sep', iceCream: 72, drowning: 38 },
+        { month: 'Oct', iceCream: 42, drowning: 20 },
+        { month: 'Nov', iceCream: 25, drowning: 12 },
+        { month: 'Dec', iceCream: 14, drowning: 9 },
+    ];
+    const w = 320, h = 130, pad = { l: 16, r: 16, t: 28, b: 30 };
+    const innerW = w - pad.l - pad.r;
+    const innerH = h - pad.t - pad.b;
+    const n = data.length;
+    const toX = (i: number) => pad.l + (i / (n - 1)) * innerW;
+    const toY1 = (v: number) => pad.t + (1 - v / 100) * innerH;
+    const toY2 = (v: number) => pad.t + (1 - v / 60) * innerH;
+
+    const iceLine = data.map((d, i) => `${i === 0 ? 'M' : 'L'} ${toX(i)} ${toY1(d.iceCream)}`).join(' ');
+    const drownLine = data.map((d, i) => `${i === 0 ? 'M' : 'L'} ${toX(i)} ${toY2(d.drowning)}`).join(' ');
+
+    return (
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+            <text x={pad.l} y={14} fill="#059669" fontSize={8} fontWeight={700}>Ice cream sales</text>
+            <text x={pad.l + 100} y={14} fill="#dc2626" fontSize={8} fontWeight={700}>Drowning deaths</text>
+            <text x={pad.l + 240} y={14} fill="#a8a29e" fontSize={7} fontStyle="italic">r = 0.97</text>
+
+            <path d={iceLine} fill="none" stroke="#059669" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={drownLine} fill="none" stroke="#dc2626" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+
+            {data.map((d, i) => (
+                <g key={d.month}>
+                    <text x={toX(i)} y={h - 6} fill="#a8a29e" fontSize={6} textAnchor="middle">{d.month}</text>
+                </g>
+            ))}
+
+            <rect x={pad.l} y={h - 28} width={w - pad.l - pad.r} height={14} rx={3} fill="#fef9c3" opacity={0.9} />
+            <text x={w / 2} y={h - 18} fill="#92400e" fontSize={7.5} textAnchor="middle" fontWeight={600}>
+                Confound: temperature drives BOTH variables. No causal link exists.
+            </text>
+        </svg>
+    );
+}
+
 export default function RelationshipLesson() {
     return (
         <LessonPage
@@ -129,14 +181,58 @@ export default function RelationshipLesson() {
                 { sectionId: 'lab', slug: 'annotation-trend', label: '3.4 — Annotation & Trend: misleading trendlines on scatter data' },
             ]}
         >
-            <div className="prose prose-stone max-w-none">
+            <div className="space-y-6">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Relationship charts encode how two or more variables co-vary. The scatter plot is the foundational
-                    form, exploiting the most accurate visual encoding — position on a common scale — for both axes
-                    simultaneously. The core ethical risk in relationship charts is the conflation of visual correlation
-                    with causal inference. A well-placed regression line makes any correlation look like a law of nature.
-                    <strong> Always distinguish observed correlation from proven causation.</strong>
+                    Relationship charts encode how two or more variables co-vary. The scatter plot is the foundational form, exploiting the most accurate visual encoding — position on a common scale — for both axes simultaneously. It is the most versatile exploratory tool in data visualization: it reveals correlation direction and strength, identifies outliers, exposes non-linear patterns, and reveals sub-groups that aggregate statistics would conceal. Yet the scatter plot is also one of the most commonly misinterpreted charts because of the fundamental confusion between <strong>visual correlation and causal relationship</strong>.
                 </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    A regression line on a scatter plot is among the most persuasive visual artifacts in data communication. It implies: (1) a linear relationship exists, (2) it extends across the full range shown, and (3) the relationship is stable enough to support extrapolation. All three implications can be false simultaneously while the line itself is technically "correct" for the observed data. The scale ratio between x and y axes directly controls how steep the regression line appears — a 45° line can be achieved with any data by adjusting axis ranges, making the apparent "strength" of the relationship a design choice as much as a data property.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The deepest risk in relationship charts is <strong>spurious correlation</strong>: two variables may share a high correlation coefficient (r ≈ 0.95) with zero causal connection because both are driven by a third, unmeasured variable (a "confound"). Ice cream sales and drowning deaths correlate strongly across months — not because one causes the other, but because both are driven by temperature and seasonality. A scatter plot of the two variables would show a tight, apparently causal relationship. Always ask: "What third variable could be driving both of these?" before interpreting a correlation as meaningful.
+                </p>
+
+                {/* Spurious correlation example */}
+                <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                        Spurious correlation: r = 0.97, zero causal link
+                    </p>
+                    <SpuriousCorrelationChart />
+                    <p className="text-[12px] text-stone-400 leading-relaxed">
+                        Both variables move in lockstep because summer drives both. A scatter plot of ice cream vs. drowning shows a near-perfect line — yet eating ice cream does not cause drowning. This is the canonical example of a confounded relationship. Always seek the confound.
+                    </p>
+                </div>
+
+                {/* Relationship chart risks summary */}
+                <div className="rounded-xl bg-red-50 border border-red-200 p-5">
+                    <p className="text-[11px] font-bold text-red-600 uppercase tracking-wider mb-3">
+                        The three most common relationship chart manipulation patterns
+                    </p>
+                    <div className="space-y-2">
+                        {[
+                            {
+                                pattern: 'Axis range selection',
+                                desc: 'Choosing x/y axis ranges to make a weak correlation appear strong or a strong one appear weak. A 45° regression line looks equally impressive regardless of actual r².',
+                            },
+                            {
+                                pattern: 'Extrapolation beyond data',
+                                desc: 'Extending the regression line beyond the observed data range implies the relationship holds in regions that have not been measured. This is often shown in forecasts.',
+                            },
+                            {
+                                pattern: 'Cherry-picked subgroup',
+                                desc: 'Showing a regression for a specific subpopulation where the relationship is strong, while omitting the full dataset where no relationship exists.',
+                            },
+                        ].map((r, i) => (
+                            <div key={i} className="flex gap-3 text-[12px]">
+                                <span className="text-red-400 shrink-0 font-bold">#{i + 1}</span>
+                                <div>
+                                    <span className="font-bold text-red-800">{r.pattern}: </span>
+                                    <span className="text-red-700">{r.desc}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <ChartFamilyLesson

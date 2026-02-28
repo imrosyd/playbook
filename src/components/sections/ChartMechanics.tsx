@@ -134,10 +134,10 @@ export default function ChartMechanics() {
     return (
         <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
+                <h2 className="text-3xl font-bold text-stone-900 tracking-tight">
                     Chart Mechanics
                 </h2>
-                <p className="mt-3 text-lg text-slate-500 max-w-2xl mx-auto">
+                <p className="mt-3 text-lg text-stone-500 max-w-2xl mx-auto">
                     Every chart type maps data to a perceptual channel. Understanding these channels reveals
                     where distortion can — and does — enter.
                 </p>
@@ -152,8 +152,8 @@ export default function ChartMechanics() {
                             key={ct.key}
                             onClick={() => setActiveType(ct.key)}
                             className={`flex items-center gap-2 px-5 py-3 rounded-xl border text-sm font-medium transition-all ${isActive
-                                    ? 'bg-blue-50 border-blue-300 text-blue-700 shadow-sm'
-                                    : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                                ? 'bg-brand-muted border-brand/40 text-brand shadow-sm'
+                                : 'bg-white border-stone-200 text-stone-600 hover:border-stone-300'
                                 }`}
                         >
                             <Icon size={18} />
@@ -165,38 +165,38 @@ export default function ChartMechanics() {
 
             <div className="grid lg:grid-cols-5 gap-8">
                 <div className="lg:col-span-2 flex items-center justify-center">
-                    <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                    <div className="bg-stone-50 rounded-2xl p-6 border border-stone-100">
                         <Demo />
                     </div>
                 </div>
 
                 <div className="lg:col-span-3 space-y-6">
-                    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                        <h3 className="text-lg font-bold text-slate-900 mb-4">{active.title}</h3>
+                    <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
+                        <h3 className="text-lg font-bold text-stone-900 mb-4">{active.title}</h3>
 
                         <div className="space-y-4">
                             <div>
-                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Best For</span>
-                                <p className="text-sm text-slate-700 mt-1">{active.bestFor}</p>
+                                <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Best For</span>
+                                <p className="text-sm text-stone-700 mt-1">{active.bestFor}</p>
                             </div>
                             <div>
-                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Perceptual Channel</span>
-                                <p className="text-sm text-slate-700 mt-1">{active.perceptualChannel}</p>
+                                <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Perceptual Channel</span>
+                                <p className="text-sm text-stone-700 mt-1">{active.perceptualChannel}</p>
                             </div>
                             <div>
-                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Common Misuse</span>
+                                <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">Common Misuse</span>
                                 <p className="text-sm text-red-600 mt-1">{active.commonMisuse}</p>
                             </div>
-                            <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-                                <ArrowRight size={14} className="text-blue-500" />
-                                <span className="text-xs font-medium text-blue-600">{active.accuracy}</span>
+                            <div className="flex items-center gap-2 pt-2 border-t border-stone-100">
+                                <ArrowRight size={14} className="text-brand" />
+                                <span className="text-xs font-medium text-brand">{active.accuracy}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-slate-50 rounded-xl border border-slate-100 p-5">
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                            Cleveland & McGill Accuracy Hierarchy
+                    <div className="bg-stone-50 rounded-xl border border-stone-100 p-5">
+                        <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
+                            Cleveland &amp; McGill Accuracy Hierarchy
                         </span>
                         <div className="mt-3 space-y-2">
                             {[
@@ -207,14 +207,14 @@ export default function ChartMechanics() {
                                 { channel: 'Color saturation', accuracy: 'Least accurate', pct: 25 },
                             ].map((item) => (
                                 <div key={item.channel} className="flex items-center gap-3">
-                                    <div className="w-32 text-xs text-slate-600">{item.channel}</div>
-                                    <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+                                    <div className="w-32 text-xs text-stone-600">{item.channel}</div>
+                                    <div className="flex-1 h-2 bg-stone-200 rounded-full overflow-hidden">
                                         <div
-                                            className="h-full bg-blue-500 rounded-full"
+                                            className="h-full bg-brand rounded-full"
                                             style={{ width: `${item.pct}%` }}
                                         />
                                     </div>
-                                    <div className="w-24 text-xs text-slate-500 text-right">{item.accuracy}</div>
+                                    <div className="w-24 text-xs text-stone-500 text-right">{item.accuracy}</div>
                                 </div>
                             ))}
                         </div>

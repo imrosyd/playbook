@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import LessonPage from '../../layout/LessonPage';
 import ChartFamilyLesson, { type ChartSpec } from './ChartFamilyLesson';
 import {
@@ -195,6 +196,101 @@ const charts: ChartSpec[] = [
     },
 ];
 
+// Aspect ratio banking demo
+function BankingDemo() {
+    const [narrow, setNarrow] = useState(true);
+    const data = [2, 3.5, 3, 5, 4.5, 7, 6, 8.5, 8, 10];
+    const w = narrow ? 90 : 280;
+    const h = 100;
+    const pad = { l: 8, r: 8, t: 10, b: 10 };
+    const innerW = w - pad.l - pad.r;
+    const innerH = h - pad.t - pad.b;
+    const n = data.length;
+    const yMin = Math.min(...data) - 0.5;
+    const yMax = Math.max(...data) + 0.5;
+    const toX = (i: number) => pad.l + (i / (n - 1)) * innerW;
+    const toY = (v: number) => pad.t + (1 - (v - yMin) / (yMax - yMin)) * innerH;
+
+    return (
+        <div className="space-y-3">
+            <div className="flex gap-2 flex-wrap">
+                {[true, false].map(n => (
+                    <button key={String(n)} onClick={() => setNarrow(n)}
+                        className={`px-3 py-1 rounded-lg text-[11px] font-semibold border transition-all ${narrow === n
+                            ? 'bg-brand text-white border-brand'
+                            : 'bg-white text-stone-500 border-stone-200'}`}>
+                        {n ? 'Narrow (steep slopes)' : 'Wide — banked to 45°'}
+                    </button>
+                ))}
+            </div>
+            <div className="flex justify-center">
+                <svg viewBox={`0 0 ${w} ${h}`} style={{ width: w, height: h }}
+                    className="border border-stone-100 rounded-lg bg-stone-50">
+                    {data.map((v, i) => i > 0 && (
+                        <line key={i}
+                            x1={toX(i - 1)} y1={toY(data[i - 1])}
+                            x2={toX(i)} y2={toY(v)}
+                            stroke="#059669" strokeWidth={2} strokeLinecap="round" />
+                    ))}
+                    {data.map((v, i) => (
+                        <circle key={i} cx={toX(i)} cy={toY(v)} r={3} fill="#059669" />
+                    ))}
+                </svg>
+            </div>
+            <p className="text-[11px] text-stone-400 leading-relaxed">
+                {narrow
+                    ? 'Narrow aspect ratio: slopes are steep, making small fluctuations look dramatic. Hard to compare slope angles.'
+                    : 'Wide (banked to 45°): average slope ≈ 45°. Slope differences between segments are most accurately perceived at this ratio.'}
+            </p>
+        </div>
+    );
+}
+
+// Chart type accuracy for time series
+function TimeSeriesAccuracyChart() {
+    const types = [
+        { name: 'Line chart', accuracy: 91, risk: 'Low' },
+        { name: 'Area chart', accuracy: 72, risk: 'Medium' },
+        { name: 'Stacked area', accuracy: 54, risk: 'High' },
+        { name: 'Streamgraph', accuracy: 31, risk: 'Very High' },
+        { name: 'Bump chart', accuracy: 48, risk: 'High' },
+    ];
+    const w = 320, h = 130, pad = { l: 90, r: 60, t: 14, b: 24 };
+    const innerW = w - pad.l - pad.r;
+    const innerH = h - pad.t - pad.b;
+    const barH = 14;
+    const gap = (innerH - types.length * barH) / (types.length + 1);
+    const riskColor = (r: string) => r === 'Low' ? '#059669' : r === 'Medium' ? '#f59e0b' : r === 'High' ? '#ef4444' : '#991b1b';
+
+    return (
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+            {[0, 25, 50, 75, 100].map(v => (
+                <g key={v}>
+                    <line x1={pad.l + (v / 100) * innerW} x2={pad.l + (v / 100) * innerW}
+                        y1={pad.t} y2={h - pad.b} stroke="#f5f5f4" strokeWidth={1} />
+                    <text x={pad.l + (v / 100) * innerW} y={h - 6}
+                        fill="#a8a29e" fontSize={7} textAnchor="middle">{v}%</text>
+                </g>
+            ))}
+            {types.map((t, i) => {
+                const y = pad.t + gap + i * (barH + gap);
+                const bw = (t.accuracy / 100) * innerW;
+                const c = riskColor(t.risk);
+                return (
+                    <g key={t.name}>
+                        <text x={pad.l - 6} y={y + barH / 2 + 4} fill="#78716c" fontSize={8} textAnchor="end">{t.name}</text>
+                        <rect x={pad.l} y={y} width={bw} height={barH} fill={c} rx={2} opacity={0.85} />
+                        <text x={pad.l + bw + 4} y={y + barH / 2 + 4} fill={c} fontSize={8} fontWeight={700}>{t.accuracy}%</text>
+                    </g>
+                );
+            })}
+            <text x={pad.l + innerW / 2} y={pad.t - 2} fill="#78716c" fontSize={7.5} textAnchor="middle">
+                Perceptual accuracy for value comparison (% correct at same scale)
+            </text>
+        </svg>
+    );
+}
+
 export default function TimeSeriesLesson() {
     return (
         <LessonPage
@@ -204,14 +300,38 @@ export default function TimeSeriesLesson() {
                 { sectionId: 'lab', slug: 'axis-scale', label: '3.1 — Axis & Scale: dual-axis and scale manipulation in time series' },
             ]}
         >
-            <div className="prose prose-stone max-w-none">
+            <div className="space-y-6">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Time-series charts encode how a quantitative variable changes across an ordered temporal dimension.
-                    The line chart is the canonical form because it exploits the pre-attentive attribute of
-                    <strong> slope</strong> — the human visual system is highly sensitive to the angle and direction of
-                    line segments. Choice of time granularity, y-axis baseline, and interpolation method each carry
-                    implicit assumptions that can significantly alter the perceived narrative of the same underlying data.
+                    Time-series charts encode how a quantitative variable changes across an ordered temporal dimension. The line chart is the canonical form because it exploits the pre-attentive attribute of <strong>slope</strong> — the human visual system is highly sensitive to the angle and direction of line segments, detecting differences in slope even when values are close. This makes line charts among the most perceptually efficient chart types for temporal data.
                 </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The choice of chart variant within the time-series family has significant implications for accuracy. A simple line chart allows position-based decoding — the most accurate perceptual channel. Area charts add filled regions that create false impressions of cumulative volume. Stacked areas require the viewer to mentally subtract lower layers to read upper ones. Streamgraphs sacrifice all positional accuracy for aesthetic flow. Each variant trades accuracy for a different visual effect — understanding this trade-off is essential for choosing the right form.
+                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    Aspect ratio is one of the most overlooked design decisions in time-series visualization. William Cleveland's "banking to 45°" principle (1993) demonstrated that slope perception is most accurate when the average absolute slope of line segments is approximately 45° from horizontal. A chart that is too narrow amplifies small fluctuations into dramatic-looking spikes; a chart that is too wide compresses genuine trends into nearly flat lines. The aspect ratio should be chosen to maximize the viewer's ability to distinguish real slope differences.
+                </p>
+
+                {/* Accuracy comparison */}
+                <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                        Perceptual accuracy by time-series chart type
+                    </p>
+                    <TimeSeriesAccuracyChart />
+                    <p className="text-[12px] text-stone-400 leading-relaxed">
+                        Line charts are the most accurate form. Each step toward aesthetic complexity (stacked area → streamgraph) degrades value-comparison accuracy. Choose the simpler form unless you have a strong specific reason.
+                    </p>
+                </div>
+
+                {/* Banking demo */}
+                <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                        Aspect ratio banking: same data, different interpretation
+                    </p>
+                    <p className="text-[13px] text-stone-500 leading-relaxed">
+                        Cleveland's banking principle: slope perception is best when the average slope angle ≈ 45°. Toggle between a narrow and banked aspect ratio to see how the same trend reads very differently.
+                    </p>
+                    <BankingDemo />
+                </div>
             </div>
 
             <ChartFamilyLesson
