@@ -1,0 +1,386 @@
+import { useState, useEffect, useMemo } from 'react';
+import { Shield, TrendingUp, Flame, Compass } from 'lucide-react';
+import LessonPage from '../../layout/LessonPage';
+import BarChart from '../../charts/BarChart';
+import ScoreGauge from '../../ui/ScoreGauge';
+import { evaluateChartState, computeLinearRegression } from '../../../lib/scoring';
+import { generateSimulation, parseTemplatesFromDB } from '../../../lib/simulation';
+import { transformData } from '../../../lib/transforms';
+import { supabase } from '../../../lib/supabase';
+import { DEFAULT_PARAMS } from '../../../types/chart';
+import type { ChartState, Scenario, DataPoint, ChartParams, Archetype } from '../../../types/chart';
+
+interface CrossRef {
+    sectionId: string;
+    slug: string;
+    label: string;
+}
+
+interface SimulatorLessonProps {
+    scenarioKey: string;
+    crossRefs: CrossRef[];
+}
+
+// Hardcoded fallback scenarios by domain key
+const FALLBACK_SCENARIOS: Record<string, Scenario> = {
+    revenue: {
+        id: 'fallback-revenue',
+        title: 'Monthly Revenue',
+        domain: 'revenue',
+        description: 'Monthly revenue performance over the past 12 months',
+        decisionTimeframe: 'month',
+        dataSpansOrdersOfMagnitude: false,
+        baseData: [
+            { label: 'Jan', value: 82 }, { label: 'Feb', value: 78 }, { label: 'Mar', value: 91 },
+            { label: 'Apr', value: 85 }, { label: 'May', value: 94 }, { label: 'Jun', value: 88 },
+            { label: 'Jul', value: 97 }, { label: 'Aug', value: 92 }, { label: 'Sep', value: 103 },
+            { label: 'Oct', value: 98 }, { label: 'Nov', value: 110 }, { label: 'Dec', value: 107 },
+        ],
+        sortOrder: 0,
+    },
+    churn: {
+        id: 'fallback-churn',
+        title: 'Customer Churn Rate',
+        domain: 'churn',
+        description: 'Monthly customer churn rate (%) over the past 12 months',
+        decisionTimeframe: 'month',
+        dataSpansOrdersOfMagnitude: false,
+        baseData: [
+            { label: 'Jan', value: 3.2 }, { label: 'Feb', value: 3.8 }, { label: 'Mar', value: 2.9 },
+            { label: 'Apr', value: 4.1 }, { label: 'May', value: 3.5 }, { label: 'Jun', value: 4.7 },
+            { label: 'Jul', value: 5.2 }, { label: 'Aug', value: 4.4 }, { label: 'Sep', value: 3.9 },
+            { label: 'Oct', value: 4.8 }, { label: 'Nov', value: 5.6 }, { label: 'Dec', value: 5.1 },
+        ],
+        sortOrder: 1,
+    },
+    marketing: {
+        id: 'fallback-marketing',
+        title: 'Marketing ROI',
+        domain: 'marketing',
+        description: 'Monthly marketing return on investment by channel',
+        decisionTimeframe: 'month',
+        dataSpansOrdersOfMagnitude: false,
+        baseData: [
+            { label: 'Email', value: 320 }, { label: 'SEO', value: 480 }, { label: 'Paid Search', value: 210 },
+            { label: 'Social', value: 150 }, { label: 'Display', value: 90 }, { label: 'Referral', value: 380 },
+            { label: 'Content', value: 290 }, { label: 'Video', value: 175 },
+        ],
+        sortOrder: 2,
+    },
+    inventory: {
+        id: 'fallback-inventory',
+        title: 'Inventory Turnover',
+        domain: 'inventory',
+        description: 'Inventory turnover ratio by product category',
+        decisionTimeframe: 'quarter',
+        dataSpansOrdersOfMagnitude: false,
+        baseData: [
+            { label: 'Electronics', value: 8.2 }, { label: 'Apparel', value: 4.1 }, { label: 'Home', value: 3.7 },
+            { label: 'Food', value: 12.4 }, { label: 'Toys', value: 5.9 }, { label: 'Sports', value: 6.3 },
+            { label: 'Books', value: 2.8 }, { label: 'Beauty', value: 7.1 },
+        ],
+        sortOrder: 3,
+    },
+    project: {
+        id: 'fallback-project',
+        title: 'Project Velocity',
+        domain: 'project',
+        description: 'Sprint velocity (story points completed) over 10 sprints',
+        decisionTimeframe: 'week',
+        dataSpansOrdersOfMagnitude: false,
+        baseData: [
+            { label: 'S1', value: 34 }, { label: 'S2', value: 28 }, { label: 'S3', value: 41 },
+            { label: 'S4', value: 38 }, { label: 'S5', value: 45 }, { label: 'S6', value: 31 },
+            { label: 'S7', value: 48 }, { label: 'S8', value: 52 }, { label: 'S9', value: 44 },
+            { label: 'S10', value: 55 },
+        ],
+        sortOrder: 4,
+    },
+    budget: {
+        id: 'fallback-budget',
+        title: 'Budget vs. Actuals',
+        domain: 'budget',
+        description: 'Department spending as % of allocated budget (Q3)',
+        decisionTimeframe: 'quarter',
+        dataSpansOrdersOfMagnitude: false,
+        baseData: [
+            { label: 'Engineering', value: 94 }, { label: 'Sales', value: 108 }, { label: 'Marketing', value: 117 },
+            { label: 'HR', value: 88 }, { label: 'Finance', value: 76 }, { label: 'Product', value: 102 },
+            { label: 'Support', value: 91 }, { label: 'Legal', value: 83 },
+        ],
+        sortOrder: 5,
+    },
+};
+
+const MANIPULATED_PARAMS: ChartParams = {
+    ...DEFAULT_PARAMS,
+    axisBaselinePct: 55,
+    threeD: true,
+    smoothingWindow: 4,
+    annotation: {
+        enabled: true,
+        text: 'Strong upward trajectory — recommend expansion',
+        honest: false,
+    },
+    trendline: 'linear',
+};
+
+const ARCHETYPE_CONFIG: Record<Archetype, {
+    icon: typeof Shield;
+    color: string;
+    bgColor: string;
+    borderColor: string;
+}> = {
+    skeptic: { icon: Shield, color: '#1e40af', bgColor: '#eff6ff', borderColor: '#bfdbfe' },
+    optimist: { icon: TrendingUp, color: '#047857', bgColor: '#ecfdf5', borderColor: '#a7f3d0' },
+    firefighter: { icon: Flame, color: '#b91c1c', bgColor: '#fef2f2', borderColor: '#fecaca' },
+    strategist: { icon: Compass, color: '#7c2d12', bgColor: '#fff7ed', borderColor: '#fed7aa' },
+};
+
+const TRUST_COLORS: Record<string, string> = {
+    trusting: '#10b981',
+    cautious: '#f59e0b',
+    suspicious: '#ef4444',
+    hostile: '#991b1b',
+};
+
+export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLessonProps) {
+    const [scenario, setScenario] = useState<Scenario>(
+        FALLBACK_SCENARIOS[scenarioKey] ?? FALLBACK_SCENARIOS['revenue']
+    );
+    const [isManipulated, setIsManipulated] = useState(false);
+    const [templates, setTemplates] = useState<ReturnType<typeof parseTemplatesFromDB>>([]);
+    const [expandedArchetype, setExpandedArchetype] = useState<Archetype | null>(null);
+
+    useEffect(() => {
+        async function loadData() {
+            try {
+                const { data: scenarioRows, error } = await supabase
+                    .from('scenarios')
+                    .select('*')
+                    .ilike('domain', scenarioKey);
+
+                if (!error && scenarioRows && scenarioRows.length > 0) {
+                    const row = scenarioRows[0];
+                    setScenario({
+                        id: row.id,
+                        title: row.title,
+                        domain: row.domain,
+                        description: row.description,
+                        decisionTimeframe: row.decision_timeframe,
+                        dataSpansOrdersOfMagnitude: row.data_spans_orders_of_magnitude ?? false,
+                        baseData: Array.isArray(row.base_data) ? row.base_data as DataPoint[] : scenario.baseData,
+                        sortOrder: row.sort_order ?? 0,
+                    });
+                }
+            } catch {
+                // keep fallback
+            }
+
+            try {
+                const { data: templateRows, error: tErr } = await supabase
+                    .from('reaction_templates')
+                    .select('*');
+                if (!tErr && templateRows) {
+                    setTemplates(parseTemplatesFromDB(templateRows));
+                }
+            } catch {
+                // keep empty
+            }
+        }
+        loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [scenarioKey]);
+
+    const activeParams = isManipulated ? MANIPULATED_PARAMS : DEFAULT_PARAMS;
+
+    const chartState: ChartState = useMemo(() => {
+        const processedData = transformData(scenario.baseData, activeParams);
+        const regressionPoints = processedData.map((d, i) => ({ x: i, y: d.value }));
+        const regression = computeLinearRegression(regressionPoints);
+        const significant = regression.rSquared >= 0.3 && processedData.length >= 4;
+
+        return {
+            datasetId: scenario.id,
+            data: scenario.baseData,
+            chartType: 'bar',
+            params: activeParams,
+            metadata: {
+                scenarioTitle: scenario.title,
+                domain: scenario.domain,
+                decisionTimeframe: scenario.decisionTimeframe,
+                dataSpansOrdersOfMagnitude: scenario.dataSpansOrdersOfMagnitude,
+                statisticallySignificantTrend: significant,
+                trendlineRSquared: regression.rSquared,
+            },
+        };
+    }, [scenario, activeParams]);
+
+    const evaluation = useMemo(() => evaluateChartState(chartState), [chartState]);
+
+    const simulation = useMemo(
+        () => generateSimulation(chartState, evaluation, templates),
+        [chartState, evaluation, templates]
+    );
+
+    return (
+        <LessonPage crossRefs={crossRefs}>
+            <div className="space-y-8">
+                <p className="text-[15px] text-stone-600 leading-relaxed">
+                    The same dataset can tell radically different stories depending on how it is presented. Toggle
+                    between the honest and manipulated versions of this {scenario.domain} chart to observe how
+                    visual choices shift executive perception — even when the underlying numbers are identical.
+                </p>
+
+                {/* Toggle */}
+                <div className="flex items-center gap-1 p-1 bg-stone-100 rounded-xl w-fit border border-stone-200">
+                    <button
+                        onClick={() => setIsManipulated(false)}
+                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${!isManipulated
+                                ? 'bg-white text-emerald-700 shadow-sm border border-stone-200'
+                                : 'text-stone-500 hover:text-stone-700'
+                            }`}
+                    >
+                        Honest Presentation
+                    </button>
+                    <button
+                        onClick={() => setIsManipulated(true)}
+                        className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isManipulated
+                                ? 'bg-white text-red-700 shadow-sm border border-stone-200'
+                                : 'text-stone-500 hover:text-stone-700'
+                            }`}
+                    >
+                        Manipulated Version
+                    </button>
+                </div>
+
+                {/* Chart + Score */}
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 overflow-x-auto">
+                        <div className="flex items-center justify-between mb-3">
+                            <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">
+                                {scenario.title}
+                            </p>
+                            {isManipulated && (
+                                <span className="text-xs font-semibold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
+                                    Manipulated
+                                </span>
+                            )}
+                        </div>
+                        <BarChart state={chartState} width={560} height={340} />
+                    </div>
+
+                    <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+                        <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-4">
+                            Integrity Evaluation
+                        </p>
+                        <ScoreGauge evaluation={evaluation} />
+                    </div>
+                </div>
+
+                {/* Executive archetype reaction cards */}
+                <div className="space-y-3">
+                    <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
+                        Executive Archetype Reactions
+                    </p>
+                    <p className="text-[13px] text-stone-500">
+                        Click an archetype card to reveal their reaction to this {isManipulated ? 'manipulated' : 'honest'} presentation.
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {simulation.reactions.map((reaction) => {
+                            const config = ARCHETYPE_CONFIG[reaction.archetype];
+                            const Icon = config.icon;
+                            const trustColor = TRUST_COLORS[reaction.trustLevel];
+                            const isExpanded = expandedArchetype === reaction.archetype;
+
+                            return (
+                                <div
+                                    key={reaction.archetype}
+                                    className="rounded-xl border p-4 cursor-pointer transition-all duration-200 hover:shadow-md"
+                                    style={{ borderColor: config.borderColor, backgroundColor: config.bgColor }}
+                                    onClick={() =>
+                                        setExpandedArchetype(isExpanded ? null : reaction.archetype)
+                                    }
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div
+                                            className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                                            style={{ backgroundColor: `${config.color}18` }}
+                                        >
+                                            <Icon size={18} style={{ color: config.color }} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="text-sm font-semibold" style={{ color: config.color }}>
+                                                {reaction.archetypeLabel}
+                                            </div>
+                                            <div className="flex items-center gap-1.5 mt-0.5">
+                                                <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: trustColor }} />
+                                                <span className="text-xs text-stone-500 capitalize">{reaction.trustLevel}</span>
+                                            </div>
+                                        </div>
+                                        <span className="text-xs text-stone-400 shrink-0">
+                                            {isExpanded ? 'Hide' : 'Reveal'}
+                                        </span>
+                                    </div>
+
+                                    {isExpanded && (
+                                        <div className="mt-4 space-y-3 border-t pt-3" style={{ borderColor: config.borderColor }}>
+                                            <p className="text-[13px] text-stone-700 leading-relaxed">
+                                                "{reaction.reactionText}"
+                                            </p>
+                                            <div className="text-xs text-stone-500">
+                                                <span className="font-medium">Decision tendency:</span>{' '}
+                                                {reaction.decisionTendency}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                {/* Decision outcome */}
+                <div className="rounded-xl border border-stone-200 bg-stone-50 p-5">
+                    <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">
+                        Decision Room Outcome
+                    </p>
+                    <p className="text-[14px] text-stone-700 leading-relaxed">
+                        {simulation.decisionOutcome}
+                    </p>
+                </div>
+
+                {/* Manipulation details when manipulated */}
+                {isManipulated && (
+                    <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+                        <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-3">
+                            Active Manipulations
+                        </p>
+                        <ul className="space-y-2 text-[13px] text-red-800">
+                            <li className="flex items-start gap-2">
+                                <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
+                                Axis baseline truncated to 55% — differences appear 3-5x larger than actual
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
+                                3D perspective effect applied — adds ~50% magnitude estimation error
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
+                                4-period smoothing — hides short-term variance and volatility
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
+                                Misleading annotation: "Strong upward trajectory — recommend expansion" exploits anchoring bias
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
+                                Linear trendline fitted to smoothed data — artificially inflated R²
+                            </li>
+                        </ul>
+                    </div>
+                )}
+            </div>
+        </LessonPage>
+    );
+}
