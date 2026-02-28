@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Scenario {
+  id                               String   @id @default(uuid())
+  title                            String
+  domain                           String   @default("revenue")
+  description                      String   @default("")
+  decision_timeframe               String   @default("quarter")
+  data_spans_orders_of_magnitude   Boolean  @default(false)
+  base_data                        String   @default("[]")
+  sort_order                       Int      @default(0)
+  created_at                       DateTime @default(now())
+
+  sessions UserLabSession[]
+}
+
+model ExecutiveReaction {
+  id                    String   @id @default(uuid())
+  archetype             String
+  credibility_band      String
+  dominant_manipulation String   @default("general")
+  template_text         String
+  decision_tendency     String   @default("")
+  created_at            DateTime @default(now())
+}
+
+model CognitivePrinciple {
+  id                String @id @default(uuid())
+  principle_key     String @unique
+  title             String
+  description       String @default("")
+  research_citation String @default("")
+  sort_order        Int    @default(0)
+}
+
+model EthicalLevel {
+  id           String @id @default(uuid())
+  level        Int
+  name         String
+  description  String @default("")
+  example_text String @default("")
+  color_code   String @default("#6B7280")
+}
+
+model UserLabSession {
+  id                String   @id @default(uuid())
+  user_id           String
+  scenario_id       String
+  chart_state       String   @default("{}")
+  credibility_score Float    @default(0)
+  score_breakdown   String   @default("[]")
+  created_at        DateTime @default(now())
+
+  scenario Scenario @relation(fields: [scenario_id], references: [id])
+}

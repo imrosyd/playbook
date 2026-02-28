@@ -6,7 +6,6 @@ import { evaluateChartState } from '../../lib/scoring';
 import { computeLinearRegression } from '../../lib/scoring';
 import { generateSimulation, parseTemplatesFromDB } from '../../lib/simulation';
 import { transformData } from '../../lib/transforms';
-import { supabase } from '../../lib/supabase';
 import BarChart from '../charts/BarChart';
 import ControlDock from '../lab/ControlDock';
 import ScoreGauge from '../ui/ScoreGauge';
@@ -72,26 +71,31 @@ export default function ManipulationLab() {
 
     useEffect(() => {
         async function load() {
-            const [scenRes, tmplRes] = await Promise.all([
-                supabase.from('scenarios').select('*').order('sort_order'),
-                supabase.from('executive_reactions').select('*'),
-            ]);
-            if (scenRes.data && scenRes.data.length > 0) {
-                setScenarios(
-                    scenRes.data.map((s: Record<string, unknown>) => ({
-                        id: s.id as string,
-                        title: s.title as string,
-                        domain: s.domain as Scenario['domain'],
-                        description: s.description as string,
-                        decisionTimeframe: s.decision_timeframe as Scenario['decisionTimeframe'],
-                        dataSpansOrdersOfMagnitude: s.data_spans_orders_of_magnitude as boolean,
-                        baseData: s.base_data as DataPoint[],
-                        sortOrder: s.sort_order as number,
-                    }))
-                );
-            }
-            if (tmplRes.data) {
-                setTemplates(parseTemplatesFromDB(tmplRes.data));
+            try {
+                const [scenRes, tmplRes] = await Promise.all([
+                    fetch('/api/scenarios').then(res => res.json()),
+                    fetch('/api/executive_reactions').then(res => res.json()),
+                ]);
+
+                if (scenRes && scenRes.length > 0) {
+                    setScenarios(
+                        scenRes.map((s: Record<string, unknown>) => ({
+                            id: s.id as string,
+                            title: s.title as string,
+                            domain: s.domain as Scenario['domain'],
+                            description: s.description as string,
+                            decisionTimeframe: (s.decision_timeframe || s.decisionTimeframe) as Scenario['decisionTimeframe'],
+                            dataSpansOrdersOfMagnitude: (s.data_spans_orders_of_magnitude || s.dataSpansOrdersOfMagnitude) as boolean,
+                            baseData: (s.base_data || s.baseData) as DataPoint[],
+                            sortOrder: (s.sort_order || s.sortOrder) as number,
+                        }))
+                    );
+                }
+                if (tmplRes) {
+                    setTemplates(parseTemplatesFromDB(tmplRes));
+                }
+            } catch (err) {
+                console.error('Failed to load lab data:', err);
             }
         }
         load();
@@ -208,8 +212,8 @@ export default function ManipulationLab() {
                         <button
                             onClick={() => setActiveTab('score')}
                             className={`flex-1 text-xs font-medium py-2 rounded-md transition-colors ${activeTab === 'score'
-                                    ? 'bg-white text-slate-800 shadow-sm'
-                                    : 'text-slate-500 hover:text-slate-700'
+                                ? 'bg-white text-slate-800 shadow-sm'
+                                : 'text-slate-500 hover:text-slate-700'
                                 }`}
                         >
                             Credibility Score
@@ -217,8 +221,8 @@ export default function ManipulationLab() {
                         <button
                             onClick={() => setActiveTab('executive')}
                             className={`flex-1 text-xs font-medium py-2 rounded-md transition-colors ${activeTab === 'executive'
-                                    ? 'bg-white text-slate-800 shadow-sm'
-                                    : 'text-slate-500 hover:text-slate-700'
+                                ? 'bg-white text-slate-800 shadow-sm'
+                                : 'text-slate-500 hover:text-slate-700'
                                 }`}
                         >
                             Executive Reactions

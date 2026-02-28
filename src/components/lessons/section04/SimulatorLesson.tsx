@@ -6,7 +6,6 @@ import ScoreGauge from '../../ui/ScoreGauge';
 import { evaluateChartState, computeLinearRegression } from '../../../lib/scoring';
 import { generateSimulation, parseTemplatesFromDB } from '../../../lib/simulation';
 import { transformData } from '../../../lib/transforms';
-import { supabase } from '../../../lib/supabase';
 import { DEFAULT_PARAMS } from '../../../types/chart';
 import type { ChartState, Scenario, DataPoint, ChartParams, Archetype } from '../../../types/chart';
 
@@ -155,34 +154,36 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
     useEffect(() => {
         async function loadData() {
             try {
-                const { data: scenarioRows, error } = await supabase
-                    .from('scenarios')
-                    .select('*')
-                    .ilike('domain', scenarioKey);
-
-                if (!error && scenarioRows && scenarioRows.length > 0) {
-                    const row = scenarioRows[0];
-                    setScenario({
-                        id: row.id,
-                        title: row.title,
-                        domain: row.domain,
-                        description: row.description,
-                        decisionTimeframe: row.decision_timeframe,
-                        dataSpansOrdersOfMagnitude: row.data_spans_orders_of_magnitude ?? false,
-                        baseData: Array.isArray(row.base_data) ? row.base_data as DataPoint[] : scenario.baseData,
-                        sortOrder: row.sort_order ?? 0,
-                    });
+                const response = await fetch('/api/scenarios');
+                if (response.ok) {
+                    const scenarioRows = await response.json();
+                    if (scenarioRows && scenarioRows.length > 0) {
+                        const row = scenarioRows.find((r: any) => r.domain.toLowerCase() === scenarioKey.toLowerCase());
+                        if (row) {
+                            setScenario({
+                                id: row.id,
+                                title: row.title,
+                                domain: row.domain,
+                                description: row.description,
+                                decisionTimeframe: row.decision_timeframe || row.decisionTimeframe,
+                                dataSpansOrdersOfMagnitude: (row.data_spans_orders_of_magnitude ?? row.dataSpansOrdersOfMagnitude) ?? false,
+                                baseData: Array.isArray(row.base_data || row.baseData) ? (row.base_data || row.baseData) as DataPoint[] : scenario.baseData,
+                                sortOrder: (row.sort_order ?? row.sortOrder) ?? 0,
+                            });
+                        }
+                    }
                 }
             } catch {
                 // keep fallback
             }
 
             try {
-                const { data: templateRows, error: tErr } = await supabase
-                    .from('reaction_templates')
-                    .select('*');
-                if (!tErr && templateRows) {
-                    setTemplates(parseTemplatesFromDB(templateRows));
+                const response = await fetch('/api/executive_reactions');
+                if (response.ok) {
+                    const templateRows = await response.json();
+                    if (templateRows) {
+                        setTemplates(parseTemplatesFromDB(templateRows));
+                    }
                 }
             } catch {
                 // keep empty
@@ -237,8 +238,8 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                     <button
                         onClick={() => setIsManipulated(false)}
                         className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${!isManipulated
-                                ? 'bg-white text-emerald-700 shadow-sm border border-stone-200'
-                                : 'text-stone-500 hover:text-stone-700'
+                            ? 'bg-white text-emerald-700 shadow-sm border border-stone-200'
+                            : 'text-stone-500 hover:text-stone-700'
                             }`}
                     >
                         Honest Presentation
@@ -246,8 +247,8 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                     <button
                         onClick={() => setIsManipulated(true)}
                         className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isManipulated
-                                ? 'bg-white text-red-700 shadow-sm border border-stone-200'
-                                : 'text-stone-500 hover:text-stone-700'
+                            ? 'bg-white text-red-700 shadow-sm border border-stone-200'
+                            : 'text-stone-500 hover:text-stone-700'
                             }`}
                     >
                         Manipulated Version
@@ -256,7 +257,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
 
                 {/* Chart + Score */}
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 overflow-x-auto">
+                    <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 overflow-hidden">
                         <div className="flex items-center justify-between mb-3">
                             <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">
                                 {scenario.title}
@@ -267,7 +268,9 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                                 </span>
                             )}
                         </div>
-                        <BarChart state={chartState} width={560} height={340} />
+                        <div className="w-full flex justify-center max-h-[380px]">
+                            <BarChart state={chartState} width={560} height={340} />
+                        </div>
                     </div>
 
                     <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-5">

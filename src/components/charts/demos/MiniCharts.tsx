@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 
 const W = 280;
 const H = 170;
-const M = { top: 12, right: 12, bottom: 28, left: 36 };
+const M = { top: 12, right: 12, bottom: 28, left: 48 };
 const IW = W - M.left - M.right;
 const IH = H - M.top - M.bottom;
 
@@ -81,7 +81,7 @@ export function StackedBarMini() {
         g.append('g').attr('transform', `translate(0,${IH})`).call(d3.axisBottom(x)).call(s => s.select('.domain').attr('stroke', '#e7e5e4')).call(s => s.selectAll('line').attr('stroke', '#e7e5e4')).call(s => s.selectAll('text').attr('fill', '#78716c').attr('font-size', '9'));
         g.append('g').call(d3.axisLeft(y).ticks(4)).call(s => s.select('.domain').remove()).call(s => s.selectAll('line').attr('stroke', '#e7e5e4')).call(s => s.selectAll('text').attr('fill', '#78716c').attr('font-size', '9'));
         stacked.forEach((layer, li) => {
-            g.selectAll(`rect.l${li}`).data(layer).join('rect').attr('x', (_, i) => x(cats[i])!).attr('y', d => y(d[1])).attr('height', d => y(d[0]) - y(d[1])).attr('width', x.bandwidth()).attr('fill', COLORS[li]).attr('rx', li === keys.length - 1 ? 2 : 0);
+            g.selectAll(`rect.l${li}`).data(layer).join('rect').attr('x', (_, i) => x(cats[i])!).attr('y', d => y(d[1])).attr('height', d => y(d[0]) - y(d[1])).attr('width', x.bandwidth()).attr('fill', COLORS[li]);
         });
     });
     return <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full" />;
@@ -949,8 +949,9 @@ export function FunnelMini() {
             const barW = (stage.v / max) * IW;
             const bx = (IW - barW) / 2;
             const by = i * (barH + 4);
+            const isSmall = barW < 80;
             g.append('rect').attr('x', bx).attr('y', by).attr('width', barW).attr('height', barH).attr('fill', COLORS[i]).attr('rx', 3);
-            g.append('text').attr('x', IW / 2).attr('y', by + barH / 2 + 4).attr('text-anchor', 'middle').attr('font-size', 10).attr('fill', 'white').attr('font-weight', 'bold').text(`${stage.l} (${stage.v})`);
+            g.append('text').attr('x', isSmall ? bx + barW + 8 : IW / 2).attr('y', by + barH / 2 + 4).attr('text-anchor', isSmall ? 'start' : 'middle').attr('font-size', 10).attr('fill', isSmall ? '#78716c' : 'white').attr('font-weight', 'bold').text(`${stage.l} (${stage.v})`);
         });
     });
     return <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full" />;
@@ -984,25 +985,24 @@ export function GaugeMini() {
     const value = 0.67;
     const ref = useSvg((g) => {
         const cx = IW / 2, cy = IH - 10, r = Math.min(IW, IH) * 0.7;
-        const startAngle = -Math.PI;
-        const endAngle = 0;
+        const d3StartAngle = -Math.PI / 2;
         const zones = [{ v: 0.33, c: '#ef4444' }, { v: 0.66, c: SECONDARY }, { v: 1.0, c: PRIMARY }];
         let prev = 0;
         zones.forEach(({ v, c }) => {
             const arc = d3.arc<{ startAngle: number; endAngle: number }>()
                 .innerRadius(r * 0.65).outerRadius(r)
-                .startAngle(startAngle + prev * Math.PI)
-                .endAngle(startAngle + v * Math.PI);
+                .startAngle(d3StartAngle + prev * Math.PI)
+                .endAngle(d3StartAngle + v * Math.PI);
             g.append('path').attr('d', arc({ startAngle: 0, endAngle: Math.PI })).attr('transform', `translate(${cx},${cy})`).attr('fill', c).attr('fill-opacity', 0.85);
             prev = v;
         });
-        const needleAngle = startAngle + value * Math.PI;
+        const mathStartAngle = -Math.PI;
+        const needleAngle = mathStartAngle + value * Math.PI;
         const nx = cx + Math.cos(needleAngle) * r * 0.7;
         const ny = cy + Math.sin(needleAngle) * r * 0.7;
         g.append('line').attr('x1', cx).attr('y1', cy).attr('x2', nx).attr('y2', ny).attr('stroke', '#1c1917').attr('stroke-width', 2.5).attr('stroke-linecap', 'round');
         g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 5).attr('fill', '#1c1917');
         g.append('text').attr('x', cx).attr('y', cy - 12).attr('text-anchor', 'middle').attr('font-size', 13).attr('font-weight', 'bold').attr('fill', '#1c1917').text(`${Math.round(value * 100)}%`);
-        void endAngle;
     });
     return <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full" />;
 }

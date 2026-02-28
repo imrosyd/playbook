@@ -23,7 +23,7 @@ export default function ChartTypeCard({
     return (
         <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
             {/* Demo area */}
-            <div className="w-full bg-stone-50 border-b border-stone-100 p-4 flex items-center justify-center min-h-[190px]">
+            <div className="w-full bg-stone-50 border-b border-stone-100 p-4 flex items-center justify-center h-[280px] sm:h-[320px] lg:h-[380px] overflow-hidden [&>svg]:w-auto [&>svg]:h-full [&>svg]:max-w-full">
                 {demo}
             </div>
 

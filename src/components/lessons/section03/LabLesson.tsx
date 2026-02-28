@@ -7,7 +7,6 @@ import ExecutivePanel from '../../ui/ExecutivePanel';
 import { evaluateChartState, computeLinearRegression } from '../../../lib/scoring';
 import { generateSimulation, parseTemplatesFromDB } from '../../../lib/simulation';
 import { transformData } from '../../../lib/transforms';
-import { supabase } from '../../../lib/supabase';
 import { DEFAULT_PARAMS } from '../../../types/chart';
 import type { ChartParams, ChartState, Scenario, DataPoint } from '../../../types/chart';
 import type { VisibleGroups } from '../../lab/ControlDock';
@@ -88,35 +87,35 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
     useEffect(() => {
         async function loadData() {
             try {
-                const { data: scenarioRows, error: scenarioError } = await supabase
-                    .from('scenarios')
-                    .select('*')
-                    .order('sort_order', { ascending: true });
-
-                if (!scenarioError && scenarioRows && scenarioRows.length > 0) {
-                    const mapped: Scenario[] = scenarioRows.map((row) => ({
-                        id: row.id,
-                        title: row.title,
-                        domain: row.domain,
-                        description: row.description,
-                        decisionTimeframe: row.decision_timeframe,
-                        dataSpansOrdersOfMagnitude: row.data_spans_orders_of_magnitude ?? false,
-                        baseData: Array.isArray(row.base_data) ? row.base_data as DataPoint[] : FALLBACK_SCENARIO.baseData,
-                        sortOrder: row.sort_order ?? 0,
-                    }));
-                    setScenarios(mapped);
+                const response = await fetch('/api/scenarios');
+                if (response.ok) {
+                    const scenarioRows = await response.json();
+                    if (scenarioRows && scenarioRows.length > 0) {
+                        const mapped: Scenario[] = scenarioRows.map((row: any) => ({
+                            id: row.id,
+                            title: row.title,
+                            domain: row.domain,
+                            description: row.description,
+                            decisionTimeframe: row.decision_timeframe || row.decisionTimeframe,
+                            dataSpansOrdersOfMagnitude: (row.data_spans_orders_of_magnitude ?? row.dataSpansOrdersOfMagnitude) ?? false,
+                            baseData: Array.isArray(row.base_data || row.baseData) ? (row.base_data || row.baseData) as DataPoint[] : FALLBACK_SCENARIO.baseData,
+                            sortOrder: (row.sort_order ?? row.sortOrder) ?? 0,
+                        }));
+                        setScenarios(mapped);
+                    }
                 }
             } catch {
                 // use fallback
             }
 
             try {
-                const { data: templateRows, error: templateError } = await supabase
-                    .from('reaction_templates')
-                    .select('*');
-
-                if (!templateError && templateRows) {
-                    setTemplates(parseTemplatesFromDB(templateRows));
+                // Note: The previous code queried 'reaction_templates', but the table in schema/API is 'executive_reactions'.
+                const response = await fetch('/api/executive_reactions');
+                if (response.ok) {
+                    const templateRows = await response.json();
+                    if (templateRows) {
+                        setTemplates(parseTemplatesFromDB(templateRows));
+                    }
                 }
             } catch {
                 // use empty templates (fallback reactions will be used)
@@ -178,8 +177,8 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
                                         setParams({ ...DEFAULT_PARAMS });
                                     }}
                                     className={`px-3 py-1.5 rounded-full text-[12px] font-medium border transition-all ${i === activeScenarioIndex
-                                            ? 'bg-emerald-700 text-white border-emerald-700 shadow-sm'
-                                            : 'bg-white text-stone-500 border-stone-200 hover:border-stone-300 hover:text-stone-700'
+                                        ? 'bg-emerald-700 text-white border-emerald-700 shadow-sm'
+                                        : 'bg-white text-stone-500 border-stone-200 hover:border-stone-300 hover:text-stone-700'
                                         }`}
                                 >
                                     {scenario.title}
@@ -193,7 +192,7 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                     {/* Left: Chart + Controls */}
                     <div className="space-y-4">
-                        <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 overflow-x-auto">
+                        <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 overflow-hidden">
                             <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">
                                 {activeScenario.title}
                             </p>

@@ -46,7 +46,7 @@ export default function PlaybookLayout() {
                 />
             )}
 
-            <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+            <Sidebar open={sidebarOpen} onClose={() => { if (!isDesktop) setSidebarOpen(false); }} />
 
             <div
                 className="min-h-screen flex flex-col transition-[margin] duration-300"
@@ -88,7 +88,7 @@ export default function PlaybookLayout() {
                     <LanguageSwitcher />
                 </header>
 
-                <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-16 py-8 max-w-4xl mx-auto">
+                <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 xl:px-12 py-8 mx-auto max-w-7xl">
                     <Outlet />
                 </main>
             </div>

@@ -22,6 +22,8 @@ export default function BarChart({ state, width = 640, height = 400 }: BarChartP
         return computeLinearRegression(points);
     }, [processedData, state.params.trendline]);
 
+    const lastAnimatedDomain = useRef<string | null>(null);
+
     useEffect(() => {
         if (!svgRef.current || processedData.length === 0) return;
 
@@ -78,6 +80,11 @@ export default function BarChart({ state, width = 640, height = 400 }: BarChartP
 
         const highlighted = state.params.colorEmphasis.highlightedIndices;
         const dimOpacity = state.params.colorEmphasis.dimOpacity;
+        const shouldAnimate = lastAnimatedDomain.current !== state.metadata.domain;
+
+        if (shouldAnimate) {
+            lastAnimatedDomain.current = state.metadata.domain;
+        }
 
         const bars = g
             .selectAll('.bar')
@@ -87,8 +94,6 @@ export default function BarChart({ state, width = 640, height = 400 }: BarChartP
             .attr('class', 'bar')
             .attr('x', (d) => x(d.label)!)
             .attr('width', x.bandwidth())
-            .attr('y', innerHeight)
-            .attr('height', 0)
             .attr('rx', 3)
             .attr('fill', (_, i) => {
                 if (highlighted.length === 0) return '#2563eb';
@@ -97,39 +102,60 @@ export default function BarChart({ state, width = 640, height = 400 }: BarChartP
             .attr('opacity', (_, i) => {
                 if (highlighted.length === 0) return 1;
                 return highlighted.includes(i) ? 1 : dimOpacity;
-            });
+            })
+            .attr('y', shouldAnimate ? innerHeight : (d) => y(d.value))
+            .attr('height', shouldAnimate ? 0 : (d) => Math.max(0, innerHeight - y(d.value)));
 
-        bars
-            .transition()
-            .duration(400)
-            .ease(d3.easeCubicOut)
-            .attr('y', (d) => y(d.value))
-            .attr('height', (d) => Math.max(0, innerHeight - y(d.value)));
+        if (shouldAnimate) {
+            bars.transition()
+                .duration(600)
+                .ease(d3.easeCubicOut)
+                .attr('y', (d) => y(d.value))
+                .attr('height', (d) => Math.max(0, innerHeight - y(d.value)));
+        }
 
         if (state.params.threeD) {
-            g.selectAll('.bar-3d-side')
+            const sideBars = g.selectAll('.bar-3d-side')
                 .data(processedData)
                 .enter()
                 .append('rect')
+                .attr('class', 'bar-3d-side')
                 .attr('x', (d) => x(d.label)! + x.bandwidth())
                 .attr('width', 8)
-                .attr('y', (d) => y(d.value))
-                .attr('height', (d) => Math.max(0, innerHeight - y(d.value)))
                 .attr('fill', '#1d4ed8')
-                .attr('opacity', 0.6);
+                .attr('opacity', 0.6)
+                .attr('y', shouldAnimate ? innerHeight : (d) => y(d.value))
+                .attr('height', shouldAnimate ? 0 : (d) => Math.max(0, innerHeight - y(d.value)));
 
-            g.selectAll('.bar-3d-top')
+            if (shouldAnimate) {
+                sideBars.transition()
+                    .duration(600)
+                    .ease(d3.easeCubicOut)
+                    .attr('y', (d) => y(d.value))
+                    .attr('height', (d) => Math.max(0, innerHeight - y(d.value)));
+            }
+
+            const getTopPoints = (d: any, currentY: number) => {
+                const bx = x(d.label)!;
+                const bw = x.bandwidth();
+                return `${bx},${currentY} ${bx + bw},${currentY} ${bx + bw + 8},${currentY - 6} ${bx + 8},${currentY - 6}`;
+            };
+
+            const topBars = g.selectAll('.bar-3d-top')
                 .data(processedData)
                 .enter()
                 .append('polygon')
-                .attr('points', (d) => {
-                    const bx = x(d.label)!;
-                    const by = y(d.value);
-                    const bw = x.bandwidth();
-                    return `${bx},${by} ${bx + bw},${by} ${bx + bw + 8},${by - 6} ${bx + 8},${by - 6}`;
-                })
+                .attr('class', 'bar-3d-top')
                 .attr('fill', '#3b82f6')
-                .attr('opacity', 0.5);
+                .attr('opacity', 0.5)
+                .attr('points', (d) => getTopPoints(d, shouldAnimate ? innerHeight : y(d.value)));
+
+            if (shouldAnimate) {
+                topBars.transition()
+                    .duration(600)
+                    .ease(d3.easeCubicOut)
+                    .attr('points', (d) => getTopPoints(d, y(d.value)));
+            }
         }
 
         if (state.params.trendline === 'linear' && regression) {
@@ -138,7 +164,7 @@ export default function BarChart({ state, width = 640, height = 400 }: BarChartP
             const yStart = regression.slope * xStart + regression.intercept;
             const yEnd = regression.slope * xEnd + regression.intercept;
 
-            g.append('line')
+            const line = g.append('line')
                 .attr('x1', x(processedData[0].label)! + x.bandwidth() / 2)
                 .attr('x2', x(processedData[processedData.length - 1].label)! + x.bandwidth() / 2)
                 .attr('y1', y(yStart))
@@ -146,11 +172,14 @@ export default function BarChart({ state, width = 640, height = 400 }: BarChartP
                 .attr('stroke', '#ef4444')
                 .attr('stroke-width', 2)
                 .attr('stroke-dasharray', '6,4')
-                .attr('opacity', 0)
-                .transition()
-                .delay(300)
-                .duration(400)
-                .attr('opacity', 0.8);
+                .attr('opacity', shouldAnimate ? 0 : 0.8);
+
+            if (shouldAnimate) {
+                line.transition()
+                    .delay(300)
+                    .duration(600)
+                    .attr('opacity', 0.8);
+            }
         }
 
         if (state.params.labelMode !== 'none') {
@@ -160,18 +189,28 @@ export default function BarChart({ state, width = 640, height = 400 }: BarChartP
                     processedData[i].value === dataMax || processedData[i].value === dataMin;
             };
 
-            g.selectAll('.value-label')
+            const labels = g.selectAll('.value-label')
                 .data(processedData)
                 .enter()
                 .append('text')
                 .filter((_, i) => shouldLabel(i))
+                .attr('class', 'value-label')
                 .attr('x', (d) => x(d.label)! + x.bandwidth() / 2)
-                .attr('y', (d) => y(d.value) - 6)
+                .attr('y', shouldAnimate ? innerHeight - 6 : (d) => y(d.value) - 6)
+                .attr('opacity', shouldAnimate ? 0 : 1)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', '11px')
                 .attr('fill', '#374151')
                 .attr('font-weight', 500)
                 .text((d) => d.value.toFixed(1));
+
+            if (shouldAnimate) {
+                labels.transition()
+                    .duration(600)
+                    .ease(d3.easeCubicOut)
+                    .attr('y', (d) => y(d.value) - 6)
+                    .attr('opacity', 1);
+            }
         }
 
         g.append('g')
@@ -198,16 +237,20 @@ export default function BarChart({ state, width = 640, height = 400 }: BarChartP
                 .attr('font-size', '13px')
                 .attr('font-weight', 600)
                 .attr('fill', annotationColor)
-                .text(state.params.annotation.text);
+                .attr('opacity', shouldAnimate ? 0 : 1)
+                .text(state.params.annotation.text)
+                .transition()
+                .delay(shouldAnimate ? 300 : 0)
+                .duration(shouldAnimate ? 600 : 0)
+                .attr('opacity', 1);
         }
-    }, [processedData, state.params, width, height, margin, regression]);
+    }, [processedData, state.params, width, height, margin, regression, state.metadata.domain]);
 
     return (
         <svg
             ref={svgRef}
-            width={width}
-            height={height}
-            className="bg-white rounded-lg"
+            viewBox={`0 0 ${width} ${height}`}
+            className="bg-white rounded-lg w-full h-auto"
             style={{
                 transform: state.params.threeD ? 'perspective(800px) rotateY(-4deg) rotateX(3deg)' : 'none',
                 transition: 'transform 0.4s ease',
