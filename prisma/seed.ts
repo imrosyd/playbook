@@ -89,6 +89,28 @@ async function main() {
     console.log('Seeding Scenarios...');
     const scenarios = [
         {
+            title: '1-Year Revenue Trend',
+            domain: 'revenue',
+            description: 'Monthly revenue figures for the past 12 months. Contains high variance and multiple notable outliers (both positive and negative) that require careful statistical handling to determine the true underlying growth rate.',
+            decision_timeframe: 'month',
+            data_spans_orders_of_magnitude: false,
+            base_data: JSON.stringify([
+                { "label": "Jan", "value": 112 },
+                { "label": "Feb", "value": 105 },
+                { "label": "Mar", "value": 240 },
+                { "label": "Apr", "value": 115 },
+                { "label": "May", "value": 121 },
+                { "label": "Jun", "value": 118 },
+                { "label": "Jul", "value": 125 },
+                { "label": "Aug", "value": 40 },
+                { "label": "Sep", "value": 130 },
+                { "label": "Oct", "value": 128 },
+                { "label": "Nov", "value": 135 },
+                { "label": "Dec", "value": 132 }
+            ]),
+            sort_order: 0
+        },
+        {
             title: 'Q3 Revenue Trajectory',
             domain: 'revenue',
             description: 'Your company reported $12.4M in Q2 revenue. The board wants to see Q3 monthly performance to decide whether to approve a $2M expansion budget. The data shows modest growth with some monthly volatility.',

@@ -56,8 +56,16 @@ export function applySorting(data: DataPoint[], order: ChartParams['sortOrder'])
     }
 }
 
+export function applyTotalSize(data: DataPoint[], params: ChartParams): DataPoint[] {
+    if (params.totalDataSize >= 100) return data;
+    const itemsToKeep = Math.max(2, Math.round(data.length * (params.totalDataSize / 100)));
+    // Keeping the most recent items (tail of the array)
+    return data.slice(-itemsToKeep);
+}
+
 export function transformData(data: DataPoint[], params: ChartParams): DataPoint[] {
-    let result = applySampling(data, params.samplePct);
+    let result = applyTotalSize(data, params);
+    result = applySampling(result, params.samplePct);
     result = applyOutlierFilter(result, params);
     result = applySmoothing(result, params.smoothingWindow);
     result = applySorting(result, params.sortOrder);

@@ -167,6 +167,22 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                             onChange={(v) => update({ axisBaselinePct: v })}
                             warning={axisWarning}
                         />
+                        <Slider
+                            label="Axis Maximum Extension"
+                            value={params.axisMaxFactor}
+                            min={1.0}
+                            max={3.0}
+                            step={0.1}
+                            unit="x"
+                            onChange={(v) => update({ axisMaxFactor: v })}
+                            warning={params.axisMaxFactor >= 2.0 ? 'Severe extension flattens variance' : undefined}
+                        />
+                        <Toggle
+                            label="Invert Y-Axis"
+                            value={params.invertYAxis}
+                            onChange={(v) => update({ invertYAxis: v })}
+                            warning="Inverting axis is highly deceptive"
+                        />
                         <Toggle
                             label="3D Perspective Effect"
                             value={params.threeD}
@@ -181,11 +197,25 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                             step={1}
                             onChange={(v) => update({ gridlineCount: v })}
                         />
+                        <Toggle
+                            label="Show Comparative Baseline"
+                            value={params.showComparativeScale}
+                            onChange={(v) => update({ showComparativeScale: v })}
+                        />
                     </ControlGroup>
                 )}
 
                 {showDataTransform && (
                     <ControlGroup title="Data Transformation" defaultOpen={visibleGroups !== undefined && visibleGroups.dataTransform === true && !visibleGroups.axisScale && !visibleGroups.visualEmphasis && !visibleGroups.annotationTrend}>
+                        <Slider
+                            label="Total Lookback Window"
+                            value={params.totalDataSize}
+                            min={10}
+                            max={100}
+                            step={10}
+                            unit="%"
+                            onChange={(v) => update({ totalDataSize: v })}
+                        />
                         <Slider
                             label="Smoothing Window"
                             value={params.smoothingWindow}
@@ -229,6 +259,11 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                                 <option value="manual_exclude">Cherry-Pick Exclusion</option>
                             </select>
                         </div>
+                        <Toggle
+                            label="Show Accompanying Data Table"
+                            value={params.dataTableEnabled}
+                            onChange={(v) => update({ dataTableEnabled: v })}
+                        />
                     </ControlGroup>
                 )}
 
@@ -276,8 +311,8 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                                             });
                                         }}
                                         className={`px-2 py-1 text-xs rounded-md border transition-colors ${params.colorEmphasis.highlightedIndices.includes(i)
-                                                ? 'bg-blue-600 text-white border-blue-600'
-                                                : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
+                                            ? 'bg-blue-600 text-white border-blue-600'
+                                            : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'
                                             }`}
                                     >
                                         {d.label.length > 6 ? d.label.slice(0, 6) + '..' : d.label}
@@ -285,11 +320,42 @@ export default function ControlDock({ params, data, onChange, visibleGroups }: C
                                 ))}
                             </div>
                         </div>
+                        <div className="space-y-1.5">
+                            <span className="text-xs font-medium text-slate-600">Highlight Rationale</span>
+                            <select
+                                value={params.highlightRationale}
+                                onChange={(e) => update({ highlightRationale: e.target.value as ChartParams['highlightRationale'] })}
+                                className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                            >
+                                <option value="none">None Declared</option>
+                                <option value="current_vs_past">Current vs Past Output</option>
+                                <option value="market_outperformance">Market Outperformance</option>
+                                <option value="custom_editorial">Custom Editorial Justification</option>
+                            </select>
+                        </div>
                     </ControlGroup>
                 )}
 
                 {showAnnotationTrend && (
                     <ControlGroup title="Annotation & Trend" defaultOpen={visibleGroups !== undefined && visibleGroups.annotationTrend === true && !visibleGroups.axisScale && !visibleGroups.dataTransform && !visibleGroups.visualEmphasis}>
+                        <Toggle
+                            label="Cite Data Source"
+                            value={params.sourceCited}
+                            onChange={(v) => update({ sourceCited: v })}
+                        />
+                        <div className="space-y-1.5">
+                            <span className="text-xs font-medium text-slate-600">Confidence Interval</span>
+                            <select
+                                value={params.confidenceLevel}
+                                onChange={(e) => update({ confidenceLevel: e.target.value as ChartParams['confidenceLevel'] })}
+                                className="w-full text-xs border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
+                            >
+                                <option value="none">None</option>
+                                <option value="90">90% Confidence</option>
+                                <option value="95">95% Confidence</option>
+                                <option value="99">99% Confidence</option>
+                            </select>
+                        </div>
                         <Toggle
                             label="Show Annotation"
                             value={params.annotation.enabled}

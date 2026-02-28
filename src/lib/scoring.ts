@@ -6,7 +6,16 @@ import type {
     EthicalLevel,
 } from '../types/chart';
 
-function evaluateAxisBaseline(pct: number): ScoreContribution {
+function evaluateAxisBaseline(pct: number, maxFactor: number, inverted: boolean): ScoreContribution {
+    if (inverted) {
+        return { parameter: 'Axis Direction', state: 'Inverted Y-Axis', contribution: -5, justification: 'Inverting the axis makes a downward trend look upward. Severe perceptual distortion. Triggers Ethical Level 4.' };
+    }
+    if (maxFactor >= 2.0) {
+        return { parameter: 'Axis Scale', state: `${maxFactor}x max extension`, contribution: -4, justification: 'Artificially extending the maximum bounds vastly flattens visual variance, intentionally hiding relative changes.' };
+    }
+    if (maxFactor > 1.2) {
+        return { parameter: 'Axis Scale', state: `${maxFactor}x max extension`, contribution: -2, justification: 'Extended maximum compresses differences.' };
+    }
     if (pct === 0) {
         return { parameter: 'Axis Baseline', state: 'True zero', contribution: 0, justification: 'Neutral default — no truncation.' };
     }
@@ -16,7 +25,10 @@ function evaluateAxisBaseline(pct: number): ScoreContribution {
     if (pct <= 50) {
         return { parameter: 'Axis Baseline', state: `${pct}% truncation`, contribution: -3, justification: 'Moderate truncation magnifies apparent differences by 2-4x. Violates Cleveland (1985) graphical perception guidelines.' };
     }
-    return { parameter: 'Axis Baseline', state: `${pct}% truncation`, contribution: -5, justification: 'Severe truncation. Differences appear 5x+ larger than actual. Triggers Ethical Level 4 (Distortion).' };
+    if (pct <= 60) {
+        return { parameter: 'Axis Baseline', state: `${pct}% truncation`, contribution: -4, justification: 'Severe truncation. Visual magnitude signals are fundamentally broken.' };
+    }
+    return { parameter: 'Axis Baseline', state: `${pct}% truncation`, contribution: -5, justification: 'Extreme truncation. Differences appear 5x+ larger than actual. Triggers Ethical Level 4 (Distortion).' };
 }
 
 function evaluateThreeD(enabled: boolean): ScoreContribution {
@@ -32,6 +44,9 @@ function evaluateOutlierMode(mode: string, manualCount: number): ScoreContributi
     }
     if (mode === 'statistical_3sd') {
         return { parameter: 'Outlier Handling', state: 'Statistical exclusion (>3 SD)', contribution: -1, justification: 'Defensible practice when documented. Mild penalty because it removes real data points.' };
+    }
+    if (manualCount >= 3) {
+        return { parameter: 'Outlier Handling', state: `Manual exclusion (${manualCount} points)`, contribution: -4, justification: 'Heavy cherry-picking of data points actively manipulates the underlying narrative. Strong ethical violation.' };
     }
     return { parameter: 'Outlier Handling', state: `Manual exclusion (${manualCount} points)`, contribution: -3, justification: 'Removing specific points without statistical justification is cherry-picking. Exploits Pattern Recognition bias.' };
 }
@@ -54,7 +69,7 @@ function evaluateAnnotation(
     honest: boolean
 ): ScoreContribution {
     if (enabled && honest) {
-        return { parameter: 'Annotation', state: 'Present and accurate', contribution: 2, justification: 'Annotations make interpretation explicit and invite scrutiny. Reduces Cognitive Load.' };
+        return { parameter: 'Annotation', state: 'Present and accurate', contribution: 3, justification: 'Honest annotations explicitly guide the viewer to the correct conclusion. Highest standard of clarity.' };
     }
     if (!enabled) {
         return { parameter: 'Annotation', state: 'Absent', contribution: 0, justification: 'No annotation present.' };
@@ -64,7 +79,7 @@ function evaluateAnnotation(
 
 function evaluateSorting(order: string): ScoreContribution {
     if (order === 'value_desc' || order === 'value_asc') {
-        return { parameter: 'Sorting', state: 'Value-sorted', contribution: 0, justification: 'Facilitates natural comparison.' };
+        return { parameter: 'Sorting', state: 'Value-sorted', contribution: 1, justification: 'Value sorting actively facilitates natural comparison and ranking.' };
     }
     if (order === 'alpha') {
         return { parameter: 'Sorting', state: 'Alphabetical', contribution: -1, justification: 'Alphabetical order disrupts the pre-attentive ranking signal when value comparison is the task.' };
@@ -83,14 +98,14 @@ function evaluateColorEmphasis(
         return { parameter: 'Color Emphasis', state: 'Neutral palette', contribution: 0, justification: 'No differential emphasis applied.' };
     }
     if (dimOpacity >= 0.4) {
-        return { parameter: 'Color Emphasis', state: `${highlightCount} highlighted, subtle dim`, contribution: 1, justification: 'Subtle emphasis guides attention without suppressing context.' };
+        return { parameter: 'Color Emphasis', state: `${highlightCount} highlighted, subtle dim`, contribution: 2, justification: 'Proper emphasis securely guides attention without destroying visual context.' };
     }
     return { parameter: 'Color Emphasis', state: `${highlightCount} highlighted, heavy dim`, contribution: -2, justification: 'Heavy dimming effectively hides non-highlighted elements. Exploits Pre-attentive Processing.' };
 }
 
 function evaluateGridlines(count: number): ScoreContribution {
     if (count >= 3 && count <= 5) {
-        return { parameter: 'Gridline Density', state: `${count} gridlines`, contribution: 0, justification: 'Optimal range per Tufte.' };
+        return { parameter: 'Gridline Density', state: `${count} gridlines`, contribution: 0, justification: 'Optimal range per Tufte. Actively aids value estimation.' };
     }
     if (count === 0) {
         return { parameter: 'Gridline Density', state: 'No gridlines', contribution: -1, justification: 'Makes value estimation difficult, reduces verifiability.' };
@@ -110,9 +125,19 @@ function evaluateTrendline(
         return { parameter: 'Trendline', state: 'None', contribution: 0, justification: 'No trendline applied.' };
     }
     if (type === 'linear' && significant && rSquared >= 0.3) {
-        return { parameter: 'Trendline', state: `Linear (R²=${rSquared.toFixed(2)})`, contribution: 1, justification: 'Honest summarization with statistical significance.' };
+        return { parameter: 'Trendline', state: `Linear (R²=${rSquared.toFixed(2)})`, contribution: 2, justification: 'Honest summarization with statistical significance strongly aids cognition.' };
     }
     return { parameter: 'Trendline', state: `Linear (R²=${rSquared.toFixed(2)}, not significant)`, contribution: -2, justification: 'Imposing a narrative on noise. Low R² means the line explains little variance.' };
+}
+
+function evaluateLabelMode(mode: string): ScoreContribution {
+    if (mode === 'none') {
+        return { parameter: 'Data Labels', state: 'None', contribution: 0, justification: 'Default state. Lack of direct data labels forces reliance on axis estimation.' };
+    }
+    if (mode === 'selective') {
+        return { parameter: 'Data Labels', state: 'Key values only', contribution: 2, justification: 'Highlighting start/end/min/max values reduces cognitive load without clutter.' };
+    }
+    return { parameter: 'Data Labels', state: 'All values', contribution: -1, justification: 'Labeling every point creates excessive cognitive load and clutter on dense charts.' };
 }
 
 function evaluateSampleSize(pct: number): ScoreContribution {
@@ -126,6 +151,51 @@ function evaluateSampleSize(pct: number): ScoreContribution {
         return { parameter: 'Sample Size', state: `${pct}% of data`, contribution: -2, justification: 'Substantial data omission. Pattern may not represent full population.' };
     }
     return { parameter: 'Sample Size', state: `${pct}% of data`, contribution: -4, justification: 'Clustering illusion is strongest at small sample sizes. Spurious patterns are most likely to appear real.' };
+}
+
+function evaluateSourceCitation(cited: boolean): ScoreContribution {
+    if (cited) {
+        return { parameter: 'Source Citation', state: 'Cited', contribution: 2, justification: 'Explicit data provenance allows viewers to verify claims. Gold standard of data transparency.' };
+    }
+    return { parameter: 'Source Citation', state: 'Absent', contribution: 0, justification: 'No source citation provided.' };
+}
+
+function evaluateConfidenceInterval(level: string): ScoreContribution {
+    if (level !== 'none') {
+        return { parameter: 'Confidence Interval', state: `${level}% CI`, contribution: 2, justification: 'Visualizing statistical uncertainty prevents viewers from interpreting noisy point-estimates as absolute facts.' };
+    }
+    return { parameter: 'Confidence Interval', state: 'None', contribution: 0, justification: 'No uncertainty visualized.' };
+}
+
+function evaluateComparativeScale(show: boolean): ScoreContribution {
+    if (show) {
+        return { parameter: 'Comparative Scale', state: 'Visible', contribution: 3, justification: 'Providing an explicit secondary baseline grounds the scale in reality, preventing viewers from misinterpreting a truncated or compressed axis.' };
+    }
+    return { parameter: 'Comparative Scale', state: 'Hidden', contribution: 0, justification: 'No comparative baseline.' };
+}
+
+function evaluateDataTable(enabled: boolean): ScoreContribution {
+    if (enabled) {
+        return { parameter: 'Data Table', state: 'Visible', contribution: 3, justification: 'Providing raw numbers under a chart is the ultimate standard against deceptive transformation or smoothing.' };
+    }
+    return { parameter: 'Data Table', state: 'Hidden', contribution: 0, justification: 'No supporting data table.' };
+}
+
+function evaluateHighlightRationale(rationale: string, dimOpacity: number): ScoreContribution {
+    if (rationale !== 'none' && dimOpacity < 0.9) {
+        return { parameter: 'Highlight Rationale', state: 'Declared', contribution: 2, justification: 'Transparently declaring the reason for color-emphasis is honest editorializing.' };
+    }
+    return { parameter: 'Highlight Rationale', state: 'Undeclared or No Emphasis', contribution: 0, justification: 'No specific rationale provided or no items highlighted.' };
+}
+
+function evaluateTotalDataSize(pct: number): ScoreContribution {
+    if (pct >= 80) {
+        return { parameter: 'Lookback Window', state: `${pct}% of timeline`, contribution: 0, justification: 'Sufficient historical context provided.' };
+    }
+    if (pct >= 40) {
+        return { parameter: 'Lookback Window', state: `${pct}% of timeline`, contribution: -1, justification: 'Reduced historical baseline limits long-term trend visibility.' };
+    }
+    return { parameter: 'Lookback Window', state: `${pct}% of timeline`, contribution: -3, justification: 'Severe window cherry-picking. Hiding the majority of historical data to isolate a specific trend.' };
 }
 
 function computeInteractionPenalties(
@@ -265,7 +335,7 @@ export function evaluateChartState(state: ChartState): EvaluationResult {
     const { params, metadata } = state;
 
     const breakdown: ScoreContribution[] = [
-        evaluateAxisBaseline(params.axisBaselinePct),
+        evaluateAxisBaseline(params.axisBaselinePct, params.axisMaxFactor, params.invertYAxis),
         evaluateThreeD(params.threeD),
         evaluateOutlierMode(params.outlierMode, params.manualExcludedIndices.length),
         evaluateSmoothing(params.smoothingWindow),
@@ -275,6 +345,13 @@ export function evaluateChartState(state: ChartState): EvaluationResult {
         evaluateGridlines(params.gridlineCount),
         evaluateTrendline(params.trendline, metadata.trendlineRSquared, metadata.statisticallySignificantTrend),
         evaluateSampleSize(params.samplePct),
+        evaluateLabelMode(params.labelMode),
+        evaluateSourceCitation(params.sourceCited),
+        evaluateConfidenceInterval(params.confidenceLevel),
+        evaluateComparativeScale(params.showComparativeScale),
+        evaluateDataTable(params.dataTableEnabled),
+        evaluateHighlightRationale(params.highlightRationale, params.colorEmphasis.dimOpacity),
+        evaluateTotalDataSize(params.totalDataSize)
     ];
 
     const interactionPenalties = computeInteractionPenalties(breakdown);

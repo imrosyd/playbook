@@ -1,6 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import LessonPage from '../../layout/LessonPage';
 import BarChart from '../../charts/BarChart';
+import LineChart from '../../charts/LineChart';
+import AreaChart from '../../charts/AreaChart';
+import ScatterChart from '../../charts/ScatterChart';
+import PieChart from '../../charts/PieChart';
 import ControlDock from '../../lab/ControlDock';
 import ScoreGauge from '../../ui/ScoreGauge';
 import ExecutivePanel from '../../ui/ExecutivePanel';
@@ -8,7 +12,7 @@ import { evaluateChartState, computeLinearRegression } from '../../../lib/scorin
 import { generateSimulation, parseTemplatesFromDB } from '../../../lib/simulation';
 import { transformData } from '../../../lib/transforms';
 import { DEFAULT_PARAMS } from '../../../types/chart';
-import type { ChartParams, ChartState, Scenario, DataPoint } from '../../../types/chart';
+import type { ChartParams, ChartState, Scenario, DataPoint, ChartType } from '../../../types/chart';
 import type { VisibleGroups } from '../../lab/ControlDock';
 
 export type LabMode = 'axis-scale' | 'data-transform' | 'visual-emphasis' | 'annotation-trend' | 'full';
@@ -32,18 +36,23 @@ const FALLBACK_SCENARIO: Scenario = {
     decisionTimeframe: 'month',
     dataSpansOrdersOfMagnitude: false,
     baseData: [
-        { label: 'Jan', value: 82 },
-        { label: 'Feb', value: 78 },
-        { label: 'Mar', value: 91 },
-        { label: 'Apr', value: 85 },
-        { label: 'May', value: 94 },
-        { label: 'Jun', value: 88 },
-        { label: 'Jul', value: 97 },
-        { label: 'Aug', value: 92 },
-        { label: 'Sep', value: 103 },
-        { label: 'Oct', value: 98 },
-        { label: 'Nov', value: 110 },
-        { label: 'Dec', value: 107 },
+        { label: 'Jan Y1', value: 82 }, { label: 'Feb Y1', value: 78 }, { label: 'Mar Y1', value: 91 },
+        { label: 'Apr Y1', value: 85 }, { label: 'May Y1', value: 94 }, { label: 'Jun Y1', value: 88 },
+        { label: 'Jul Y1', value: 97 }, { label: 'Aug Y1', value: 92 }, { label: 'Sep Y1', value: 103 },
+        { label: 'Oct Y1', value: 98 }, { label: 'Nov Y1', value: 110 }, { label: 'Dec Y1', value: 107 },
+        { label: 'Jan Y2', value: 112 }, { label: 'Feb Y2', value: 105 }, { label: 'Mar Y2', value: 240 }, // OUTLIER SPIKE
+        { label: 'Apr Y2', value: 115 }, { label: 'May Y2', value: 121 }, { label: 'Jun Y2', value: 118 },
+        { label: 'Jul Y2', value: 125 }, { label: 'Aug Y2', value: 122 }, { label: 'Sep Y2', value: 130 },
+        { label: 'Oct Y2', value: 128 }, { label: 'Nov Y2', value: 135 }, { label: 'Dec Y2', value: 132 },
+        { label: 'Jan Y3', value: 138 }, { label: 'Feb Y3', value: 134 }, { label: 'Mar Y3', value: 145 },
+        { label: 'Apr Y3', value: 140 }, { label: 'May Y3', value: 148 }, { label: 'Jun Y3', value: 142 },
+        { label: 'Jul Y3', value: 153 }, { label: 'Aug Y3', value: 40 }, // OUTLIER DROP
+        { label: 'Sep Y3', value: 158 }, { label: 'Oct Y3', value: 152 }, { label: 'Nov Y3', value: 165 },
+        { label: 'Dec Y3', value: 160 }, { label: 'Jan Y4', value: 168 }, { label: 'Feb Y4', value: 162 },
+        { label: 'Mar Y4', value: 175 }, { label: 'Apr Y4', value: 170 }, { label: 'May Y4', value: 180 },
+        { label: 'Jun Y4', value: 174 }, { label: 'Jul Y4', value: 185 }, { label: 'Aug Y4', value: 180 },
+        { label: 'Sep Y4', value: 290 }, // OUTLIER SPIKE
+        { label: 'Oct Y4', value: 186 }, { label: 'Nov Y4', value: 195 }, { label: 'Dec Y4', value: 190 },
     ],
     sortOrder: 0,
 };
@@ -81,6 +90,7 @@ function getModeIntro(mode: LabMode): string {
 export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
     const [scenarios, setScenarios] = useState<Scenario[]>([FALLBACK_SCENARIO]);
     const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
+    const [activeChartType, setActiveChartType] = useState<ChartType>('bar');
     const [params, setParams] = useState<ChartParams>({ ...DEFAULT_PARAMS });
     const [templates, setTemplates] = useState<ReturnType<typeof parseTemplatesFromDB>>([]);
 
@@ -136,7 +146,7 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
         return {
             datasetId: activeScenario.id,
             data: activeScenario.baseData,
-            chartType: 'bar',
+            chartType: activeChartType,
             params,
             metadata: {
                 scenarioTitle: activeScenario.title,
@@ -147,7 +157,7 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
                 trendlineRSquared: regression.rSquared,
             },
         };
-    }, [activeScenario, params]);
+    }, [activeScenario, params, activeChartType]);
 
     const evaluation = useMemo(() => evaluateChartState(chartState), [chartState]);
 
@@ -193,10 +203,43 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
                     {/* Left: Chart + Controls */}
                     <div className="space-y-4">
                         <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 overflow-hidden">
-                            <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">
-                                {activeScenario.title}
-                            </p>
-                            <BarChart state={chartState} width={560} height={340} />
+                            <div className="flex items-center justify-between mb-3">
+                                <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">
+                                    {activeScenario.title}
+                                </p>
+                                <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-lg border border-stone-200">
+                                    {(['bar', 'line', 'area', 'scatter', 'pie'] as ChartType[]).map((type) => (
+                                        <button
+                                            key={type}
+                                            onClick={() => setActiveChartType(type)}
+                                            className={`px-3 py-1 rounded text-xs font-semibold capitalize transition-all ${activeChartType === type
+                                                ? 'bg-white text-stone-800 shadow-sm'
+                                                : 'text-stone-500 hover:text-stone-700'
+                                                }`}
+                                        >
+                                            {type}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {params.highlightRationale !== 'none' && (
+                                <div className="mb-4 bg-amber-50 border border-amber-200 rounded-md p-2.5 text-xs text-amber-800 flex items-start gap-2">
+                                    <svg className="w-4 h-4 text-amber-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    <div>
+                                        <span className="font-semibold">Editorial Note: </span>
+                                        {params.highlightRationale === 'current_vs_past' && 'Highlighting current year performance against historical context.'}
+                                        {params.highlightRationale === 'market_outperformance' && 'Highlighting periods of significant market outperformance.'}
+                                        {params.highlightRationale === 'custom_editorial' && 'Highlight applies custom editorial emphasis to key data points.'}
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeChartType === 'bar' && <BarChart state={chartState} width={560} height={340} />}
+                            {activeChartType === 'line' && <LineChart state={chartState} width={560} height={340} />}
+                            {activeChartType === 'area' && <AreaChart state={chartState} width={560} height={340} />}
+                            {activeChartType === 'scatter' && <ScatterChart state={chartState} width={560} height={340} />}
+                            {activeChartType === 'pie' && <PieChart state={chartState} width={560} height={340} />}
                         </div>
                         <ControlDock
                             params={params}
@@ -204,6 +247,36 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
                             onChange={setParams}
                             visibleGroups={visibleGroups}
                         />
+
+                        {params.dataTableEnabled && (
+                            <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-4 overflow-hidden mt-4">
+                                <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-3">Underlying Dataset</p>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-xs text-left text-stone-600">
+                                        <thead className="text-stone-500 bg-stone-50 uppercase border-b border-stone-100">
+                                            <tr>
+                                                <th className="px-3 py-2 font-medium">Period</th>
+                                                <th className="px-3 py-2 font-medium text-right">Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {chartState.data.map((d, i) => (
+                                                <tr key={i} className="border-b border-stone-50 last:border-0 hover:bg-stone-50">
+                                                    <td className="px-3 py-1.5">{d.label}</td>
+                                                    <td className="px-3 py-1.5 text-right font-medium">{d.value.toFixed(1)}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                        <tfoot className="bg-stone-50 text-stone-500 border-t border-stone-200 font-semibold">
+                                            <tr>
+                                                <td className="px-3 py-2">Total Points</td>
+                                                <td className="px-3 py-2 text-right">{chartState.data.length}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Right: Score + Executive reactions */}

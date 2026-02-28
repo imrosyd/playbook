@@ -11,10 +11,12 @@ export type LabelMode = 'none' | 'selective' | 'all';
 export type OutlierMode = 'show_all' | 'statistical_3sd' | 'manual_exclude';
 export type TrendlineType = 'none' | 'linear';
 export type ConfidenceLevel = 'none' | '90' | '95' | '99';
-export type ChartType = 'bar' | 'line' | 'area';
+export type ChartType = 'bar' | 'line' | 'area' | 'scatter' | 'pie';
 
 export interface ChartParams {
     axisBaselinePct: number;
+    axisMaxFactor: number;
+    invertYAxis: boolean;
     sortOrder: SortOrder;
     colorEmphasis: {
         highlightedIndices: number[];
@@ -33,6 +35,12 @@ export interface ChartParams {
     trendline: TrendlineType;
     smoothingWindow: number;
     samplePct: number;
+    sourceCited: boolean;
+    confidenceLevel: ConfidenceLevel;
+    totalDataSize: number;
+    showComparativeScale: boolean;
+    dataTableEnabled: boolean;
+    highlightRationale: string;
 }
 
 export interface ChartMetadata {
@@ -54,13 +62,15 @@ export interface ChartState {
 
 export const DEFAULT_PARAMS: ChartParams = {
     axisBaselinePct: 0,
+    axisMaxFactor: 1.08,
+    invertYAxis: false,
     sortOrder: 'original',
     colorEmphasis: {
         highlightedIndices: [],
         dimOpacity: 1,
     },
     gridlineCount: 5,
-    labelMode: 'selective',
+    labelMode: 'none',
     annotation: {
         enabled: false,
         text: '',
@@ -72,6 +82,12 @@ export const DEFAULT_PARAMS: ChartParams = {
     trendline: 'none',
     smoothingWindow: 1,
     samplePct: 100,
+    sourceCited: false,
+    confidenceLevel: 'none',
+    totalDataSize: 100,
+    showComparativeScale: false,
+    dataTableEnabled: false,
+    highlightRationale: 'none',
 };
 
 export type Archetype = 'skeptic' | 'optimist' | 'firefighter' | 'strategist';
