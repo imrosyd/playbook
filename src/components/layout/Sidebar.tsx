@@ -21,7 +21,7 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
         if (sectionId) setExpanded((p) => ({ ...p, [sectionId]: true }));
         else {
             const first = SECTIONS[0];
-            setExpanded({ [first.id]: true });
+            if (first) setExpanded((p) => ({ ...p, [first.id]: true }));
         }
     }, [sectionId]);
 
@@ -31,14 +31,16 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
     const done = completedLessons.size;
     const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
+
+
     return (
         <aside
             className={`fixed top-0 h-screen w-64 bg-[#FAFAF8] flex flex-col z-40 select-none transition-transform duration-300 ${dir === 'rtl'
-                    ? `right-0 border-l border-stone-200 ${open ? 'translate-x-0' : 'translate-x-full'}`
-                    : `left-0 border-r border-stone-200 ${open ? 'translate-x-0' : '-translate-x-full'}`
+                ? `right-0 border-l border-stone-200 ${open ? 'translate-x-0' : 'translate-x-full'}`
+                : `left-0 border-r border-stone-200 ${open ? 'translate-x-0' : '-translate-x-full'}`
                 }`}
         >
-            <Link to="/" className="flex items-center gap-2.5 px-4 py-4 border-b border-stone-200">
+            <Link to="/" className="flex items-center gap-2.5 px-4 py-4 border-b border-stone-200 text-decoration-none">
                 <div className="w-7 h-7 rounded-lg bg-emerald-700 flex items-center justify-center">
                     <BarChart3 size={14} className="text-white" />
                 </div>
@@ -52,12 +54,14 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
                 <Link
                     to="/playbook"
                     onClick={onClose}
-                    className={`flex items-center gap-2.5 mx-2 px-3 py-2 rounded-lg mb-1 transition-colors text-[12.5px] font-semibold ${!sectionId ? 'bg-emerald-700 text-white' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-700'
+                    className={`flex items-center gap-2.5 mx-2 px-3 py-2 rounded-lg mb-1 transition-colors text-[12.5px] font-semibold text-decoration-none ${!sectionId ? 'bg-emerald-700 text-white' : 'text-stone-500 hover:bg-stone-100 hover:text-stone-700'
                         }`}
                 >
                     <Rocket size={13} className={!sectionId ? 'text-white' : 'text-stone-400'} />
                     {t(lang, 'startHere')}
                 </Link>
+
+
 
                 {SECTIONS.map((section) => {
                     const isOpen = expanded[section.id] ?? false;
@@ -70,9 +74,9 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
                         <div key={section.id} className="mb-0.5">
                             <button
                                 onClick={() => toggle(section.id)}
-                                className={`w-full flex items-center gap-2 mx-2 px-3 py-2 rounded-lg transition-colors text-left pr-2 ${isActiveSection
-                                        ? 'bg-stone-100 text-stone-800'
-                                        : 'text-stone-600 hover:bg-stone-100'
+                                className={`w-full flex items-center gap-2 mx-2 px-3 py-2 rounded-lg transition-colors text-left pr-2 border-none bg-transparent cursor-pointer ${isActiveSection
+                                    ? 'bg-stone-100 text-stone-800'
+                                    : 'text-stone-600 hover:bg-stone-100'
                                     }`}
                                 style={{ width: 'calc(100% - 1rem)' }}
                             >
@@ -107,11 +111,11 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
                                                 key={lesson.id}
                                                 to={`/playbook/${section.id}/${lesson.slug}`}
                                                 onClick={onClose}
-                                                className={`flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-md transition-all text-left mx-1 ${isActive
-                                                        ? 'bg-emerald-700 text-white'
-                                                        : isDone
-                                                            ? 'text-stone-400 hover:bg-stone-100 hover:text-stone-600'
-                                                            : 'text-stone-600 hover:bg-stone-100'
+                                                className={`flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-md transition-all text-left mx-1 text-decoration-none ${isActive
+                                                    ? 'bg-emerald-700 text-white'
+                                                    : isDone
+                                                        ? 'text-stone-400 hover:bg-stone-100 hover:text-stone-600'
+                                                        : 'text-stone-600 hover:bg-stone-100'
                                                     }`}
                                             >
                                                 <LIcon

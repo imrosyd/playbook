@@ -1,5 +1,4 @@
 import { type ReactNode } from 'react';
-import { Check, X, AlertTriangle, Brain, ShieldAlert } from 'lucide-react';
 
 interface ChartTypeCardProps {
     name: string;
@@ -22,35 +21,38 @@ export default function ChartTypeCard({
 }: ChartTypeCardProps) {
     return (
         <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
-            {/* Demo area */}
-            <div className="w-full bg-stone-50 border-b border-stone-100 p-4 flex items-center justify-center h-[280px] sm:h-[320px] lg:h-[380px] overflow-hidden [&>svg]:w-auto [&>svg]:h-full [&>svg]:max-w-full">
-                {demo}
+            {/* Demo area — full height, clean background */}
+            <div className="w-full bg-stone-50 border-b border-stone-100 p-6 flex items-center justify-center"
+                style={{ minHeight: 280 }}>
+                <div className="w-full max-w-[340px]">
+                    {demo}
+                </div>
             </div>
 
             {/* Name */}
-            <div className="px-5 pt-4 pb-2">
+            <div className="px-5 pt-5 pb-3">
                 <h3 className="text-base font-bold text-stone-800">{name}</h3>
             </div>
 
             {/* When to use / When not to use */}
-            <div className="px-5 pb-4 grid grid-cols-2 gap-4">
+            <div className="px-5 pb-4 grid grid-cols-2 gap-5">
                 <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 mb-2">When to Use</p>
-                    <ul className="space-y-1.5">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-stone-600 mb-2">Use when</p>
+                    <ul className="space-y-2">
                         {whenToUse.map((item, i) => (
-                            <li key={i} className="flex items-start gap-1.5 text-[12px] text-stone-600 leading-snug">
-                                <Check size={11} className="text-emerald-500 shrink-0 mt-0.5" />
+                            <li key={i} className="flex items-start gap-2 text-[12px] text-stone-600 leading-relaxed">
+                                <span className="shrink-0 text-stone-300 font-bold mt-0.5">—</span>
                                 {item}
                             </li>
                         ))}
                     </ul>
                 </div>
                 <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-red-600 mb-2">When Not to Use</p>
-                    <ul className="space-y-1.5">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-stone-400 mb-2">Avoid when</p>
+                    <ul className="space-y-2">
                         {whenNotToUse.map((item, i) => (
-                            <li key={i} className="flex items-start gap-1.5 text-[12px] text-stone-600 leading-snug">
-                                <X size={11} className="text-red-400 shrink-0 mt-0.5" />
+                            <li key={i} className="flex items-start gap-2 text-[12px] text-stone-500 leading-relaxed">
+                                <span className="shrink-0 text-stone-200 font-bold mt-0.5">—</span>
                                 {item}
                             </li>
                         ))}
@@ -59,23 +61,21 @@ export default function ChartTypeCard({
             </div>
 
             {/* Interpretation risk */}
-            <div className="mx-5 mb-4 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2.5 flex items-start gap-2">
-                <AlertTriangle size={13} className="text-amber-500 shrink-0 mt-0.5" />
-                <p className="text-[12px] text-amber-800 leading-snug">{interpretationRisk}</p>
+            <div className="mx-5 mb-4 rounded-lg bg-stone-50 border border-stone-200 px-4 py-3">
+                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">Interpretation risk</p>
+                <p className="text-[12px] text-stone-600 leading-relaxed">{interpretationRisk}</p>
             </div>
 
-            {/* Chips */}
+            {/* Meta refs */}
             {(cognitiveRef || ethicalRef) && (
                 <div className="px-5 pb-5 flex flex-wrap gap-2">
                     {cognitiveRef && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-[11px] font-medium text-blue-700">
-                            <Brain size={10} className="shrink-0" />
-                            {cognitiveRef}
+                        <span className="inline-flex px-2.5 py-1 rounded-full bg-stone-100 text-[11px] font-medium text-stone-600">
+                            Perception: {cognitiveRef}
                         </span>
                     )}
                     {ethicalRef && (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-50 border border-red-200 text-[11px] font-medium text-red-700">
-                            <ShieldAlert size={10} className="shrink-0" />
+                        <span className="inline-flex px-2.5 py-1 rounded-full bg-stone-50 border border-stone-200 text-[11px] font-medium text-stone-500">
                             {ethicalRef}
                         </span>
                     )}

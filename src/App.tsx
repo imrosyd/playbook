@@ -6,6 +6,7 @@ import PlaybookLayout from './components/layout/PlaybookLayout';
 import PlaybookIntro from './components/layout/PlaybookIntro';
 import LessonRouter from './components/layout/LessonRouter';
 
+
 export default function App() {
     return (
         <BrowserRouter>
@@ -15,6 +16,7 @@ export default function App() {
                         <Route path="/" element={<Landing />} />
                         <Route path="/playbook" element={<PlaybookLayout />}>
                             <Route index element={<PlaybookIntro />} />
+
                             <Route path=":sectionId/:lessonSlug" element={<LessonRouter />} />
                         </Route>
                     </Routes>
