@@ -50,6 +50,7 @@ export interface ChartMetadata {
     dataSpansOrdersOfMagnitude: boolean;
     statisticallySignificantTrend: boolean;
     trendlineRSquared: number;
+    preferredChartTypes: string;
 }
 
 export interface ChartState {
@@ -143,6 +144,7 @@ export interface Scenario {
     decisionTimeframe: Timeframe;
     dataSpansOrdersOfMagnitude: boolean;
     baseData: DataPoint[];
+    preferredChartTypes: string;
     sortOrder: number;
 }
 

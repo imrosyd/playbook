@@ -27,6 +27,7 @@ const FALLBACK_SCENARIOS: Scenario[] = [
             { label: 'Sep W1', value: 3.42 }, { label: 'Sep W2', value: 3.15 },
             { label: 'Sep W3', value: 3.28 }, { label: 'Sep W4', value: 3.51 },
         ],
+        preferredChartTypes: 'line,bar',
         sortOrder: 1,
     },
     {
@@ -44,6 +45,7 @@ const FALLBACK_SCENARIOS: Scenario[] = [
             { label: 'Sep', value: 3.6 }, { label: 'Oct', value: 2.9 },
             { label: 'Nov', value: 3.3 }, { label: 'Dec', value: 3.0 },
         ],
+        preferredChartTypes: 'line',
         sortOrder: 2,
     },
     {
@@ -58,6 +60,7 @@ const FALLBACK_SCENARIOS: Scenario[] = [
             { label: 'Paid Search', value: 3.5 }, { label: 'Content', value: 2.1 },
             { label: 'Events', value: 1.8 }, { label: 'Referral', value: 3.9 },
         ],
+        preferredChartTypes: 'bar',
         sortOrder: 3,
     },
 ];
@@ -87,6 +90,7 @@ export default function ManipulationLab() {
                             decisionTimeframe: (s.decision_timeframe || s.decisionTimeframe) as Scenario['decisionTimeframe'],
                             dataSpansOrdersOfMagnitude: (s.data_spans_orders_of_magnitude || s.dataSpansOrdersOfMagnitude) as boolean,
                             baseData: (s.base_data || s.baseData) as DataPoint[],
+                            preferredChartTypes: (s.preferred_chart_types || s.preferredChartTypes || 'line,bar') as string,
                             sortOrder: (s.sort_order || s.sortOrder) as number,
                         }))
                     );
@@ -120,6 +124,7 @@ export default function ManipulationLab() {
                 dataSpansOrdersOfMagnitude: scenario.dataSpansOrdersOfMagnitude,
                 statisticallySignificantTrend: reg.rSquared >= 0.3,
                 trendlineRSquared: reg.rSquared,
+                preferredChartTypes: scenario.preferredChartTypes,
             },
         };
     }, [scenario, params]);

@@ -15,6 +15,7 @@ model Scenario {
   decision_timeframe               String   @default("quarter")
   data_spans_orders_of_magnitude   Boolean  @default(false)
   base_data                        String   @default("[]")
+  preferred_chart_types            String   @default("line,bar")
   sort_order                       Int      @default(0)
   created_at                       DateTime @default(now())
 

@@ -35,6 +35,7 @@ const FALLBACK_SCENARIOS: Record<string, Scenario> = {
             { label: 'Jul', value: 97 }, { label: 'Aug', value: 92 }, { label: 'Sep', value: 103 },
             { label: 'Oct', value: 98 }, { label: 'Nov', value: 110 }, { label: 'Dec', value: 107 },
         ],
+        preferredChartTypes: 'line,bar',
         sortOrder: 0,
     },
     churn: {
@@ -50,6 +51,7 @@ const FALLBACK_SCENARIOS: Record<string, Scenario> = {
             { label: 'Jul', value: 5.2 }, { label: 'Aug', value: 4.4 }, { label: 'Sep', value: 3.9 },
             { label: 'Oct', value: 4.8 }, { label: 'Nov', value: 5.6 }, { label: 'Dec', value: 5.1 },
         ],
+        preferredChartTypes: 'line',
         sortOrder: 1,
     },
     marketing: {
@@ -64,6 +66,7 @@ const FALLBACK_SCENARIOS: Record<string, Scenario> = {
             { label: 'Social', value: 150 }, { label: 'Display', value: 90 }, { label: 'Referral', value: 380 },
             { label: 'Content', value: 290 }, { label: 'Video', value: 175 },
         ],
+        preferredChartTypes: 'bar',
         sortOrder: 2,
     },
     inventory: {
@@ -78,6 +81,7 @@ const FALLBACK_SCENARIOS: Record<string, Scenario> = {
             { label: 'Food', value: 12.4 }, { label: 'Toys', value: 5.9 }, { label: 'Sports', value: 6.3 },
             { label: 'Books', value: 2.8 }, { label: 'Beauty', value: 7.1 },
         ],
+        preferredChartTypes: 'bar',
         sortOrder: 3,
     },
     project: {
@@ -93,6 +97,7 @@ const FALLBACK_SCENARIOS: Record<string, Scenario> = {
             { label: 'S7', value: 48 }, { label: 'S8', value: 52 }, { label: 'S9', value: 44 },
             { label: 'S10', value: 55 },
         ],
+        preferredChartTypes: 'line,bar',
         sortOrder: 4,
     },
     budget: {
@@ -107,6 +112,7 @@ const FALLBACK_SCENARIOS: Record<string, Scenario> = {
             { label: 'HR', value: 88 }, { label: 'Finance', value: 76 }, { label: 'Product', value: 102 },
             { label: 'Support', value: 91 }, { label: 'Legal', value: 83 },
         ],
+        preferredChartTypes: 'bar',
         sortOrder: 5,
     },
 };
@@ -168,6 +174,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                                 decisionTimeframe: row.decision_timeframe || row.decisionTimeframe,
                                 dataSpansOrdersOfMagnitude: (row.data_spans_orders_of_magnitude ?? row.dataSpansOrdersOfMagnitude) ?? false,
                                 baseData: Array.isArray(row.base_data || row.baseData) ? (row.base_data || row.baseData) as DataPoint[] : scenario.baseData,
+                                preferredChartTypes: row.preferred_chart_types || row.preferredChartTypes || 'line,bar',
                                 sortOrder: (row.sort_order ?? row.sortOrder) ?? 0,
                             });
                         }
@@ -213,6 +220,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                 dataSpansOrdersOfMagnitude: scenario.dataSpansOrdersOfMagnitude,
                 statisticallySignificantTrend: significant,
                 trendlineRSquared: regression.rSquared,
+                preferredChartTypes: scenario.preferredChartTypes,
             },
         };
     }, [scenario, activeParams]);

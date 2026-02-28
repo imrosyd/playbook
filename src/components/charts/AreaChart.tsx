@@ -139,14 +139,7 @@ export default function AreaChart({ state, width = 640, height = 400 }: AreaChar
                 .attr('stroke-dasharray', '8,4')
                 .attr('opacity', 0.8);
 
-            g.append('text')
-                .attr('x', innerWidth - 5)
-                .attr('y', baselineY - 6)
-                .attr('text-anchor', 'end')
-                .attr('fill', '#6366f1')
-                .attr('font-size', '11px')
-                .attr('font-weight', '600')
-                .text('Industry Baseline');
+
         }
 
         if (state.params.trendline === 'linear' && regression) {

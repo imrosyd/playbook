@@ -54,6 +54,7 @@ const FALLBACK_SCENARIO: Scenario = {
         { label: 'Sep Y4', value: 290 }, // OUTLIER SPIKE
         { label: 'Oct Y4', value: 186 }, { label: 'Nov Y4', value: 195 }, { label: 'Dec Y4', value: 190 },
     ],
+    preferredChartTypes: 'line,bar,area',
     sortOrder: 0,
 };
 
@@ -109,6 +110,7 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
                             decisionTimeframe: row.decision_timeframe || row.decisionTimeframe,
                             dataSpansOrdersOfMagnitude: (row.data_spans_orders_of_magnitude ?? row.dataSpansOrdersOfMagnitude) ?? false,
                             baseData: Array.isArray(row.base_data || row.baseData) ? (row.base_data || row.baseData) as DataPoint[] : FALLBACK_SCENARIO.baseData,
+                            preferredChartTypes: row.preferred_chart_types || row.preferredChartTypes || 'line,bar',
                             sortOrder: (row.sort_order ?? row.sortOrder) ?? 0,
                         }));
                         setScenarios(mapped);
@@ -155,6 +157,7 @@ export default function LabLesson({ mode, crossRefs }: LabLessonProps) {
                 dataSpansOrdersOfMagnitude: activeScenario.dataSpansOrdersOfMagnitude,
                 statisticallySignificantTrend: significant,
                 trendlineRSquared: regression.rSquared,
+                preferredChartTypes: activeScenario.preferredChartTypes,
             },
         };
     }, [activeScenario, params, activeChartType]);

@@ -166,6 +166,26 @@ function evaluateConfidenceInterval(level: string): ScoreContribution {
     }
     return { parameter: 'Confidence Interval', state: 'None', contribution: 0, justification: 'No uncertainty visualized.' };
 }
+function evaluateChartSelection(selectedType: string, preferredTypesStr: string): ScoreContribution {
+    const preferredTypes = preferredTypesStr.split(',').map(t => t.trim());
+    const isPreferred = preferredTypes.includes(selectedType);
+
+    if (isPreferred) {
+        return {
+            parameter: 'Chart Type Selection',
+            state: `${selectedType} (Appropriate)`,
+            contribution: 1,
+            justification: 'The selected chart type is optimal for this data structure, facilitating correct pre-attentive processing.'
+        };
+    }
+
+    return {
+        parameter: 'Chart Type Selection',
+        state: `${selectedType} (Inappropriate)`,
+        contribution: -4,
+        justification: `The selected chart type is poorly suited for this data. For example, using a pie chart for time-series or a scatter plot for simple comparisons creates unnecessary cognitive load and can hide the true narrative. Triggers Ethical Level 4 (Distortion).`
+    };
+}
 
 function evaluateComparativeScale(show: boolean): ScoreContribution {
     if (show) {
@@ -351,7 +371,8 @@ export function evaluateChartState(state: ChartState): EvaluationResult {
         evaluateComparativeScale(params.showComparativeScale),
         evaluateDataTable(params.dataTableEnabled),
         evaluateHighlightRationale(params.highlightRationale, params.colorEmphasis.dimOpacity),
-        evaluateTotalDataSize(params.totalDataSize)
+        evaluateTotalDataSize(params.totalDataSize),
+        evaluateChartSelection(state.chartType, metadata.preferredChartTypes)
     ];
 
     const interactionPenalties = computeInteractionPenalties(breakdown);

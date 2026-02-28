@@ -90,7 +90,7 @@ async function main() {
     const scenarios = [
         {
             title: '1-Year Revenue Trend',
-            domain: 'revenue',
+            domain: 'revenue' as any,
             description: 'Monthly revenue figures for the past 12 months. Contains high variance and multiple notable outliers (both positive and negative) that require careful statistical handling to determine the true underlying growth rate.',
             decision_timeframe: 'month',
             data_spans_orders_of_magnitude: false,
@@ -108,34 +108,59 @@ async function main() {
                 { "label": "Nov", "value": 135 },
                 { "label": "Dec", "value": 132 }
             ]),
+            preferred_chart_types: 'line,area',
             sort_order: 0
         },
         {
             title: 'Q3 Revenue Trajectory',
-            domain: 'revenue',
+            domain: 'revenue' as any,
             description: 'Your company reported $12.4M in Q2 revenue. The board wants to see Q3 monthly performance to decide whether to approve a $2M expansion budget. The data shows modest growth with some monthly volatility.',
             decision_timeframe: 'month',
             data_spans_orders_of_magnitude: false,
             base_data: JSON.stringify([{ "label": "Jul W1", "value": 3.05 }, { "label": "Jul W2", "value": 3.12 }, { "label": "Jul W3", "value": 2.98 }, { "label": "Jul W4", "value": 3.21 }, { "label": "Aug W1", "value": 3.08 }, { "label": "Aug W2", "value": 3.35 }, { "label": "Aug W3", "value": 3.18 }, { "label": "Aug W4", "value": 2.95 }, { "label": "Sep W1", "value": 3.42 }, { "label": "Sep W2", "value": 3.15 }, { "label": "Sep W3", "value": 3.28 }, { "label": "Sep W4", "value": 3.51 }]),
+            preferred_chart_types: 'line,bar',
             sort_order: 1
         },
         {
             title: 'Customer Churn Analysis',
-            domain: 'churn',
+            domain: 'churn' as any,
             description: 'Monthly customer churn rate over the past year. The CEO believes churn is improving and wants to present this to investors. The data shows a slight downward trend but with significant month-to-month variance and two outlier months.',
             decision_timeframe: 'month',
             data_spans_orders_of_magnitude: false,
             base_data: JSON.stringify([{ "label": "Jan", "value": 4.2 }, { "label": "Feb", "value": 3.8 }, { "label": "Mar", "value": 5.1 }, { "label": "Apr", "value": 3.5 }, { "label": "May", "value": 3.9 }, { "label": "Jun", "value": 3.2 }, { "label": "Jul", "value": 4.8 }, { "label": "Aug", "value": 3.1 }, { "label": "Sep", "value": 3.6 }, { "label": "Oct", "value": 2.9 }, { "label": "Nov", "value": 3.3 }, { "label": "Dec", "value": 3.0 }]),
+            preferred_chart_types: 'line',
             sort_order: 2
         },
         {
-            title: 'Marketing Channel ROI',
-            domain: 'marketing',
-            description: 'Quarterly ROI comparison across 6 marketing channels. The marketing VP wants to justify doubling the social media budget. Social shows moderate ROI but email marketing significantly outperforms it. The decision affects $500K in budget allocation.',
-            decision_timeframe: 'quarter',
+            title: 'Market Share 2025',
+            domain: 'marketing' as any,
+            description: 'Current market share distribution among key competitors. Useful for part-to-whole analysis and competitive ranking.',
+            decision_timeframe: 'year',
             data_spans_orders_of_magnitude: false,
-            base_data: JSON.stringify([{ "label": "Email", "value": 4.2 }, { "label": "Social Media", "value": 2.8 }, { "label": "Paid Search", "value": 3.5 }, { "label": "Content", "value": 2.1 }, { "label": "Events", "value": 1.8 }, { "label": "Referral", "value": 3.9 }]),
+            base_data: JSON.stringify([
+                { "label": "Our Company", "value": 34 },
+                { "label": "Competitor A", "value": 28 },
+                { "label": "Competitor B", "value": 15 },
+                { "label": "Competitor C", "value": 12 },
+                { "label": "Others", "value": 11 }
+            ]),
+            preferred_chart_types: 'pie,bar',
             sort_order: 3
+        },
+        {
+            title: 'Ad Spend Correlation',
+            domain: 'marketing' as any,
+            description: 'Relationship between monthly digital ad spend ($K) and new customer acquisitions. High-variance data aimed at identifying correlation patterns.',
+            decision_timeframe: 'month',
+            data_spans_orders_of_magnitude: false,
+            base_data: JSON.stringify([
+                { "label": "Jan", "value": 12 }, { "label": "Feb", "value": 15 }, { "label": "Mar", "value": 18 },
+                { "label": "Apr", "value": 14 }, { "label": "May", "value": 22 }, { "label": "Jun", "value": 25 },
+                { "label": "Jul", "value": 20 }, { "label": "Aug", "value": 28 }, { "label": "Sep", "value": 32 },
+                { "label": "Oct", "value": 30 }, { "label": "Nov", "value": 35 }, { "label": "Dec", "value": 40 }
+            ]),
+            preferred_chart_types: 'scatter',
+            sort_order: 4
         }
     ];
 
