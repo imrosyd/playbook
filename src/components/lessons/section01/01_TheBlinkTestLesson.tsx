@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import * as d3 from 'd3';
 import LessonPage from '../../../components/layout/LessonPage';
 import ChartFrame from '../../ui/ChartFrame';
 
@@ -145,6 +146,8 @@ export default function TheBlinkTestLesson() {
     const [targetIndex, setTargetIndex] = useState(19);
     const [targetColor, setTargetColor] = useState(POP_COLORS[0]);
 
+    const svgRef = useRef<SVGSVGElement>(null);
+
     const svgWidth = COLS * GAP + 24;
     const svgHeight = ROWS * GAP + 24;
     const total = COLS * ROWS;
@@ -160,6 +163,47 @@ export default function TheBlinkTestLesson() {
         }
         setWithColor(next);
     }
+
+    useEffect(() => {
+        const svgEl = svgRef.current;
+        if (!svgEl) return;
+
+        const svg = d3.select(svgEl);
+
+        if (svg.select('.main-group').empty()) {
+            svg.append('g').attr('class', 'main-group');
+        }
+        const g = svg.select('.main-group');
+        const t = svg.transition().duration(800).ease(d3.easeCubicOut) as any;
+
+        const data = Array.from({ length: total }, (_, i) => {
+            const isTarget = withColor && i === targetIndex;
+            return {
+                id: i,
+                cx: 20 + (i % COLS) * GAP,
+                cy: 20 + Math.floor(i / COLS) * GAP,
+                fill: isTarget ? targetColor : '#d6d3d1'
+            };
+        });
+
+        const circles = g.selectAll('circle').data(data, (d: any) => d.id);
+
+        circles.join(
+            (enter) => enter.append('circle')
+                .attr('cx', d => d.cx)
+                .attr('cy', d => d.cy)
+                .attr('r', CIRCLE_R)
+                .attr('fill', '#d6d3d1')
+                .call(e => e.transition(t).attr('fill', d => d.fill)),
+            (update) => update.call(u => u.transition(t)
+                .attr('fill', d => d.fill)
+                // Add a small pop animation to the target
+                .attr('r', d => d.fill !== '#d6d3d1' ? CIRCLE_R + 1 : CIRCLE_R)
+            ),
+            (exit) => exit.remove()
+        );
+
+    }, [withColor, targetIndex, targetColor, total]);
 
     return (
         <LessonPage crossRefs={crossRefs}>
@@ -282,31 +326,21 @@ export default function TheBlinkTestLesson() {
                     <div className="relative">
                         <span className="absolute top-0 right-0 text-xs font-bold text-stone-300 select-none">1.1</span>
 
-                        <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-4">
+                        <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
                             Live demo: parallel vs. serial search
                         </p>
+                        <p className="text-[13px] text-stone-500 mb-4">
+                            Toggle the switch to see how a single pre-attentive feature (color hue) instantly breaks serial processing limitations.
+                        </p>
 
-                        <svg
-                            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-                            className="w-full max-w-2xl mx-auto block"
-                            aria-label="Pre-attentive processing demo: grid of circles"
-                        >
-                            {Array.from({ length: total }, (_, i) => {
-                                const col = i % COLS;
-                                const row = Math.floor(i / COLS);
-                                const cx = 20 + col * GAP;
-                                const cy = 20 + row * GAP;
-                                const isTarget = withColor && i === targetIndex;
-                                return (
-                                    <circle
-                                        key={i}
-                                        cx={cx} cy={cy} r={CIRCLE_R}
-                                        fill={isTarget ? targetColor : '#d6d3d1'}
-                                        style={{ transition: 'fill 0.3s ease' }}
-                                    />
-                                );
-                            })}
-                        </svg>
+                        <div className="flex justify-center py-3 overflow-x-auto">
+                            <svg
+                                ref={svgRef}
+                                viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+                                className="w-full max-w-2xl mx-auto block"
+                                aria-label="Pre-attentive processing demo: grid of circles"
+                            />
+                        </div>
 
                         <div className="flex items-center justify-center gap-3 mt-4">
                             <span className={`text-[13px] font-medium transition-colors ${!withColor ? 'text-stone-800' : 'text-stone-400'}`}>

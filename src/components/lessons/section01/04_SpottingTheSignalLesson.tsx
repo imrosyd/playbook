@@ -209,19 +209,52 @@ export default function SpottingTheSignalLesson() {
     const rawData = useMemo(() => buildData(), []);
     const smoothedData = useMemo(() => movingAverage(rawData, 3), [rawData]);
 
+    // Ensure we clear out old D3 elements (especially from Vite HMR / StrictMode) when unmounting
+    useEffect(() => {
+        return () => {
+            if (svgRef.current) d3.select(svgRef.current).selectAll('*').remove();
+        };
+    }, []);
+
     useEffect(() => {
         const svgEl = svgRef.current;
         if (!svgEl) return;
 
         const svg = d3.select(svgEl);
-        svg.selectAll('*').remove();
 
         const innerW = W - MARGIN.left - MARGIN.right;
         const innerH = H - MARGIN.top - MARGIN.bottom;
 
-        const g = svg
-            .append('g')
-            .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+        if (svg.select('.main-group').empty()) {
+            const g = svg
+                .append('g')
+                .attr('class', 'main-group')
+                .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+            g.append('g').attr('class', 'grid');
+            g.append('path').attr('class', 'raw-line');
+            g.append('g').attr('class', 'dots');
+            g.append('path').attr('class', 'smooth-line').attr('opacity', 0);
+
+            const legend = g.append('g').attr('class', 'legend').attr('opacity', 0);
+            legend.append('line')
+                .attr('x1', 8).attr('y1', 8)
+                .attr('x2', 26).attr('y2', 8)
+                .attr('stroke', '#dc2626')
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', '5,3');
+            legend.append('text')
+                .attr('x', 30).attr('y', 11)
+                .style('font-size', '8px')
+                .style('fill', '#dc2626')
+                .text('3-period moving avg');
+
+            g.append('g').attr('class', 'x-axis').attr('transform', `translate(0,${innerH})`);
+            g.append('g').attr('class', 'y-axis');
+        }
+
+        const g = svg.select('.main-group');
+        const t = svg.transition().duration(800).ease(d3.easeCubicOut) as any;
 
         const xScale = d3
             .scalePoint()
@@ -235,87 +268,80 @@ export default function SpottingTheSignalLesson() {
 
         const yScale = d3.scaleLinear().domain([yMin, yMax]).range([innerH, 0]);
 
-        g.selectAll('.grid-line')
+        // Gridlines
+        g.select('.grid').selectAll('.grid-line')
             .data(yScale.ticks(4))
-            .enter()
-            .append('line')
+            .join('line')
             .attr('class', 'grid-line')
             .attr('x1', 0)
             .attr('x2', innerW)
-            .attr('y1', (d) => yScale(d))
-            .attr('y2', (d) => yScale(d))
+            .attr('y1', d => yScale(d))
+            .attr('y2', d => yScale(d))
             .attr('stroke', '#e7e5e4')
             .attr('stroke-width', 0.75);
 
+        // Raw Line
         const lineGen = d3
             .line<{ label: string; value: number }>()
             .x((d) => xScale(d.label)!)
             .y((d) => yScale(d.value))
             .curve(d3.curveLinear);
 
-        g.append('path')
+        g.select('.raw-line')
             .datum(rawData)
             .attr('fill', 'none')
             .attr('stroke', '#059669')
             .attr('stroke-width', 2)
-            .attr('d', lineGen);
+            .attr('d', lineGen as any);
 
-        g.selectAll('.dot')
+        // Dots
+        g.select('.dots').selectAll('.dot')
             .data(rawData)
-            .enter()
-            .append('circle')
+            .join('circle')
             .attr('class', 'dot')
-            .attr('cx', (d) => xScale(d.label)!)
-            .attr('cy', (d) => yScale(d.value))
+            .attr('cx', d => xScale(d.label)!)
+            .attr('cy', d => yScale(d.value))
             .attr('r', 3)
             .attr('fill', '#059669');
 
-        if (withSmoothing) {
-            const smoothGen = d3
-                .line<{ label: string; value: number }>()
-                .x((d) => xScale(d.label)!)
-                .y((d) => yScale(d.value))
-                .curve(d3.curveCatmullRom.alpha(0.5));
+        // Smoothed Line (Animated Opacity)
+        const smoothGen = d3
+            .line<{ label: string; value: number }>()
+            .x((d) => xScale(d.label)!)
+            .y((d) => yScale(d.value))
+            .curve(d3.curveCatmullRom.alpha(0.5));
 
-            g.append('path')
-                .datum(smoothedData)
-                .attr('fill', 'none')
-                .attr('stroke', '#dc2626')
-                .attr('stroke-width', 2.5)
-                .attr('stroke-dasharray', '5,3')
-                .attr('d', smoothGen);
+        g.select('.smooth-line')
+            .datum(smoothedData)
+            .attr('fill', 'none')
+            .attr('stroke', '#dc2626')
+            .attr('stroke-width', 2.5)
+            .attr('stroke-dasharray', '5,3')
+            .attr('d', smoothGen as any)
+            .transition(t)
+            .attr('opacity', withSmoothing ? 1 : 0);
 
-            g.append('line')
-                .attr('x1', 8)
-                .attr('y1', 8)
-                .attr('x2', 26)
-                .attr('y2', 8)
-                .attr('stroke', '#dc2626')
-                .attr('stroke-width', 2)
-                .attr('stroke-dasharray', '5,3');
+        // Legend Transition
+        g.select('.legend')
+            .transition(t)
+            .attr('opacity', withSmoothing ? 1 : 0);
 
-            g.append('text')
-                .attr('x', 30)
-                .attr('y', 12)
-                .style('font-size', '10px')
-                .style('fill', '#dc2626')
-                .text('3-period moving avg');
-        }
-
-        g.append('g')
-            .attr('transform', `translate(0,${innerH})`)
-            .call(d3.axisBottom(xScale).tickSize(0))
+        // X Axis
+        g.select('.x-axis')
+            .call(d3.axisBottom(xScale).tickSize(0) as any)
             .call((ax) => ax.select('.domain').attr('stroke', '#d6d3d1'))
             .selectAll('text')
-            .style('font-size', '11px')
+            .style('font-size', '8px')
             .style('fill', '#78716c');
 
-        g.append('g')
-            .call(d3.axisLeft(yScale).ticks(4).tickFormat((d) => `${Math.round(Number(d))}`))
+        // Y Axis
+        g.select('.y-axis')
+            .call(d3.axisLeft(yScale).ticks(4).tickFormat((d) => `${Math.round(Number(d))}`) as any)
             .call((ax) => ax.select('.domain').attr('stroke', '#d6d3d1'))
             .selectAll('text')
-            .style('font-size', '11px')
+            .style('font-size', '8px')
             .style('fill', '#78716c');
+
     }, [withSmoothing, rawData, smoothedData]);
 
     return (
@@ -422,8 +448,6 @@ export default function SpottingTheSignalLesson() {
                         <div className="flex justify-center py-3 overflow-x-auto">
                             <svg className="w-full max-w-2xl mx-auto block"
                                 ref={svgRef}
-                                width={W}
-                                height={H}
                                 viewBox={`0 0 ${W} ${H}`}
                                 aria-label="Pattern recognition demo: noisy flat line with optional smoothing overlay"
                             />

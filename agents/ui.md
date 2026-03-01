@@ -363,6 +363,63 @@ Semua interaksi harus menggunakan **transition yang subtle**. Tidak ada animasi 
 
 ---
 
+## Standar Interactive Component & Layout
+- **Container**: Gunakan `ChartFrame` untuk grafik statis biasa.
+- **Live Demo / Interactive**: Untuk interaksi toggle On/Off, JANGAN gunakan ChartFrame. Gunakan wrapper khusus dari 1.3:
+  ```tsx
+  <div className="bg-white rounded-xl border border-stone-200 p-5 shadow-sm">
+      <div className="relative">
+          <span className="absolute top-0 right-0 text-xs font-bold text-stone-300 select-none">1.3</span>
+          <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
+              Live demo: [Judul]
+          </p>
+          <p className="text-[13px] text-stone-500 mb-4">
+              [Deskripsi singkat]
+          </p>
+          
+          <div className="flex justify-center py-3 overflow-x-auto">
+             {/* <svg> chart */}
+          </div>
+
+          <div className="flex items-center justify-center gap-3 mt-4">
+              <span className={`text-[13px] font-medium transition-colors ${!isToggled ? 'text-stone-800' : 'text-stone-400'}`}>
+                  State A (active text-stone-800)
+              </span>
+              <button
+                  onClick={() => setIsToggled(!isToggled)}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${isToggled ? 'bg-red-500' : 'bg-stone-200'}`}
+              >
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${isToggled ? 'translate-x-6' : 'translate-x-1'}`} />
+              </button>
+              <span className={`text-[13px] font-medium transition-colors ${isToggled ? 'text-stone-800' : 'text-stone-400'}`}>
+                  State B
+              </span>
+          </div>
+          
+          <p className="text-center text-[12px] text-stone-400 mt-2">
+              {isToggled ? 'Keterangan state B.' : 'Keterangan state A.'}
+          </p>
+      </div>
+  </div>
+  ```
+
+  **Aturan Animasi Interaktif (D3.js) dalam Live Demo:**
+  - **Dilarang** me-render ulang SVG dari nol (`svg.selectAll('*').remove()`) setiap kali state berubah.
+  - **Wajib** menggunakan *D3 update pattern* (`.join(enter, update, exit)`) agar pergerakan halus.
+  - **Standar Transisi**: Semua perpindahan posisi, warna, garis, atau ukuran WAJIB menggunakan transisi berdurasi **800ms** dan easing **`d3.easeCubicOut`**.
+    ```ts
+    const t = svg.transition().duration(800).ease(d3.easeCubicOut);
+    
+    elements.join(
+      enter => enter.append('rect').call(e => e.transition(t).attr('y', ...)),
+      update => update.call(u => u.transition(t).attr('y', ...)),
+      exit => exit.call(ex => ex.transition(t).attr('opacity', 0).remove())
+    );
+    ```
+
+### Struktur File Component (Section)
+Materi / pelajaran berada dalam `src/components/lessons/sectionXX/`.
+
 ## 8. Do's & Don'ts
 
 ### ✅ Lakukan

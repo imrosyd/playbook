@@ -146,19 +146,42 @@ export default function TheEthicsOfAttentionLesson() {
     const [allManipulations, setAllManipulations] = useState(false);
     const svgRef = useRef<SVGSVGElement>(null);
 
+    // Ensure we clear out old D3 elements (especially from Vite HMR / StrictMode) when unmounting
+    useEffect(() => {
+        return () => {
+            if (svgRef.current) d3.select(svgRef.current).selectAll('*').remove();
+        };
+    }, []);
+
     useEffect(() => {
         const svgEl = svgRef.current;
         if (!svgEl) return;
 
         const svg = d3.select(svgEl);
-        svg.selectAll('*').remove();
 
         const innerW = W - MARGIN.left - MARGIN.right;
         const innerH = H - MARGIN.top - MARGIN.bottom;
 
-        const g = svg
-            .append('g')
-            .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+        if (svg.select('.main-group').empty()) {
+            const g = svg
+                .append('g')
+                .attr('class', 'main-group')
+                .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+            g.append('g').attr('class', 'grid');
+            g.append('g').attr('class', 'bars');
+            g.append('path').attr('class', 'smooth-line').attr('opacity', 0);
+
+            g.append('text').attr('class', 'growth-label').attr('opacity', 0);
+            g.append('text').attr('class', 'axis-warning').attr('opacity', 0);
+            svg.append('text').attr('class', 'chart-title').attr('opacity', 0);
+
+            g.append('g').attr('class', 'x-axis').attr('transform', `translate(0,${innerH})`);
+            g.append('g').attr('class', 'y-axis');
+        }
+
+        const g = svg.select('.main-group');
+        const t = svg.transition().duration(800).ease(d3.easeCubicOut) as any;
 
         const yMin = allManipulations ? 2.85 : 0;
         const yMax = 3.35;
@@ -174,107 +197,131 @@ export default function TheEthicsOfAttentionLesson() {
         const gridCount = allManipulations ? 12 : 5;
         const gridTicks = yScale.ticks(gridCount);
 
-        g.selectAll('.grid-line')
-            .data(gridTicks)
-            .enter()
-            .append('line')
-            .attr('class', 'grid-line')
-            .attr('x1', 0)
-            .attr('x2', innerW)
-            .attr('y1', (d) => yScale(d))
-            .attr('y2', (d) => yScale(d))
-            .attr('stroke', allManipulations ? '#a8a29e' : '#e7e5e4')
-            .attr('stroke-width', allManipulations ? 1 : 0.75)
-            .attr('stroke-dasharray', allManipulations ? '2,2' : '0');
+        // Gridlines
+        g.select('.grid').selectAll('.grid-line')
+            .data(gridTicks, (d: any) => d)
+            .join(
+                enter => enter.append('line')
+                    .attr('class', 'grid-line')
+                    .attr('x1', 0)
+                    .attr('x2', innerW)
+                    .attr('y1', d => yScale(d))
+                    .attr('y2', d => yScale(d))
+                    .attr('stroke', allManipulations ? '#a8a29e' : '#e7e5e4')
+                    .attr('stroke-width', allManipulations ? 1 : 0.75)
+                    .attr('stroke-dasharray', allManipulations ? '2,2' : '0')
+                    .attr('opacity', 0)
+                    .call(e => e.transition(t).attr('opacity', 1)),
+                update => update.call(u => u.transition(t)
+                    .attr('y1', d => yScale(d))
+                    .attr('y2', d => yScale(d))
+                    .attr('stroke', allManipulations ? '#a8a29e' : '#e7e5e4')
+                    .attr('stroke-width', allManipulations ? 1 : 0.75)
+                    .attr('stroke-dasharray', allManipulations ? '2,2' : '0')
+                ),
+                exit => exit.call(ex => ex.transition(t).attr('opacity', 0).remove())
+            );
 
-        g.selectAll('.bar')
+        // Bars
+        g.select('.bars').selectAll('.bar')
             .data(DATA)
-            .enter()
-            .append('rect')
-            .attr('class', 'bar')
-            .attr('x', (d) => xScale(d.label)!)
-            .attr('y', (d) => yScale(d.value))
-            .attr('width', xScale.bandwidth())
-            .attr('height', (d) => innerH - yScale(d.value))
-            .attr('fill', (_d, i) =>
-                allManipulations && i === HIGHLIGHT_INDEX ? '#dc2626' : '#059669'
-            )
-            .attr('rx', 2);
+            .join(
+                enter => enter.append('rect')
+                    .attr('class', 'bar')
+                    .attr('x', d => xScale(d.label)!)
+                    .attr('y', innerH)
+                    .attr('width', xScale.bandwidth())
+                    .attr('height', 0)
+                    .attr('fill', '#059669')
+                    .attr('rx', 2)
+                    .call(e => e.transition(t)
+                        .attr('y', d => yScale(d.value))
+                        .attr('height', d => innerH - yScale(d.value))
+                        .attr('fill', (_d, i) => allManipulations && i === HIGHLIGHT_INDEX ? '#dc2626' : '#059669')
+                    ),
+                update => update.call(u => u.transition(t)
+                    .attr('x', d => xScale(d.label)!)
+                    .attr('y', d => yScale(d.value))
+                    .attr('height', d => innerH - yScale(d.value))
+                    .attr('fill', (_d, i) => allManipulations && i === HIGHLIGHT_INDEX ? '#dc2626' : '#059669')
+                ),
+                exit => exit.call(ex => ex.transition(t).attr('height', 0).attr('y', innerH).remove())
+            );
 
-        if (allManipulations) {
-            const smoothed = movingAvg(DATA, 3);
-            const lineGen = d3
-                .line<{ label: string; value: number }>()
-                .x((d) => xScale(d.label)! + xScale.bandwidth() / 2)
-                .y((d) => yScale(d.value))
-                .curve(d3.curveCatmullRom.alpha(0.5));
+        // Smoothed Line
+        const smoothed = movingAvg(DATA, 3);
+        const lineGen = d3
+            .line<{ label: string; value: number }>()
+            .x((d) => xScale(d.label)! + xScale.bandwidth() / 2)
+            .y((d) => yScale(d.value))
+            .curve(d3.curveCatmullRom.alpha(0.5));
 
-            g.append('path')
-                .datum(smoothed)
-                .attr('fill', 'none')
-                .attr('stroke', '#f97316')
-                .attr('stroke-width', 2)
-                .attr('stroke-dasharray', '5,3')
-                .attr('d', lineGen);
-        }
+        g.select('.smooth-line')
+            .datum(smoothed)
+            .attr('fill', 'none')
+            .attr('stroke', '#f97316')
+            .attr('stroke-width', 2)
+            .attr('stroke-dasharray', '5,3')
+            .transition(t)
+            .attr('d', lineGen as any)
+            .attr('opacity', allManipulations ? 1 : 0);
 
-        if (allManipulations) {
-            const lastX = xScale(DATA[HIGHLIGHT_INDEX].label)! + xScale.bandwidth() / 2;
-            const lastY = yScale(DATA[HIGHLIGHT_INDEX].value);
+        // Annotations & Labels
+        const lastX = xScale(DATA[HIGHLIGHT_INDEX].label)! + xScale.bandwidth() / 2;
+        const lastY = yScale(DATA[HIGHLIGHT_INDEX].value);
 
-            g.append('text')
-                .attr('x', lastX - 30)
-                .attr('y', lastY - 24)
-                .attr('text-anchor', 'end')
-                .style('font-size', '10px')
-                .style('font-weight', '700')
-                .style('fill', '#dc2626')
-                .text('Strong growth ↑');
-        }
+        g.select('.growth-label')
+            .text('Strong growth ↑')
+            .attr('text-anchor', 'end')
+            .style('font-size', '10px')
+            .style('font-weight', '700')
+            .style('fill', '#dc2626')
+            .transition(t)
+            .attr('x', lastX - 30)
+            .attr('y', lastY - 24)
+            .attr('opacity', allManipulations ? 1 : 0);
 
-        if (allManipulations) {
-            g.append('text')
-                .attr('x', innerW / 2)
-                .attr('y', innerH + 26)
-                .attr('text-anchor', 'middle')
-                .style('font-size', '10px')
-                .style('fill', '#dc2626')
-                .style('font-weight', '600')
-                .text('⚠ axis truncated — starts at $2.85M');
-        }
+        g.select('.axis-warning')
+            .attr('x', innerW / 2)
+            .attr('text-anchor', 'middle')
+            .style('font-size', '10px')
+            .style('fill', '#dc2626')
+            .style('font-weight', '600')
+            .text('⚠ axis truncated — starts at $2.85M')
+            .transition(t)
+            .attr('y', innerH + 26)
+            .attr('opacity', allManipulations ? 1 : 0);
 
-        g.append('g')
-            .attr('transform', `translate(0,${innerH})`)
-            .call(d3.axisBottom(xScale).tickSize(0))
+        svg.select('.chart-title')
+            .attr('x', MARGIN.left)
+            .attr('y', 14)
+            .style('font-size', '11px')
+            .style('font-weight', '700')
+            .style('fill', '#dc2626')
+            .text('Revenue explodes to record highs')
+            .transition(t)
+            .attr('opacity', allManipulations ? 1 : 0);
+
+        // X Axis
+        g.select('.x-axis')
+            .call((ax: any) => ax.transition(t).call(d3.axisBottom(xScale).tickSize(0)))
             .call((ax) => ax.select('.domain').attr('stroke', '#d6d3d1'))
             .selectAll('text')
-            .style('font-size', '11px')
+            .style('font-size', '8px')
             .style('fill', '#78716c');
 
-        g.append('g')
-            .call(
-                d3
-                    .axisLeft(yScale)
+        // Y Axis
+        g.select('.y-axis')
+            .call((ax: any) => ax.transition(t).call(
+                d3.axisLeft(yScale)
                     .ticks(allManipulations ? 6 : 4)
                     .tickFormat((d) => `$${Number(d).toFixed(2)}M`)
-            )
-            .call((ax) =>
-                ax.select('.domain').attr('stroke', allManipulations ? '#dc2626' : '#d6d3d1')
-            )
+            ))
+            .call((ax) => ax.select('.domain').transition(t).attr('stroke', allManipulations ? '#dc2626' : '#d6d3d1'))
             .selectAll('text')
-            .style('font-size', '11px')
+            .style('font-size', '8px')
             .style('fill', '#78716c');
 
-        if (allManipulations) {
-            svg
-                .append('text')
-                .attr('x', MARGIN.left)
-                .attr('y', 14)
-                .style('font-size', '11px')
-                .style('font-weight', '700')
-                .style('fill', '#dc2626')
-                .text('Revenue explodes to record highs');
-        }
     }, [allManipulations]);
 
     return (
@@ -445,8 +492,6 @@ export default function TheEthicsOfAttentionLesson() {
                         <div className="flex justify-center py-3 overflow-x-auto">
                             <svg className="w-full max-w-2xl mx-auto block"
                                 ref={svgRef}
-                                width={W}
-                                height={H}
                                 viewBox={`0 0 ${W} ${H}`}
                                 aria-label="Compound manipulation demo: bar chart toggling between clean and manipulated state"
                             />

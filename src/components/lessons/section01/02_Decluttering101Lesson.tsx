@@ -277,19 +277,38 @@ export default function Decluttering101Lesson() {
     const [lowNoise, setLowNoise] = useState(false);
     const svgRef = useRef<SVGSVGElement>(null);
 
+    // Ensure we clear out old D3 elements (especially from Vite HMR / StrictMode) when unmounting
+    useEffect(() => {
+        return () => {
+            if (svgRef.current) d3.select(svgRef.current).selectAll('*').remove();
+        };
+    }, []);
+
     useEffect(() => {
         const svgEl = svgRef.current;
         if (!svgEl) return;
 
         const svg = d3.select(svgEl);
-        svg.selectAll('*').remove();
 
         const innerW = W - MARGIN.left - MARGIN.right;
         const innerH = H - MARGIN.top - MARGIN.bottom;
 
-        const g = svg
-            .append('g')
-            .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+        if (svg.select('.main-group').empty()) {
+            const g = svg
+                .append('g')
+                .attr('class', 'main-group')
+                .attr('transform', `translate(${MARGIN.left},${MARGIN.top})`);
+
+            g.append('g').attr('class', 'stripes');
+            g.append('rect').attr('class', 'border-rect');
+            g.append('g').attr('class', 'grid');
+            g.append('g').attr('class', 'bars');
+            g.append('g').attr('class', 'x-axis').attr('transform', `translate(0,${innerH})`);
+            g.append('g').attr('class', 'y-axis');
+        }
+
+        const g = svg.select('.main-group');
+        const t = svg.transition().duration(800).ease(d3.easeCubicOut) as any;
 
         const xScale = d3
             .scaleBand()
@@ -305,74 +324,103 @@ export default function Decluttering101Lesson() {
         const gridlineCount = lowNoise ? 3 : 13;
         const gridTicks = yScale.ticks(gridlineCount);
 
-        if (!lowNoise) {
-            for (let i = 0; i < innerH; i += 12) {
-                g.append('rect')
+        // Stripes
+        const stripesData = lowNoise ? [] : Array.from({ length: Math.ceil(innerH / 12) }, (_, i) => i * 12);
+        g.select('.stripes').selectAll('rect')
+            .data(stripesData)
+            .join(
+                (enter) => enter.append('rect')
                     .attr('x', 0)
-                    .attr('y', i)
+                    .attr('y', d => d)
                     .attr('width', innerW)
                     .attr('height', 6)
-                    .attr('fill', i % 24 === 0 ? '#f5f5f4' : '#fafaf9')
-                    .attr('opacity', 0.7);
-            }
-        }
+                    .attr('fill', (_, i) => i % 2 === 0 ? '#f5f5f4' : '#fafaf9')
+                    .attr('opacity', 0)
+                    .call(e => e.transition(t).attr('opacity', 0.7)),
+                (update) => update,
+                (exit) => exit.call(e => e.transition(t).attr('opacity', 0).remove())
+            );
 
-        g.selectAll('.grid-line')
+        // Gridlines
+        g.select('.grid').selectAll('line')
             .data(gridTicks)
-            .enter()
-            .append('line')
-            .attr('class', 'grid-line')
-            .attr('x1', 0)
-            .attr('x2', innerW)
-            .attr('y1', (d) => yScale(d))
-            .attr('y2', (d) => yScale(d))
-            .attr('stroke', lowNoise ? '#e7e5e4' : '#a8a29e')
-            .attr('stroke-width', lowNoise ? 0.75 : 1)
-            .attr('stroke-dasharray', lowNoise ? '0' : '2,2');
+            .join(
+                (enter) => enter.append('line')
+                    .attr('x1', 0)
+                    .attr('x2', innerW)
+                    .attr('y1', d => yScale(d))
+                    .attr('y2', d => yScale(d))
+                    .attr('stroke', lowNoise ? '#e7e5e4' : '#a8a29e')
+                    .attr('stroke-width', lowNoise ? 0.75 : 1)
+                    .attr('stroke-dasharray', lowNoise ? '0' : '2,2')
+                    .attr('opacity', 0)
+                    .call(e => e.transition(t).attr('opacity', 1)),
+                (update) => update.call(u => u.transition(t)
+                    .attr('y1', d => yScale(d))
+                    .attr('y2', d => yScale(d))
+                    .attr('stroke', lowNoise ? '#e7e5e4' : '#a8a29e')
+                    .attr('stroke-width', lowNoise ? 0.75 : 1)
+                    .attr('stroke-dasharray', lowNoise ? '0' : '2,2')
+                    .attr('opacity', 1)
+                ),
+                (exit) => exit.call(e => e.transition(t).attr('opacity', 0).remove())
+            );
 
-        if (!lowNoise) {
-            g.append('rect')
-                .attr('x', -4)
-                .attr('y', -4)
-                .attr('width', innerW + 8)
-                .attr('height', innerH + 8)
-                .attr('fill', 'none')
-                .attr('stroke', '#d6d3d1')
-                .attr('stroke-width', 2)
-                .attr('rx', 3);
-        }
+        // Border
+        g.select('.border-rect')
+            .attr('x', -4)
+            .attr('y', -4)
+            .attr('width', innerW + 8)
+            .attr('height', innerH + 8)
+            .attr('fill', 'none')
+            .attr('rx', 3)
+            .transition(t)
+            .attr('stroke', lowNoise ? 'none' : '#d6d3d1')
+            .attr('stroke-width', lowNoise ? 0 : 2);
 
-        g.selectAll('.bar')
-            .data(DATA)
-            .enter()
-            .append('rect')
-            .attr('class', 'bar')
-            .attr('x', (d) => xScale(d.label)!)
-            .attr('y', (d) => yScale(d.value))
-            .attr('width', xScale.bandwidth())
-            .attr('height', (d) => innerH - yScale(d.value))
-            .attr('fill', '#059669')
-            .attr('rx', 2);
+        // Bars
+        g.select('.bars').selectAll('.bar')
+            .data(DATA, (d: any) => d.label)
+            .join(
+                (enter) => enter.append('rect')
+                    .attr('class', 'bar')
+                    .attr('x', d => xScale(d.label)!)
+                    .attr('y', innerH)
+                    .attr('width', xScale.bandwidth())
+                    .attr('height', 0)
+                    .attr('fill', '#059669')
+                    .attr('rx', 2)
+                    .call(e => e.transition(t)
+                        .attr('y', d => yScale(d.value))
+                        .attr('height', d => innerH - yScale(d.value))),
+                (update) => update.call(u => u.transition(t)
+                    .attr('x', d => xScale(d.label)!)
+                    .attr('y', d => yScale(d.value))
+                    .attr('height', d => innerH - yScale(d.value))
+                ),
+                (exit) => exit.remove()
+            );
 
-        g.append('g')
-            .attr('transform', `translate(0,${innerH})`)
-            .call(d3.axisBottom(xScale).tickSize(0))
+        // X Axis
+        g.select('.x-axis')
+            .call((ax: any) => ax.transition(t).call(d3.axisBottom(xScale).tickSize(0)))
             .call((ax) => ax.select('.domain').attr('stroke', '#d6d3d1'))
             .selectAll('text')
             .style('font-size', '8px')
             .style('fill', '#78716c');
 
-        g.append('g')
-            .call(
-                d3
-                    .axisLeft(yScale)
+        // Y Axis
+        g.select('.y-axis')
+            .call((ax: any) => ax.transition(t).call(
+                d3.axisLeft(yScale)
                     .ticks(lowNoise ? 3 : 8)
-                    .tickFormat((d) => `${d}`)
-            )
+                    .tickFormat(d => `${d}`)
+            ))
             .call((ax) => ax.select('.domain').attr('stroke', '#d6d3d1'))
             .selectAll('text')
             .style('font-size', '8px')
             .style('fill', '#78716c');
+
     }, [lowNoise]);
 
     return (
@@ -464,43 +512,47 @@ export default function Decluttering101Lesson() {
                 </div>
 
                 {/* Interactive demo */}
-                <ChartFrame
-                    label="Live Lab: Gridline Density"
-                    note={lowNoise
-                        ? '3 gridlines — only what comprehension requires. Working memory is free to interpret data.'
-                        : '13+ gridlines, background stripes, decorative border — each steals a working memory slot before a value is read.'}
-                >
-                    <div className="p-6">
-                        <div className="flex flex-col items-center">
-                            <div className="overflow-x-auto w-full flex justify-center py-4 bg-stone-50 rounded-xl shadow-inner border border-stone-100">
-                                <svg
-                                    ref={svgRef}
-                                    width={W}
-                                    height={H}
-                                    viewBox={`0 0 ${W} ${H}`}
-                                    className="drop-shadow-sm"
-                                    aria-label="Cognitive load demo: bar chart with gridline density toggle"
-                                />
-                            </div>
+                <div className="bg-white rounded-xl border border-stone-200 p-5 shadow-sm">
+                    <div className="relative">
+                        <span className="absolute top-0 right-0 text-xs font-bold text-stone-300 select-none">1.2</span>
+                        <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
+                            Live demo: Gridline density
+                        </p>
+                        <p className="text-[13px] text-stone-500 mb-4">
+                            Toggle the gridline density to experience how unnecessary structure forces your eyes to work harder to read the exact same data.
+                        </p>
 
-                            <div className="flex items-center justify-center gap-4 mt-8 bg-white p-2 rounded-full border border-stone-100 shadow-sm">
-                                <span className={`text-[13px] font-medium transition-colors ${!lowNoise ? 'text-stone-800' : 'text-stone-400'}`}>
-                                    Chaos (high noise)
-                                </span>
-                                <button
-                                    onClick={() => setLowNoise((v) => !v)}
-                                    className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors focus:outline-none ${lowNoise ? 'bg-emerald-500' : 'bg-rose-500'}`}
-                                    aria-label="Toggle low noise mode"
-                                >
-                                    <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform ${lowNoise ? 'translate-x-8' : 'translate-x-1'}`} />
-                                </button>
-                                <span className={`text-[13px] font-medium transition-colors ${lowNoise ? 'text-stone-800' : 'text-stone-400'}`}>
-                                    Tufte (clean)
-                                </span>
-                            </div>
+                        <div className="flex justify-center py-3 overflow-x-auto">
+                            <svg className="w-full max-w-2xl mx-auto block"
+                                ref={svgRef}
+                                viewBox={`0 0 ${W} ${H}`}
+                                aria-label="Cognitive load demo: bar chart with gridline density toggle"
+                            />
                         </div>
+
+                        <div className="flex items-center justify-center gap-3 mt-4">
+                            <span className={`text-[13px] font-medium transition-colors ${!lowNoise ? 'text-stone-800' : 'text-stone-400'}`}>
+                                Chaos (high noise)
+                            </span>
+                            <button
+                                onClick={() => setLowNoise((v) => !v)}
+                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${lowNoise ? 'bg-emerald-500' : 'bg-red-500'}`}
+                                aria-label="Toggle low noise mode"
+                            >
+                                <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${lowNoise ? 'translate-x-6' : 'translate-x-1'}`} />
+                            </button>
+                            <span className={`text-[13px] font-medium transition-colors ${lowNoise ? 'text-stone-800' : 'text-stone-400'}`}>
+                                Tufte (clean)
+                            </span>
+                        </div>
+
+                        <p className="text-center text-[12px] text-stone-400 mt-2">
+                            {lowNoise
+                                ? '3 gridlines — only what comprehension requires. Working memory is free to interpret data.'
+                                : '13+ gridlines, background stripes, decorative border — each steals a working memory slot before a value is read.'}
+                        </p>
                     </div>
-                </ChartFrame>
+                </div>
 
 
                 {/* Research note */}
