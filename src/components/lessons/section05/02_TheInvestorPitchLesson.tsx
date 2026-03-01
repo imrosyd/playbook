@@ -1,4 +1,4 @@
-import SimulatorLesson from '../section04/SimulatorLesson';
+import SimulatorLesson from './SimulatorLesson';
 
 const crossRefs = [
     { sectionId: 'perception', slug: 'pattern', label: '1.4 — Pattern Recognition: trend perception in noisy data' },

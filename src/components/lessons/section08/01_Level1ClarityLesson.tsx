@@ -1,4 +1,4 @@
-import EthicalLevelLesson from '../section05/EthicalLevelLesson';
+import EthicalLevelLesson from './EthicalLevelLesson';
 
 const crossRefs = [
     { sectionId: 'lab', slug: 'full-lab', label: '3.5 — Full Lab: compare honest vs. distorted versions' },

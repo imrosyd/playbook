@@ -89,7 +89,7 @@ function SmoothingWindowChart() {
                 <line x1={pad.l} x2={w - pad.r}
                     y1={toY(FLAT_MEAN)} y2={toY(FLAT_MEAN)}
                     stroke="#059669" strokeWidth={1.5} strokeDasharray="6,4" opacity={0.6} />
-                <text x={pad.l + 4} y={toY(FLAT_MEAN) - 4} fill="#059669" fontSize={8} fontWeight={700}>
+                <text x={pad.l + 4} y={toY(FLAT_MEAN) - 4} fill="#059669" fontSize={8}>
                     True mean (50)
                 </text>
                 {/* Raw line */}
@@ -420,7 +420,7 @@ export default function SpottingTheSignalLesson() {
                         </p>
 
                         <div className="flex justify-center py-3 overflow-x-auto">
-                            <svg
+                            <svg className="w-full max-w-2xl mx-auto block"
                                 ref={svgRef}
                                 width={W}
                                 height={H}

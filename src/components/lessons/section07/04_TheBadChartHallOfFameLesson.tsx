@@ -79,7 +79,7 @@ function TruncatedBarChart() {
                     return (
                         <g key={i}>
                             <rect x={x} y={toY(d)} width={bw} height={bH(d)} fill="#1c1917" rx={2} />
-                            <text x={x + bw / 2} y={toY(d) - 4} fill="#1c1917" fontSize={8} fontWeight={700} textAnchor="middle">{d}%</text>
+                            <text x={x + bw / 2} y={toY(d) - 4} fill="#1c1917" fontSize={8} textAnchor="middle">{d}%</text>
                             <text x={x + bw / 2} y={h - 8} fill="#a8a29e" fontSize={8} textAnchor="middle">{labels[i]}</text>
                         </g>
                     );
@@ -126,7 +126,7 @@ function AreaDistortionChart() {
                             <g key={i}>
                                 <circle cx={cx} cy={h / 2 - 4} r={r} fill="#1c1917" opacity={byArea ? 0.85 : 0.5} />
                                 <text x={cx} y={h - 4} fill="#78716c" fontSize={8} textAnchor="middle">{d.label}</text>
-                                <text x={cx} y={h / 2 - 4 + 3} fill="white" fontSize={7} fontWeight={700} textAnchor="middle">{d.value}</text>
+                                <text x={cx} y={h / 2 - 4 + 3} fill="white" fontSize={7} textAnchor="middle">{d.value}</text>
                             </g>
                         );
                     })}
@@ -191,7 +191,7 @@ function ThreeDPerspectiveChart() {
                             {/* Front face */}
                             <rect x={x} y={apparentY} width={bw} height={apparentH} fill="#1c1917" />
                             <text x={x + bw / 2} y={h - 8} fill="#a8a29e" fontSize={8} textAnchor="middle">{labels[i]}</text>
-                            <text x={x + bw / 2} y={apparentY - 10} fill="#78716c" fontSize={8} fontWeight={700} textAnchor="middle">{d}</text>
+                            <text x={x + bw / 2} y={apparentY - 10} fill="#78716c" fontSize={8} textAnchor="middle">{d}</text>
                         </g>
                     );
                 })}
@@ -236,7 +236,7 @@ function ElevenSlicePieChart() {
             <div className="flex items-start gap-4">
                 <div>
                     <p className="text-[9px] font-bold text-stone-400 uppercase tracking-wider mb-2 text-center">11-slice pie (weak)</p>
-                    <svg viewBox="0 0 140 140" className="w-full max-w-[140px]">
+                    <svg viewBox="0 0 480 220" className="w-full max-w-[140px]">
                         {slices.map((s, i) => (
                             <path key={i} d={s.path} fill={s.fill} stroke="white" strokeWidth={1} />
                         ))}

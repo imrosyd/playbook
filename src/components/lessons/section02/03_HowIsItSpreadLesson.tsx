@@ -214,7 +214,7 @@ function DistributionAccuracyChart() {
                     <g key={t.name}>
                         <text x={pad.l - 8} y={y + barH / 2 + 4} fill="#78716c" fontSize={12} textAnchor="end">{t.name}</text>
                         <rect x={pad.l} y={y} width={bw} height={barH} fill={c} rx={3} opacity={0.85} />
-                        <text x={pad.l + bw + 6} y={y + barH / 2 + 4} fill={c} fontSize={11} fontWeight={700}>{t.accuracy}%</text>
+                        <text x={pad.l + bw + 6} y={y + barH / 2 + 4} fill={c} fontSize={11}>{t.accuracy}%</text>
                     </g>
                 );
             })}
@@ -287,8 +287,8 @@ function DistributionShapeComparisonDemo() {
                     </g>
                 ))}
 
-                <text x={pad.l - 12} y={yA} fill="#57534e" fontSize={12} fontWeight={700} textAnchor="end" dominantBaseline="middle">Group A</text>
-                <text x={pad.l - 12} y={yB} fill="#57534e" fontSize={12} fontWeight={700} textAnchor="end" dominantBaseline="middle">Group B</text>
+                <text x={pad.l - 12} y={yA} fill="#57534e" fontSize={12} textAnchor="end" dominantBaseline="middle">Group A</text>
+                <text x={pad.l - 12} y={yB} fill="#57534e" fontSize={12} textAnchor="end" dominantBaseline="middle">Group B</text>
 
                 {view === 'boxplot' && (
                     <>
@@ -382,14 +382,14 @@ function MeanVsMedianDemo() {
                 <g className="transition-all duration-500" transform={`translate(${scaleX(median)}, 0)`}>
                     <line x1={0} x2={0} y1={pad.t} y2={h - pad.b} stroke="#2563eb" strokeWidth={2} strokeDasharray="4,2" />
                     <rect x={-30} y={pad.t - 22} width={60} height={18} fill="#2563eb" rx={2} />
-                    <text x={0} y={pad.t - 9} fill="#fff" fontSize={10} fontWeight={600} textAnchor="middle">Median: ${Math.round(median)}k</text>
+                    <text x={0} y={pad.t - 9} fill="#fff" fontSize={10} textAnchor="middle">Median: ${Math.round(median)}k</text>
                 </g>
 
                 {/* Mean marker */}
                 <g className="transition-all duration-500" transform={`translate(${scaleX(mean)}, 0)`}>
                     <line x1={0} x2={0} y1={pad.t + 30} y2={h - pad.b} stroke="#f43f5e" strokeWidth={2} strokeDasharray="4,2" />
                     <rect x={-30} y={pad.t + 30 - 22} width={60} height={18} fill="#f43f5e" rx={2} />
-                    <text x={0} y={pad.t + 30 - 9} fill="#fff" fontSize={10} fontWeight={600} textAnchor="middle">Mean: ${mean}k</text>
+                    <text x={0} y={pad.t + 30 - 9} fill="#fff" fontSize={10} textAnchor="middle">Mean: ${mean}k</text>
                 </g>
             </svg>
 

@@ -143,7 +143,7 @@ function GaugeVsBulletChart() {
                             </span>
                         </div>
                         <div className="bg-white rounded-xl border border-stone-100 p-6 shadow-sm flex items-center justify-center h-32">
-                            <svg viewBox="0 0 100 60" className="w-full max-w-[160px] drop-shadow-sm">
+                            <svg viewBox="0 0 480 220" className="w-full max-w-[160px] drop-shadow-sm">
                                 <path d={bgPath} fill="none" stroke="#e7e5e4" strokeWidth={10} strokeLinecap="round" />
                                 <path d={valPath} fill="none" stroke="#10b981" strokeWidth={10} strokeLinecap="round" />
                                 <line
@@ -152,7 +152,7 @@ function GaugeVsBulletChart() {
                                     x2={cx + (r + 2) * Math.cos(targetAngle)}
                                     y2={cy + (r + 2) * Math.sin(targetAngle)}
                                     stroke="#1e293b" strokeWidth={2.5} />
-                                <text x={cx} y={cy + 8} fill="#059669" fontSize={14} textAnchor="middle" fontWeight={900}>{value}%</text>
+                                <text x={cx} y={cy + 8} fill="#059669" fontSize={14} textAnchor="middle">{value}%</text>
                             </svg>
                         </div>
                         <ul className="space-y-1.5 px-2">
@@ -177,14 +177,14 @@ function GaugeVsBulletChart() {
                             </span>
                         </div>
                         <div className="bg-white rounded-xl border border-stone-100 p-6 shadow-sm flex items-center justify-center h-32">
-                            <svg viewBox="0 0 100 60" className="w-full max-w-[160px] drop-shadow-sm">
+                            <svg viewBox="0 0 480 220" className="w-full max-w-[160px] drop-shadow-sm">
                                 <rect x={0} y={20} width={100} height={20} fill="#f5f5f4" rx={2} />
                                 <rect x={0} y={20} width={80} height={20} fill="#e7e5e4" rx={2} />
                                 <rect x={0} y={20} width={60} height={20} fill="#d6d3d1" rx={2} />
                                 <rect x={0} y={24} width={value} height={12} fill="#10b981" rx={1.5} />
                                 <line x1={target} y1={16} x2={target} y2={44} stroke="#1e293b" strokeWidth={3} />
-                                <text x={value + 4} y={34} fill="#065f46" fontSize={8} fontWeight={900}>{value}%</text>
-                                <text x={target} y={12} fill="#1e293b" fontSize={7} textAnchor="middle" fontWeight={900}>GOAL</text>
+                                <text x={value + 4} y={34} fill="#065f46" fontSize={8}>{value}%</text>
+                                <text x={target} y={12} fill="#1e293b" fontSize={7} textAnchor="middle">GOAL</text>
                             </svg>
                         </div>
                         <ul className="space-y-1.5 px-2">

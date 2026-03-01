@@ -19,8 +19,8 @@ function SlopegraphDemo() {
                 <line x1={pad.l} x2={pad.l} y1={pad.t} y2={h - pad.b} stroke="#e7e5e4" strokeWidth={1} />
                 <line x1={w - pad.r} x2={w - pad.r} y1={pad.t} y2={h - pad.b} stroke="#e7e5e4" strokeWidth={1} />
 
-                <text x={pad.l} y={pad.t - 15} fill="#78716c" fontSize={12} fontWeight={800} textAnchor="middle">2023</text>
-                <text x={w - pad.r} y={pad.t - 15} fill="#78716c" fontSize={12} fontWeight={800} textAnchor="middle">2024</text>
+                <text x={pad.l} y={pad.t - 15} fill="#78716c" fontSize={12} textAnchor="middle">2023</text>
+                <text x={w - pad.r} y={pad.t - 15} fill="#78716c" fontSize={12} textAnchor="middle">2024</text>
 
                 {data.map((d, i) => {
                     const y1 = scaleY(d.start);
@@ -30,8 +30,8 @@ function SlopegraphDemo() {
                             <line x1={pad.l} x2={w - pad.r} y1={y1} y2={y2} stroke={d.color} strokeWidth={2.5} opacity={0.85} />
                             <circle cx={pad.l} cy={y1} r={4} fill={d.color} />
                             <circle cx={w - pad.r} cy={y2} r={4} fill={d.color} />
-                            <text x={pad.l - 12} y={y1 + 4} fill={d.color} fontSize={11} fontWeight={600} textAnchor="end">{d.label} {d.start}%</text>
-                            <text x={w - pad.r + 12} y={y2 + 4} fill={d.color} fontSize={11} fontWeight={600} textAnchor="start">{d.end}% {d.label}</text>
+                            <text x={pad.l - 12} y={y1 + 4} fill={d.color} fontSize={11} textAnchor="end">{d.label} {d.start}%</text>
+                            <text x={w - pad.r + 12} y={y2 + 4} fill={d.color} fontSize={11} textAnchor="start">{d.end}% {d.label}</text>
                         </g>
                     )
                 })}

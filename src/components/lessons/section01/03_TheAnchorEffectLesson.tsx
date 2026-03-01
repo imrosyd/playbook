@@ -70,7 +70,7 @@ function DualChartComparison() {
                                 {/* Truncation warning */}
                                 {c.yMin > 0 && (
                                     <text x={pad.l + innerW / 2} y={h - 4} fill="#dc2626"
-                                        fontSize={7} textAnchor="middle" fontWeight={700}>
+                                        fontSize={7} textAnchor="middle">
                                         axis starts at ${c.yMin}M — not zero!
                                     </text>
                                 )}
@@ -132,7 +132,7 @@ function AnchoringMagnitudeChart() {
                         <rect x={pad.l} y={y} width={bw} height={barH}
                             fill={s.color} rx={2} opacity={0.85} />
                         <text x={pad.l + bw + 4} y={y + barH / 2 + 4}
-                            fill={s.color} fontSize={8} fontWeight={700}>{s.anchorEffect}%</text>
+                            fill={s.color} fontSize={8}>{s.anchorEffect}%</text>
                     </g>
                 );
             })}
@@ -504,7 +504,7 @@ export default function TheAnchorEffectLesson() {
                         </p>
 
                         <div className="flex justify-center py-3 overflow-x-auto">
-                            <svg
+                            <svg className="w-full max-w-2xl mx-auto block"
                                 ref={svgRef}
                                 width={W}
                                 height={H}

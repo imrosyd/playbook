@@ -49,7 +49,7 @@ function AccessibilityBarChart({ filter }: { filter: FilterType }) {
                 return (
                     <g key={b.label}>
                         <rect x={x} y={toY(b.value)} width={barWidth} height={barH(b.value)} fill={b.color} rx={3} />
-                        <text x={x + barWidth / 2} y={toY(b.value) - 4} fill="#44403c" fontSize={9} fontWeight={700} textAnchor="middle">{b.value}%</text>
+                        <text x={x + barWidth / 2} y={toY(b.value) - 4} fill="#44403c" fontSize={9} textAnchor="middle">{b.value}%</text>
                         <text x={x + barWidth / 2} y={h - 6} fill="#a8a29e" fontSize={8} textAnchor="middle">{b.label}</text>
                     </g>
                 );

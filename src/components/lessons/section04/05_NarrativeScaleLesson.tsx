@@ -33,7 +33,7 @@ function ScaleDomainNarrativeDemo() {
                     </div>
 
                     <div className="w-[80%] max-w-[250px] mt-6 relative">
-                        <svg viewBox="0 0 100 100" className="w-full h-auto overflow-visible bg-white border border-stone-200 drop-shadow-sm">
+                        <svg viewBox="0 0 480 220" className="w-full h-auto overflow-visible bg-white border border-stone-200 drop-shadow-sm">
                             {/* Grid center lines */}
                             <line x1="50" x2="50" y1="0" y2="100" stroke="#e2e8f0" strokeWidth={0.5} />
                             <line x1="0" x2="100" y1="50" y2="50" stroke="#e2e8f0" strokeWidth={0.5} />
@@ -83,7 +83,7 @@ function EconomistStyleDemo() {
                         <span className="text-stone-400 font-normal normal-case">% of new car sales</span>
                     </h4>
 
-                    <svg viewBox="0 0 100 50" className="w-full h-auto overflow-visible">
+                    <svg viewBox="0 0 480 220" className="w-full h-auto overflow-visible">
                         {/* Horizontal Grid */}
                         <line x1="0" x2="100" y1="5" y2="5" stroke="#cbd5e1" strokeWidth={0.5} />
                         <line x1="0" x2="100" y1="20" y2="20" stroke="#cbd5e1" strokeWidth={0.5} />
@@ -98,7 +98,7 @@ function EconomistStyleDemo() {
                         {/* Today Marker Line (Anchor) */}
                         <line x1="60" x2="60" y1="0" y2="50" stroke="#f87171" strokeWidth={0.8} />
                         <rect x="52" y="-5" width="16" height="5" fill="#f87171" />
-                        <text x="60" y="-1.5" fontSize="3.5" fill="#fff" textAnchor="middle" fontWeight="bold">TODAY</text>
+                        <text x="60" y="-1.5" fontSize="3.5" fill="#fff" textAnchor="middle">TODAY</text>
 
                         {/* Historical Data (Solid) */}
                         <path d="M 0 48 L 15 45 L 30 38 L 45 32 L 60 25" fill="none" stroke="#0ea5e9" strokeWidth={1.5} />
@@ -129,7 +129,7 @@ function ContextualAnnotationsDemo() {
             <h3 className="text-[14px] font-bold text-stone-800 uppercase tracking-wide mb-6">Contextual Annotations</h3>
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-6 relative min-h-[250px] flex justify-center items-end">
-                    <svg viewBox="0 0 100 80" className="w-[90%] max-w-[300px] h-auto overflow-visible">
+                    <svg viewBox="0 0 480 220" className="w-[90%] max-w-[300px] h-auto overflow-visible">
                         {/* Axes */}
                         <line x1="5" x2="95" y1="65" y2="65" stroke="#a8a29e" strokeWidth={0.5} />
 
@@ -150,8 +150,8 @@ function ContextualAnnotationsDemo() {
                         <text x="14" y="70" fontSize="3" fill="#64748b" textAnchor="middle">Mon</text>
                         <text x="26" y="70" fontSize="3" fill="#64748b" textAnchor="middle">Tue</text>
                         <text x="38" y="70" fontSize="3" fill="#64748b" textAnchor="middle">Wed</text>
-                        <text x="50" y="70" fontSize="3" fill="#ef4444" textAnchor="middle" fontWeight="bold">Thu</text>
-                        <text x="62" y="70" fontSize="3" fill="#ef4444" textAnchor="middle" fontWeight="bold">Fri</text>
+                        <text x="50" y="70" fontSize="3" fill="#ef4444" textAnchor="middle">Thu</text>
+                        <text x="62" y="70" fontSize="3" fill="#ef4444" textAnchor="middle">Fri</text>
                         <text x="74" y="70" fontSize="3" fill="#64748b" textAnchor="middle">Sat</text>
                         <text x="86" y="70" fontSize="3" fill="#64748b" textAnchor="middle">Sun</text>
 
@@ -160,7 +160,7 @@ function ContextualAnnotationsDemo() {
                         <path d="M 46 22 L 46 18 L 56 18 L 56 16 M 56 18 L 66 18 L 66 22" fill="none" stroke="#b91c1c" strokeWidth={0.5} />
 
                         {/* Annotation Text */}
-                        <text x="56" y="14" fontSize="4" fill="#b91c1c" textAnchor="middle" fontWeight="bold">Landing Page 500 Error</text>
+                        <text x="56" y="14" fontSize="4" fill="#b91c1c" textAnchor="middle">Landing Page 500 Error</text>
                         <text x="56" y="27" fontSize="3" fill="#ef4444" textAnchor="middle">(Resolved Friday 2PM)</text>
 
                     </svg>
@@ -192,7 +192,7 @@ function AestheticVsPurposeDemo() {
 
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-6 relative min-h-[250px] flex justify-center items-end">
-                    <svg viewBox="0 0 100 80" className="w-[80%] max-w-[250px] h-auto overflow-visible">
+                    <svg viewBox="0 0 480 220" className="w-[80%] max-w-[250px] h-auto overflow-visible">
                         {is3D ? (
                             <g>
                                 {/* A fake 3D perspective bar chart. Very hard to read the exact value. */}
@@ -224,13 +224,13 @@ function AestheticVsPurposeDemo() {
 
                                 {/* Target/Quota line */}
                                 <line x1="10" x2="90" y1="20" y2="20" stroke="#f59e0b" strokeWidth={1} strokeDasharray="3 3" />
-                                <text x="92" y="21" fontSize="4" fill="#d97706" fontWeight="bold">Sales Quota</text>
+                                <text x="92" y="21" fontSize="4" fill="#d97706">Sales Quota</text>
 
                                 <rect x="25" y="40" width="15" height="30" fill="#3b82f6" rx="1" />
-                                <text x="32.5" y="38" fontSize="4" fill="#1e40af" textAnchor="middle" fontWeight="bold">60%</text>
+                                <text x="32.5" y="38" fontSize="4" fill="#1e40af" textAnchor="middle">60%</text>
 
                                 <rect x="55" y="15" width="15" height="55" fill="#10b981" rx="1" />
-                                <text x="62.5" y="13" fontSize="4" fill="#065f46" textAnchor="middle" fontWeight="bold">110%</text>
+                                <text x="62.5" y="13" fontSize="4" fill="#065f46" textAnchor="middle">110%</text>
 
                                 <text x="32.5" y="75" fontSize="4" fill="#64748b" textAnchor="middle">Q1</text>
                                 <text x="62.5" y="75" fontSize="4" fill="#64748b" textAnchor="middle">Q2</text>
@@ -270,9 +270,9 @@ function SlopegraphLimitationsDemo() {
 
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-6 relative min-h-[250px] flex justify-center">
-                    <svg viewBox="0 0 100 80" className="w-[90%] max-w-[300px] h-auto overflow-visible">
+                    <svg viewBox="0 0 480 220" className="w-[90%] max-w-[300px] h-auto overflow-visible">
                         {/* Title & Axes */}
-                        <text x="50" y="5" fontSize="5" fill="#334155" textAnchor="middle" fontWeight="bold">Market Share: 2023 vs 2024</text>
+                        <text x="50" y="5" fontSize="5" fill="#334155" textAnchor="middle">Market Share: 2023 vs 2024</text>
                         <line x1="20" x2="20" y1="15" y2="75" stroke="#cbd5e1" strokeWidth={0.5} />
                         <line x1="80" x2="80" y1="15" y2="75" stroke="#cbd5e1" strokeWidth={0.5} />
 
@@ -283,8 +283,8 @@ function SlopegraphLimitationsDemo() {
                         <path d="M 20 25 L 80 20" fill="none" stroke="#3b82f6" strokeWidth={1} />
                         <circle cx="20" cy="25" r="1.5" fill="#3b82f6" />
                         <circle cx="80" cy="20" r="1.5" fill="#3b82f6" />
-                        <text x="18" y="26" fontSize="3.5" fill="#3b82f6" textAnchor="end" fontWeight="bold">Alpha (30%)</text>
-                        <text x="82" y="21" fontSize="3.5" fill="#3b82f6" textAnchor="start" fontWeight="bold">Alpha (35%)</text>
+                        <text x="18" y="26" fontSize="3.5" fill="#3b82f6" textAnchor="end">Alpha (30%)</text>
+                        <text x="82" y="21" fontSize="3.5" fill="#3b82f6" textAnchor="start">Alpha (35%)</text>
 
                         {/* Middle Cluster (The Overlap Problem) */}
                         {/* Beta: 15% -> 12% */}
@@ -315,11 +315,11 @@ function SlopegraphLimitationsDemo() {
                                 <line x1="18.5" x2="19.5" y1="46.5" y2="50" stroke="#cbd5e1" strokeWidth={0.2} /> {/* connector */}
 
                                 <text x="18" y="56" fontSize="3" fill="#64748b" textAnchor="end">Delta (13%)</text>
-                                <text x="18" y="61" fontSize="3.5" fill="#d97706" textAnchor="end" fontWeight="bold">Epsilon (12%)</text>
+                                <text x="18" y="61" fontSize="3.5" fill="#d97706" textAnchor="end">Epsilon (12%)</text>
                                 <line x1="18.5" x2="19.5" y1="60.5" y2="56" stroke="#fcd34d" strokeWidth={0.5} /> {/* connector */}
 
                                 {/* Right Side Staggered Labels */}
-                                <text x="82" y="45" fontSize="3.5" fill="#d97706" textAnchor="start" fontWeight="bold">Epsilon (17%)</text>
+                                <text x="82" y="45" fontSize="3.5" fill="#d97706" textAnchor="start">Epsilon (17%)</text>
                                 <text x="82" y="49" fontSize="3" fill="#64748b" textAnchor="start">Gamma (16%)</text>
 
                                 <text x="82" y="55" fontSize="3" fill="#64748b" textAnchor="start">Beta (12%)</text>
@@ -331,14 +331,14 @@ function SlopegraphLimitationsDemo() {
                                 <text x="18" y="50" fontSize="3" fill="#64748b" textAnchor="end">Beta (15%)</text>
                                 <text x="18" y="52" fontSize="3" fill="#64748b" textAnchor="end">Gamma (14%)</text>
                                 <text x="18" y="54" fontSize="3" fill="#64748b" textAnchor="end">Delta (13%)</text>
-                                <text x="18" y="56" fontSize="3.5" fill="#d97706" textAnchor="end" fontWeight="bold">Epsilon (12%)</text>
+                                <text x="18" y="56" fontSize="3.5" fill="#d97706" textAnchor="end">Epsilon (12%)</text>
                                 {/* Notice how they literally print on top of each other slightly in real D3 without collision detection */}
 
                                 {/* Right Side Messy Overlap */}
                                 <text x="82" y="55" fontSize="3" fill="#64748b" textAnchor="start">Beta (12%)</text>
                                 <text x="82" y="48" fontSize="3" fill="#64748b" textAnchor="start">Gamma (16%)</text>
                                 <text x="82" y="57" fontSize="3" fill="#64748b" textAnchor="start">Delta (11%)</text>
-                                <text x="82" y="46" fontSize="3.5" fill="#d97706" textAnchor="start" fontWeight="bold">Epsilon (17%)</text>
+                                <text x="82" y="46" fontSize="3.5" fill="#d97706" textAnchor="start">Epsilon (17%)</text>
                             </g>
                         )}
 

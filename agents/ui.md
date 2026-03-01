@@ -297,10 +297,14 @@ function MyChart() {
 ```
 
 **Font sizes standar dalam SVG (proporsional terhadap 480x220):**
-- Axis tick labels: `fontSize={9–10}`
-- Bar / data labels: `fontSize={11–12}`
-- Annotation text: `fontSize={10–11}`
-- Chart sub-titles: `fontSize={10}` (di luar ChartFrame label)
+- Axis tick labels: `fontSize={7–8}`
+- Bar / data labels: `fontSize={8}`
+- Annotation text: `fontSize={7-8}`, `fontWeight={500}` untuk emphasis (hindari bold/900)
+- Chart sub-titles: `fontSize={7.5–8}` (di luar ChartFrame label)
+
+**Typography UI / Legend di luar SVG:**
+- Gaya Teks UI pendukung chart (toggle, legend): Gunakan `text-[13px] font-medium text-stone-*-*`
+- Huruf kapital (`uppercase` / `font-black`): SEMAKSIMAL MUNGKIN DIHINDARI. Gunakan Sentence case biasa untuk legend dan tombol.
 
 **Aturan:**
 - ✅ Selalu gunakan `viewBox="0 0 480 220"` — BUKAN `width`/`height` inline

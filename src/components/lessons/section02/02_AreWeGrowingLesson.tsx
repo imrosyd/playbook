@@ -246,7 +246,7 @@ function BankingDemo() {
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     <rect x={0} y={0} width={panelW} height={h} fill="#f5f5f4" rx={12} stroke="#e7e5e4" strokeWidth={1} />
-                    <text x={panelW / 2} y={18} fill="#78716c" fontSize={8} textAnchor="middle" fontWeight={800} className="tracking-widest uppercase">
+                    <text x={panelW / 2} y={18} fill="#78716c" fontSize={8} textAnchor="middle" className="tracking-widest uppercase">
                         {narrow ? 'AMPLIFIED VARIANCE' : 'OPTIMAL DISCRIMINATION'}
                     </text>
                     {data.map((v, i) => i > 0 && (
@@ -259,11 +259,11 @@ function BankingDemo() {
                         <circle key={i} cx={toX(i)} cy={toY(v)} r={3.5} fill={sectionColor} stroke="#fff" strokeWidth={1.5} />
                     ))}
                     {months.map((m, i) => (
-                        <text key={i} x={toX(i)} y={h - pad.b + 22} fill="#a8a29e" fontSize={9} textAnchor="middle" fontWeight={500} className="tabular-nums">{m}</text>
+                        <text key={i} x={toX(i)} y={h - pad.b + 22} fill="#a8a29e" fontSize={9} textAnchor="middle" className="tabular-nums">{m}</text>
                     ))}
                     {!narrow && (
                         <g transform={`translate(${panelW + 20}, ${h / 2 - 10})`}>
-                            <text fill={sectionColor} fontSize={10} fontWeight={700}>
+                            <text fill={sectionColor} fontSize={10}>
                                 <tspan x={0} y={0}>✔ Avg slope ≈ 45°</tspan>
                                 <tspan x={0} dy={16}>✔ Precise comparison</tspan>
                             </text>
@@ -271,7 +271,7 @@ function BankingDemo() {
                     )}
                     {narrow && (
                         <g transform={`translate(${panelW + 20}, ${h / 2 - 10})`}>
-                            <text fill="#dc2626" fontSize={10} fontWeight={700}>
+                            <text fill="#dc2626" fontSize={10}>
                                 <tspan x={0} y={0}>⚠ Slopes too steep</tspan>
                                 <tspan x={0} dy={16}>⚠ False drama</tspan>
                             </text>
@@ -324,9 +324,9 @@ function TimeSeriesAccuracyChart() {
                         const c = riskColor(t.risk);
                         return (
                             <g key={t.name}>
-                                <text x={pad.l - 8} y={y + barH / 2 + 3} fill="#78716c" fontSize={9} fontWeight={500} textAnchor="end">{t.name}</text>
+                                <text x={pad.l - 8} y={y + barH / 2 + 3} fill="#78716c" fontSize={9} textAnchor="end">{t.name}</text>
                                 <rect x={pad.l} y={y} width={bw} height={barH} fill={c} rx={4} />
-                                <text x={pad.l + bw + 6} y={y + barH / 2 + 3} fill={c} fontSize={9} fontWeight={800} className="tabular-nums">{t.accuracy}%</text>
+                                <text x={pad.l + bw + 6} y={y + barH / 2 + 3} fill={c} fontSize={9} className="tabular-nums">{t.accuracy}%</text>
                             </g>
                         );
                     })}

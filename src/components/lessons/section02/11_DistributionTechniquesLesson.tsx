@@ -48,7 +48,7 @@ function RidgelineDemo() {
                         return (
                             <g key={i} transform={`translate(${pad.l}, ${yOffset}) scale(${(w - pad.l - pad.r) / 100}, 1.5)`}>
                                 <path d={l.d} fill={l.color} opacity={0.6} stroke={l.color} strokeWidth={1} />
-                                <text x="-5" y="36" fontSize="7" fontWeight="bold" fill="#475569" textAnchor="end">{l.label}</text>
+                                <text x="-5" y="36" fontSize="7" fill="#475569" textAnchor="end">{l.label}</text>
                             </g>
                         )
                     })}
@@ -196,7 +196,7 @@ function HistogramShapes() {
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 p-2">
                     {shapes.map(s => (
                         <div key={s.name} className="flex flex-col bg-stone-50 p-4 border border-stone-200 rounded-xl shadow-sm">
-                            <svg viewBox="0 0 100 45" className="w-full block mb-3">
+                            <svg viewBox="0 0 480 220" className="w-full block mb-3">
                                 {/* Grid/Axes */}
                                 <line x1="0" x2="100" y1="40" y2="40" stroke="#a8a29e" strokeWidth={1} />
                                 <line x1="50" x2="50" y1="0" y2="40" stroke="#e7e5e4" strokeWidth={1} strokeDasharray="2 2" />
@@ -235,7 +235,7 @@ function KdeButterflyBox() {
                                 <span className="flex items-center gap-1 text-[10px] font-bold text-stone-500"><div className="w-2 h-2 rounded-full bg-emerald-500"></div>Group B</span>
                             </div>
                         </div>
-                        <svg viewBox="0 0 100 45" className="w-full block">
+                        <svg viewBox="0 0 480 220" className="w-full block">
                             <line x1="0" x2="100" y1="40" y2="40" stroke="#e7e5e4" strokeWidth={1} />
                             <path d="M0 40 C 20 40, 30 10, 40 10, 60 40, 80 40" fill="#3b82f6" opacity={0.6} />
                             <path d="M20 40 C 40 40, 50 5, 60 5, 80 40, 100 40" fill="#10b981" opacity={0.6} />
@@ -248,7 +248,7 @@ function KdeButterflyBox() {
                         <div className="flex justify-between items-center mb-4">
                             <span className="text-[12px] font-bold text-stone-800 uppercase tracking-wider">2. Butterfly Bar</span>
                         </div>
-                        <svg viewBox="0 0 100 45" className="w-full block">
+                        <svg viewBox="0 0 480 220" className="w-full block">
                             <line x1="50" x2="50" y1="0" y2="45" stroke="#a8a29e" strokeWidth={1} />
 
                             {/* Group A (Left) */}
@@ -271,7 +271,7 @@ function KdeButterflyBox() {
                         <div className="flex justify-between items-center mb-4">
                             <span className="text-[12px] font-bold text-stone-800 uppercase tracking-wider">3. Parallel Box Plots</span>
                         </div>
-                        <svg viewBox="0 0 100 45" className="w-full block">
+                        <svg viewBox="0 0 480 220" className="w-full block">
                             {/* X-axis */}
                             <line x1="0" x2="100" y1="40" y2="40" stroke="#e7e5e4" strokeWidth={1} />
 
@@ -293,7 +293,7 @@ function KdeButterflyBox() {
                         <div className="flex justify-between items-center mb-4">
                             <span className="text-[12px] font-bold text-stone-800 uppercase tracking-wider">4. Stacked Histogram</span>
                         </div>
-                        <svg viewBox="0 0 100 45" className="w-full block">
+                        <svg viewBox="0 0 480 220" className="w-full block">
                             <line x1="0" x2="100" y1="40" y2="40" stroke="#e7e5e4" strokeWidth={1} />
 
                             <rect x="10" y="25" width="15" height="15" fill="#3b82f6" opacity={0.9} />
@@ -325,7 +325,7 @@ function ViolinDemo() {
                 note="A Violin plot combines the summary statistical markers of a box plot with the continuous density shape of a KDE curve (mirrored symmetrically). It explicitly reveals multi-modal data clusters that a simple box plot would obscure."
             >
                 <div className="flex justify-center py-4 w-full relative">
-                    <svg viewBox="0 0 100 60" className="w-full max-w-[200px] overflow-visible block">
+                    <svg viewBox="0 0 480 220" className="w-full max-w-[200px] overflow-visible block">
                         {/* Axes */}
                         <line x1="0" x2="100" y1="55" y2="55" stroke="#a8a29e" strokeWidth={0.5} />
                         <line x1="20" x2="20" y1="0" y2="55" stroke="#e7e5e4" strokeWidth={0.5} strokeDasharray="1 1" />

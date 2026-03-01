@@ -1,4 +1,4 @@
-import SimulatorLesson from '../section04/SimulatorLesson';
+import SimulatorLesson from './SimulatorLesson';
 
 const crossRefs = [
     { sectionId: 'perception', slug: 'preattentive', label: '1.1 — Pre-attentive: color emphasis in channel comparison' },

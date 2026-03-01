@@ -69,7 +69,7 @@ function TurningPointDemo() {
                     <g style={{ opacity: showEvent ? 1 : 0, transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
                         <line x1={eventX} x2={eventX} y1={pad.t} y2={h - pad.b} stroke="#f97316" strokeWidth={1.5} strokeDasharray="4 3" />
                         <rect x={eventX - 35} y={pad.t} width={70} height={16} rx={4} fill="#fff" stroke="#fdba74" strokeWidth={1} shadow-sm="true" />
-                        <text x={eventX} y={pad.t + 11} fill="#ea580c" fontSize="9" fontWeight="bold" textAnchor="middle">Pricing Update</text>
+                        <text x={eventX} y={pad.t + 11} fill="#ea580c" fontSize="9" textAnchor="middle">Pricing Update</text>
                         <circle cx={scaleX(7)} cy={scaleY(data[7])} r={5} fill="none" stroke="#ea580c" strokeWidth={1.5} />
                     </g>
 
@@ -167,7 +167,6 @@ function LegendInlineDemo() {
                                         y={scaleY(l.data[l.data.length - 1]) + 3}
                                         fill={l.color}
                                         fontSize="10"
-                                        fontWeight="bold"
                                     >
                                         {l.name}
                                     </text>
@@ -234,7 +233,7 @@ function EventAnnotatedDemo() {
                                 {ann && (
                                     <g>
                                         <rect x={scaleX(i) - 35} y={scaleY(d) + ann.dy - 10} width={70} height={14} rx={2} fill="#0f172a" opacity={0.9} />
-                                        <text x={scaleX(i)} y={scaleY(d) + ann.dy} fill="#fff" fontSize="8" fontWeight="bold" textAnchor="middle" letterSpacing="0.2">
+                                        <text x={scaleX(i)} y={scaleY(d) + ann.dy} fill="#fff" fontSize="8" textAnchor="middle" letterSpacing="0.2">
                                             {ann.label}
                                         </text>
                                         <line x1={scaleX(i)} x2={scaleX(i)} y1={scaleY(d) - 4} y2={scaleY(d) + ann.dy + 4} stroke="#0f172a" strokeWidth={1.5} />
@@ -356,7 +355,7 @@ function MissingDataDemo() {
                     {/* Explanation Note */}
                     <g>
                         <rect x={scaleX(3.5) - 35} y={pad.t + 10} width={70} height={16} rx={3} fill="#e2e8f0" />
-                        <text x={scaleX(3.5)} y={pad.t + 21} fill="#475569" fontSize="9" fontWeight="bold" textAnchor="middle">Sensor Outage</text>
+                        <text x={scaleX(3.5)} y={pad.t + 21} fill="#475569" fontSize="9" textAnchor="middle">Sensor Outage</text>
                     </g>
 
                     {/* X-axis labels */}
@@ -416,12 +415,12 @@ function DifferenceShadingDemo() {
                     <path d={pathActual} fill="none" stroke="#1c1917" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
 
                     {/* Inline Labels */}
-                    <text x={scaleX(5) + 6} y={scaleY(target[5]) + 3} fill="#78716c" fontSize="10" fontWeight="bold">Target</text>
-                    <text x={scaleX(5) + 6} y={scaleY(actual[5]) + 3} fill="#1c1917" fontSize="10" fontWeight="bold">Actual</text>
+                    <text x={scaleX(5) + 6} y={scaleY(target[5]) + 3} fill="#78716c" fontSize="10">Target</text>
+                    <text x={scaleX(5) + 6} y={scaleY(actual[5]) + 3} fill="#1c1917" fontSize="10">Actual</text>
 
                     {/* Area Annotations */}
-                    <text x={scaleX(1.5)} y={scaleY(116)} fill="#16a34a" fontSize="9" fontWeight="bold">Surplus</text>
-                    <text x={scaleX(4.5)} y={scaleY(135)} fill="#dc2626" fontSize="9" fontWeight="bold">Deficit</text>
+                    <text x={scaleX(1.5)} y={scaleY(116)} fill="#16a34a" fontSize="9">Surplus</text>
+                    <text x={scaleX(4.5)} y={scaleY(135)} fill="#dc2626" fontSize="9">Deficit</text>
 
                     {/* X-axis labels */}
                     {months.map((m, i) => (
@@ -467,7 +466,7 @@ function ShadedRegionDemo() {
                     <line x1={scaleX(6.5)} x2={scaleX(6.5)} y1={pad.t} y2={h - pad.b} stroke="#ca8a04" strokeWidth={1} strokeDasharray="2 2" />
 
                     <rect x={scaleX(5) - 30} y={pad.t} width={60} height={16} rx={3} fill="#ca8a04" opacity={0.9} />
-                    <text x={scaleX(5)} y={pad.t + 11} fill="#fff" fontSize="9" fontWeight="bold" textAnchor="middle">Flash Sale</text>
+                    <text x={scaleX(5)} y={pad.t + 11} fill="#fff" fontSize="9" textAnchor="middle">Flash Sale</text>
 
                     {/* Line & Points */}
                     <path d={path} fill="none" stroke="#0ea5e9" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />

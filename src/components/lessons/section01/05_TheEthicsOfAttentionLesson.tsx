@@ -81,7 +81,7 @@ function BiasInteractionChart() {
                         <rect x={pad.l} y={y} width={bw} height={barH}
                             fill={b.color} rx={2} opacity={0.9} />
                         <text x={pad.l + bw + 4} y={y + barH / 2 + 4}
-                            fill={b.color} fontSize={9} fontWeight={700}>{b.multiplier}×</text>
+                            fill={b.color} fontSize={9}>{b.multiplier}×</text>
                     </g>
                 );
             })}
@@ -443,7 +443,7 @@ export default function TheEthicsOfAttentionLesson() {
                         </p>
 
                         <div className="flex justify-center py-3 overflow-x-auto">
-                            <svg
+                            <svg className="w-full max-w-2xl mx-auto block"
                                 ref={svgRef}
                                 width={W}
                                 height={H}

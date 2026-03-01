@@ -35,9 +35,9 @@ function ColorCountChart({ count }: { count: number }) {
     };
 
     return (
-        <svg viewBox="0 0 160 160" className="w-full" style={{ maxWidth: 160 }}>
+        <svg viewBox="0 0 480 220" className="w-full" style={{ maxWidth: 160 }}>
             {colors.map((c, i) => arc(i * segSize, (i + 1) * segSize, c, i))}
-            <text x={cx} y={cy + 4} textAnchor="middle" fill="#1c1917" fontSize={14} fontWeight={700}>{count}</text>
+            <text x={cx} y={cy + 4} textAnchor="middle" fill="#1c1917" fontSize={14}>{count}</text>
             <text x={cx} y={cy + 16} textAnchor="middle" fill="#78716c" fontSize={8}>colors</text>
         </svg>
     );

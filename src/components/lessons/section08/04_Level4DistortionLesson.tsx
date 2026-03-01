@@ -1,4 +1,4 @@
-import EthicalLevelLesson from '../section05/EthicalLevelLesson';
+import EthicalLevelLesson from './EthicalLevelLesson';
 
 const crossRefs = [
     { sectionId: 'perception', slug: 'preattentive', label: '1.1 — Pre-attentive: how 3D and axis errors corrupt visual channels' },

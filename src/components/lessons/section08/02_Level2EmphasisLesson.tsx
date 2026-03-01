@@ -1,4 +1,4 @@
-import EthicalLevelLesson from '../section05/EthicalLevelLesson';
+import EthicalLevelLesson from './EthicalLevelLesson';
 
 const crossRefs = [
     { sectionId: 'perception', slug: 'preattentive', label: '1.1 — Pre-attentive: visual channels that emphasis exploits' },

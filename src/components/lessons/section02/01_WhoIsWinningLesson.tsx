@@ -231,14 +231,14 @@ function AccuracyHierarchyChart() {
                 const c = color(e.accuracy);
                 return (
                     <g key={e.rank}>
-                        <text x={4} y={y + barH / 2 + 4} fill="#a8a29e" fontSize={9} fontWeight={700}>
+                        <text x={4} y={y + barH / 2 + 4} fill="#a8a29e" fontSize={9}>
                             #{e.rank}
                         </text>
                         <text x={20} y={y + barH / 2 + 4} fill="#78716c" fontSize={10} textAnchor="start">
                             {e.name}
                         </text>
                         <rect x={pad.l} y={y} width={bw} height={barH} fill={c} rx={3} opacity={0.85} />
-                        <text x={pad.l + bw + 5} y={y + barH / 2 + 4} fill={c} fontSize={10} fontWeight={700}>{e.accuracy}%</text>
+                        <text x={pad.l + bw + 5} y={y + barH / 2 + 4} fill={c} fontSize={10}>{e.accuracy}%</text>
                     </g>
                 );
             })}

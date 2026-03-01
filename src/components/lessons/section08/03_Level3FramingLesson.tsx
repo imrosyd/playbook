@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import EthicalLevelLesson from '../section05/EthicalLevelLesson';
+import EthicalLevelLesson from './EthicalLevelLesson';
 
 const crossRefs = [
     { sectionId: 'perception', slug: 'anchoring', label: '1.3 — Anchoring: how framing exploits first-impression bias' },

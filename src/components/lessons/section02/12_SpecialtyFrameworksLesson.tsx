@@ -42,7 +42,7 @@ function StandoutScatterDemo() {
                     {/* The standout */}
                     <circle cx={pad.l + (85 / 100) * (w - pad.l - pad.r)} cy={pad.t + (15 / 100) * (h - pad.t - pad.b)} r="6" fill="#ef4444" stroke="#fff" strokeWidth={1} className="animate-pulse" />
                     <circle cx={pad.l + (85 / 100) * (w - pad.l - pad.r)} cy={pad.t + (15 / 100) * (h - pad.t - pad.b)} r="9" fill="none" stroke="#ef4444" strokeWidth={1} opacity={0.5} />
-                    <text x={pad.l + (82 / 100) * (w - pad.l - pad.r)} y={pad.t + (16 / 100) * (h - pad.t - pad.b)} fill="#ef4444" fontSize="10" fontWeight="bold" textAnchor="end">Campaign Alpha</text>
+                    <text x={pad.l + (82 / 100) * (w - pad.l - pad.r)} y={pad.t + (16 / 100) * (h - pad.t - pad.b)} fill="#ef4444" fontSize="10" textAnchor="end">Campaign Alpha</text>
                     <text x={pad.l + (82 / 100) * (w - pad.l - pad.r)} y={pad.t + (24 / 100) * (h - pad.t - pad.b)} fill="#7f1d1d" fontSize="8" textAnchor="end">High spend, massive return</text>
                 </svg>
             </ChartFrame>
@@ -96,7 +96,7 @@ function StripTierDemo() {
                     {isBar ? (
                         <g>
                             <rect x={pad.l} y={pad.t + 20} width={(avg / 150) * (w - pad.l - pad.r)} height="30" fill="#3b82f6" opacity={0.8} />
-                            <text x={pad.l + (avg / 150) * (w - pad.l - pad.r) + 8} y={pad.t + 38} fontSize="12" fontWeight="bold" fill="#1e40af">Avg: ${avg}k</text>
+                            <text x={pad.l + (avg / 150) * (w - pad.l - pad.r) + 8} y={pad.t + 38} fontSize="12" fill="#1e40af">Avg: ${avg}k</text>
                         </g>
                     ) : (
                         <g>
@@ -105,9 +105,9 @@ function StripTierDemo() {
                             <rect x={pad.l + (65 / 150) * (w - pad.l - pad.r)} y={pad.t} width={(45 / 150) * (w - pad.l - pad.r)} height={h - pad.t - pad.b} fill="#fef08a" opacity={0.2} />
                             <rect x={pad.l + (110 / 150) * (w - pad.l - pad.r)} y={pad.t} width={(40 / 150) * (w - pad.l - pad.r)} height={h - pad.t - pad.b} fill="#bbf7d0" opacity={0.2} />
 
-                            <text x={pad.l + (32.5 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fontWeight="bold" fill="#ef4444" textAnchor="middle" opacity={0.7}>NEEDS REVIEW</text>
-                            <text x={pad.l + (87.5 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fontWeight="bold" fill="#ca8a04" textAnchor="middle" opacity={0.7}>TARGET ZONE</text>
-                            <text x={pad.l + (130 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fontWeight="bold" fill="#22c55e" textAnchor="middle" opacity={0.7}>TOP PERFORMERS</text>
+                            <text x={pad.l + (32.5 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#ef4444" textAnchor="middle" opacity={0.7}>NEEDS REVIEW</text>
+                            <text x={pad.l + (87.5 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#ca8a04" textAnchor="middle" opacity={0.7}>TARGET ZONE</text>
+                            <text x={pad.l + (130 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#22c55e" textAnchor="middle" opacity={0.7}>TOP PERFORMERS</text>
 
                             {data.map((d, i) => {
                                 const x = pad.l + (d / 150) * (w - pad.l - pad.r);
@@ -189,14 +189,14 @@ function QuadrantScatterDemo() {
                         <line x1={pad.l + (w - pad.l - pad.r) / 2} x2={pad.l + (w - pad.l - pad.r) / 2} y1={pad.t} y2={h - pad.b} stroke="white" strokeWidth="2" />
 
                         {/* Labels within quadrants */}
-                        <text x={pad.l + 10} y={pad.t + 18} fill="#ef4444" fontSize="10" fontWeight="bold" opacity={0.8}>HIGH RISK</text>
-                        <text x={pad.l + (w - pad.l - pad.r) / 2 + 10} y={pad.t + 18} fill="#16a34a" fontSize="10" fontWeight="bold" opacity={0.8}>STARS</text>
-                        <text x={pad.l + 10} y={pad.t + (h - pad.t - pad.b) / 2 + 18} fill="#9ca3af" fontSize="10" fontWeight="bold" opacity={0.8}>IGNORE</text>
-                        <text x={pad.l + (w - pad.l - pad.r) / 2 + 10} y={pad.t + (h - pad.t - pad.b) / 2 + 18} fill="#ca8a04" fontSize="10" fontWeight="bold" opacity={0.8}>POTENTIAL</text>
+                        <text x={pad.l + 10} y={pad.t + 18} fill="#ef4444" fontSize="10" opacity={0.8}>HIGH RISK</text>
+                        <text x={pad.l + (w - pad.l - pad.r) / 2 + 10} y={pad.t + 18} fill="#16a34a" fontSize="10" opacity={0.8}>STARS</text>
+                        <text x={pad.l + 10} y={pad.t + (h - pad.t - pad.b) / 2 + 18} fill="#9ca3af" fontSize="10" opacity={0.8}>IGNORE</text>
+                        <text x={pad.l + (w - pad.l - pad.r) / 2 + 10} y={pad.t + (h - pad.t - pad.b) / 2 + 18} fill="#ca8a04" fontSize="10" opacity={0.8}>POTENTIAL</text>
 
                         {/* Axis Labels */}
-                        <text x={pad.l + (w - pad.l - pad.r) / 2} y={h - 10} fill="#78716c" fontSize="10" fontWeight="bold" textAnchor="middle" letterSpacing="0.5">REWARD / ROI</text>
-                        <text x={15} y={pad.t + (h - pad.t - pad.b) / 2} fill="#78716c" fontSize="10" fontWeight="bold" textAnchor="middle" transform={`rotate(-90 15 ${pad.t + (h - pad.t - pad.b) / 2})`} letterSpacing="0.5">EFFORT / COST</text>
+                        <text x={pad.l + (w - pad.l - pad.r) / 2} y={h - 10} fill="#78716c" fontSize="10" textAnchor="middle" letterSpacing="0.5">REWARD / ROI</text>
+                        <text x={15} y={pad.t + (h - pad.t - pad.b) / 2} fill="#78716c" fontSize="10" textAnchor="middle" transform={`rotate(-90 15 ${pad.t + (h - pad.t - pad.b) / 2})`} letterSpacing="0.5">EFFORT / COST</text>
 
                         {/* Data Points */}
                         {/* High risk */}
@@ -252,7 +252,7 @@ function WafflePieDemo() {
                 <div className="flex justify-center py-6 w-full relative">
                     {isPie ? (
                         <div className="relative">
-                            <svg viewBox="0 0 100 100" className="w-[200px] h-[200px]">
+                            <svg viewBox="0 0 480 220" className="w-[200px] h-[200px]">
                                 {/* 68% pie using path */}
                                 {/* 68% = 244.8 degrees. Start at top (50, 10). End at ~ (14.65, 68.75) */}
                                 <circle cx="50" cy="50" r="40" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth={0.5} />
@@ -317,7 +317,7 @@ function LikertScaleDemo() {
                     </div>
 
                     <div className="flex justify-center p-6 w-full">
-                        <svg viewBox="0 0 120 40" className="w-full max-w-[400px] overflow-visible block">
+                        <svg viewBox="0 0 480 220" className="w-full max-w-[400px] overflow-visible block">
                             {mode === 0 && (
                                 // Standard 100% stacked right from 0
                                 <g>
@@ -352,12 +352,12 @@ function LikertScaleDemo() {
                                     {/* Negative */}
                                     <rect x="20" y="15" width="20" height="10" fill="#dc2626" />
                                     <rect x="40" y="15" width="10" height="10" fill="#fca5a5" />
-                                    <text x="18" y="21.5" fontSize="4" fill="#dc2626" fontWeight="bold" textAnchor="end">30%</text>
+                                    <text x="18" y="21.5" fontSize="4" fill="#dc2626" textAnchor="end">30%</text>
 
                                     {/* Positive */}
                                     <rect x="50" y="15" width="25" height="10" fill="#86efac" />
                                     <rect x="75" y="15" width="30" height="10" fill="#16a34a" opacity="0.9" />
-                                    <text x="107" y="21.5" fontSize="4" fill="#16a34a" fontWeight="bold">55%</text>
+                                    <text x="107" y="21.5" fontSize="4" fill="#16a34a">55%</text>
 
                                     {/* Separated Neutral */}
                                     <rect x="10" y="3" width="15" height="4" fill="#cbd5e1" />
@@ -380,7 +380,7 @@ function CumulativeStepDemo() {
             className="h-full flex flex-col"
         >
             <div className="flex-1 w-full bg-white rounded-lg relative flex items-center justify-center min-h-[140px] px-2">
-                <svg viewBox="0 0 100 50" className="w-full block overflow-visible">
+                <svg viewBox="0 0 480 220" className="w-full block overflow-visible">
                     {/* Axes */}
                     <line x1="5" x2="95" y1="45" y2="45" stroke="#a8a29e" strokeWidth={0.5} />
                     <line x1="5" x2="5" y1="5" y2="45" stroke="#a8a29e" strokeWidth={0.5} />
@@ -410,7 +410,7 @@ function LogScaleDemo() {
             className="h-full flex flex-col"
         >
             <div className="flex-1 w-full bg-white rounded-lg relative flex items-center justify-center min-h-[140px] px-2">
-                <svg viewBox="0 0 100 50" className="w-full block overflow-visible">
+                <svg viewBox="0 0 480 220" className="w-full block overflow-visible">
                     {/* Axes */}
                     <line x1="10" x2="95" y1="40" y2="40" stroke="#a8a29e" strokeWidth={0.5} />
                     <line x1="10" x2="10" y1="5" y2="40" stroke="#a8a29e" strokeWidth={0.5} />
@@ -466,19 +466,19 @@ function TreemapDemo() {
             className="h-full flex flex-col"
         >
             <div className="flex-1 w-full bg-white rounded-lg p-2 relative flex items-center justify-center min-h-[140px]">
-                <svg viewBox="0 0 100 60" className="w-full block h-full">
+                <svg viewBox="0 0 480 220" className="w-full block h-full">
                     {/* Simulated Finviz-style tech sector breakdown */}
                     <g>
                         <rect x="0" y="0" width="60" height="60" fill="#15803d" stroke="#fff" strokeWidth={0.5} />
-                        <text x="2" y="5" fill="#fff" fontSize="4" fontWeight="bold">AAPL: +2.1%</text>
+                        <text x="2" y="5" fill="#fff" fontSize="4">AAPL: +2.1%</text>
                     </g>
                     <g>
                         <rect x="60" y="0" width="40" height="35" fill="#b91c1c" stroke="#fff" strokeWidth={0.5} />
-                        <text x="62" y="5" fill="#fff" fontSize="4" fontWeight="bold">MSFT: -1.5%</text>
+                        <text x="62" y="5" fill="#fff" fontSize="4">MSFT: -1.5%</text>
                     </g>
                     <g>
                         <rect x="60" y="35" width="25" height="25" fill="#22c55e" stroke="#fff" strokeWidth={0.5} />
-                        <text x="62" y="40" fill="#fff" fontSize="3" fontWeight="bold">NVDA</text>
+                        <text x="62" y="40" fill="#fff" fontSize="3">NVDA</text>
                     </g>
                     <g>
                         <rect x="85" y="35" width="15" height="15" fill="#16a34a" stroke="#fff" strokeWidth={0.5} />
@@ -502,33 +502,33 @@ function MisleadingRecoveryDemo() {
             >
                 <div className="flex-1 w-full bg-white rounded-lg p-5 flex items-center justify-center">
                     <div className="w-full max-w-[300px]">
-                        <svg viewBox="0 0 100 50" className="w-full block overflow-visible">
+                        <svg viewBox="0 0 480 220" className="w-full block overflow-visible">
                             <line x1="5" x2="95" y1="45" y2="45" stroke="#a8a29e" strokeWidth={0.5} />
 
                             {/* Bars representing actual dollar value */}
                             {/* Start $100 */}
                             <rect x="15" y="5" width="20" height="40" fill="#cbd5e1" />
-                            <text x="25" y="4" fontSize="4" fill="#64748b" textAnchor="middle" fontWeight="bold">$100</text>
+                            <text x="25" y="4" fontSize="4" fill="#64748b" textAnchor="middle">$100</text>
 
                             {/* Drop 50% */}
                             <rect x="40" y="25" width="20" height="20" fill="#ef4444" />
-                            <text x="50" y="24" fontSize="4" fill="#ef4444" textAnchor="middle" fontWeight="bold">$50</text>
+                            <text x="50" y="24" fontSize="4" fill="#ef4444" textAnchor="middle">$50</text>
 
                             {/* Gain 50% ($25) */}
                             <rect x="65" y="12.5" width="20" height="32.5" fill="#10b981" />
-                            <text x="75" y="11.5" fontSize="4" fill="#10b981" textAnchor="middle" fontWeight="bold">$75</text>
+                            <text x="75" y="11.5" fontSize="4" fill="#10b981" textAnchor="middle">$75</text>
 
                             {/* Annotation arrows */}
                             <path d="M 25 15 C 35 15, 40 18, 50 20 L 48 18 M 50 20 L 48 22" fill="none" stroke="#ef4444" strokeWidth={0.5} />
-                            <text x="37.5" y="14" fontSize="4" fill="#ef4444" textAnchor="middle" fontWeight="bold">-50%</text>
+                            <text x="37.5" y="14" fontSize="4" fill="#ef4444" textAnchor="middle">-50%</text>
 
                             <path d="M 50 30 C 60 30, 65 20, 75 18 L 73 16 M 75 18 L 73 20" fill="none" stroke="#10b981" strokeWidth={0.5} />
-                            <text x="62.5" y="27" fontSize="4" fill="#10b981" textAnchor="middle" fontWeight="bold">+50%</text>
+                            <text x="62.5" y="27" fontSize="4" fill="#10b981" textAnchor="middle">+50%</text>
 
                             {/* Gap marker */}
                             <line x1="15" x2="95" y1="5" y2="5" stroke="#ef4444" strokeWidth={0.5} strokeDasharray="1 1" />
                             <path d="M 90 5 L 90 12.5" stroke="#ef4444" strokeWidth={0.5} fill="none" />
-                            <text x="92" y="9" fontSize="3" fill="#ef4444" fontWeight="bold" textAnchor="start">Still down $25!</text>
+                            <text x="92" y="9" fontSize="3" fill="#ef4444" textAnchor="start">Still down $25!</text>
 
                         </svg>
                     </div>

@@ -177,11 +177,11 @@ function PieVsBarComparisonChart() {
                         Pie chart — hard to compare B vs C
                     </p>
                     <div className="relative">
-                        <svg viewBox="0 0 160 160" className="w-full max-w-[160px] drop-shadow-sm">
+                        <svg viewBox="0 0 480 220" className="w-full max-w-[160px] drop-shadow-sm">
                             {slices.map((s, i) => (
                                 <path key={i} d={s.path} fill={s.color} stroke="#fff" strokeWidth={1.5} opacity={0.95} />
                             ))}
-                            <text x={cx} y={cy + 8} fill="white" fontSize={24} fontWeight={900} textAnchor="middle" opacity={0.5}>?</text>
+                            <text x={cx} y={cy + 8} fill="white" fontSize={24} textAnchor="middle" opacity={0.5}>?</text>
                         </svg>
                         <div className="mt-4 text-center">
                             <span className="text-[11px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100 shadow-sm">
@@ -413,7 +413,7 @@ function LikertDivergingDemo() {
                             let currentX = pad.l;
                             return (
                                 <g key={d.q}>
-                                    <text x={pad.l - 10} y={y + barH / 2 + 4} fill="#57534e" fontSize={11} fontWeight={900} textAnchor="end" letterSpacing="-0.02em">{d.q.split(': ')[1]}</text>
+                                    <text x={pad.l - 10} y={y + barH / 2 + 4} fill="#57534e" fontSize={11} textAnchor="end" letterSpacing="-0.02em">{d.q.split(': ')[1]}</text>
                                     {d.vals.map((v, j) => {
                                         const bw = (v / 100) * chartW;
                                         const rect = <rect key={j} x={currentX} y={y} width={bw} height={barH} fill={colors[j]} stroke="#fff" strokeWidth={1.5} rx={1} />;
@@ -429,7 +429,7 @@ function LikertDivergingDemo() {
 
                             return (
                                 <g key={d.q}>
-                                    <text x={pad.l - 10} y={y + barH / 2 + 4} fill="#57534e" fontSize={11} fontWeight={900} textAnchor="end" letterSpacing="-0.02em">{d.q.split(': ')[1]}</text>
+                                    <text x={pad.l - 10} y={y + barH / 2 + 4} fill="#57534e" fontSize={11} textAnchor="end" letterSpacing="-0.02em">{d.q.split(': ')[1]}</text>
                                     <line x1={center} x2={center} y1={pad.t} y2={h - pad.b + 10} stroke="#e7e5e4" strokeWidth={1.5} strokeDasharray="3,3" />
                                     {d.vals.map((v, j) => {
                                         const bw = (v / 100) * chartW;
@@ -450,7 +450,7 @@ function LikertDivergingDemo() {
 
                             return (
                                 <g key={d.q}>
-                                    <text x={pad.l - 10} y={y + barH / 2 + 4} fill="#78716c" fontSize={11} fontWeight={900} textAnchor="end" letterSpacing="-0.02em">{d.q.split(': ')[1]}</text>
+                                    <text x={pad.l - 10} y={y + barH / 2 + 4} fill="#78716c" fontSize={11} textAnchor="end" letterSpacing="-0.02em">{d.q.split(': ')[1]}</text>
                                     <line x1={center} x2={center} y1={pad.t} y2={h - pad.b + 10} stroke="#e7e5e4" strokeWidth={1.5} strokeDasharray="3,3" />
 
                                     {/* Polarized segments */}
@@ -461,7 +461,7 @@ function LikertDivergingDemo() {
 
                                     {/* Neutral segment isolated */}
                                     <rect x={neutralX} y={y} width={(d.vals[2] / 100) * neutralW} height={barH} fill={colors[2]} stroke="#fff" strokeWidth={1.5} rx={2} />
-                                    <text x={neutralX + (d.vals[2] / 100) * neutralW + 5} y={y + barH / 2 + 3} fill="#a8a29e" fontSize={9} fontWeight={900}>{d.vals[2]}%</text>
+                                    <text x={neutralX + (d.vals[2] / 100) * neutralW + 5} y={y + barH / 2 + 3} fill="#a8a29e" fontSize={9}>{d.vals[2]}%</text>
                                 </g>
                             );
                         }

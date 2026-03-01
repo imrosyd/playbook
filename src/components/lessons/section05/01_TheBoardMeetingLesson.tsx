@@ -1,4 +1,4 @@
-import SimulatorLesson from '../section04/SimulatorLesson';
+import SimulatorLesson from './SimulatorLesson';
 
 const crossRefs = [
     { sectionId: 'perception', slug: 'anchoring', label: '1.3 — Anchoring: how axis baseline sets the narrative' },

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BarChart3, Brain, Wrench, FlaskConical, Users, Scale, ArrowRight, Eye } from 'lucide-react';
+import { BarChart3, Brain, Wrench, FlaskConical, Users, Scale, ArrowRight, Eye, MessageSquare, Palette, Search } from 'lucide-react';
 
 const SECTIONS = [
     {
@@ -21,13 +21,31 @@ const SECTIONS = [
         color: '#059669',
     },
     {
-        id: 'simulator', firstLesson: 'revenue', number: '04', icon: Users,
-        title: 'Executive Simulator', subtitle: 'Four Minds, One Chart',
+        id: 'storytelling', firstLesson: 'so-what', number: '04', icon: MessageSquare,
+        title: 'Data Storytelling', subtitle: 'From Numbers to Decisions',
+        description: 'Translate raw metrics into business decisions your audience can act on.',
+        color: '#7c3aed',
+    },
+    {
+        id: 'simulator', firstLesson: 'revenue', number: '05', icon: Users,
+        title: 'The Decision Room', subtitle: 'Present to Four Executive Minds',
         description: 'The same chart produces four divergent reactions in the boardroom.',
         color: '#d97706',
     },
     {
-        id: 'ethics', firstLesson: 'clarity', number: '05', icon: Scale,
+        id: 'design', firstLesson: 'three-color-rule', number: '06', icon: Palette,
+        title: 'Color & Design', subtitle: 'Look Professional Without Being a Designer',
+        description: 'Why using fewer colors makes your charts instantly more credible.',
+        color: '#db2777',
+    },
+    {
+        id: 'cases', firstLesson: 'challenger', number: '07', icon: Search,
+        title: 'Case Studies', subtitle: 'Real Decisions. Real Consequences.',
+        description: 'Before-and-after analysis of real data presentation makeovers.',
+        color: '#0f766e',
+    },
+    {
+        id: 'ethics', firstLesson: 'clarity', number: '08', icon: Scale,
         title: 'Ethics Framework', subtitle: 'Clarity to Manipulation',
         description: 'Five ethical levels from transparent to deceptive, with real-world examples and bright-line tests.',
         color: '#dc2626',
@@ -96,7 +114,7 @@ export default function Landing() {
 
             <section className="max-w-4xl mx-auto px-6 pb-20">
                 <div className="text-center mb-10">
-                    <h2 className="text-2xl font-bold text-stone-800">Five Sections. One Framework.</h2>
+                    <h2 className="text-2xl font-bold text-stone-800">Eight Sections. One Framework.</h2>
                     <p className="mt-2 text-stone-500 text-sm">Work through each section in order — each builds on the last.</p>
                 </div>
 

@@ -102,7 +102,7 @@ function ShowGroupsDemo() {
             </div>
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-4 flex justify-center items-end h-[200px] pb-8 relative">
-                    <svg viewBox="0 0 100 50" className="w-full h-full overflow-visible">
+                    <svg viewBox="0 0 480 220" className="w-full h-full overflow-visible">
                         <line x1="0" x2="100" y1="50" y2="50" stroke="#a8a29e" strokeWidth={0.5} />
 
                         {touching ? (
@@ -110,17 +110,17 @@ function ShowGroupsDemo() {
                                 {/* Group 1 */}
                                 <rect x="10" y="20" width="10" height="30" fill="#3b82f6" />
                                 <rect x="20" y="10" width="10" height="40" fill="#10b981" />
-                                <text x="20" y="58" fontSize="4" fill="#57534e" textAnchor="middle" fontWeight="bold">Q1</text>
+                                <text x="20" y="58" fontSize="4" fill="#57534e" textAnchor="middle">Q1</text>
 
                                 {/* Group 2 */}
                                 <rect x="40" y="15" width="10" height="35" fill="#3b82f6" />
                                 <rect x="50" y="5" width="10" height="45" fill="#10b981" />
-                                <text x="50" y="58" fontSize="4" fill="#57534e" textAnchor="middle" fontWeight="bold">Q2</text>
+                                <text x="50" y="58" fontSize="4" fill="#57534e" textAnchor="middle">Q2</text>
 
                                 {/* Group 3 */}
                                 <rect x="70" y="25" width="10" height="25" fill="#3b82f6" />
                                 <rect x="80" y="20" width="10" height="30" fill="#10b981" />
-                                <text x="80" y="58" fontSize="4" fill="#57534e" textAnchor="middle" fontWeight="bold">Q3</text>
+                                <text x="80" y="58" fontSize="4" fill="#57534e" textAnchor="middle">Q3</text>
                             </g>
                         ) : (
                             <g>
@@ -183,9 +183,9 @@ function AudienceContextDemo() {
                             </div>
                         </div>
                     ) : (
-                        <svg viewBox="0 0 100 80" className="w-[80%] max-w-[200px] h-full overflow-visible">
+                        <svg viewBox="0 0 480 220" className="w-[80%] max-w-[200px] h-full overflow-visible">
                             {/* Academic style: Y-axis, error bars */}
-                            <text x="50" y="-5" fontSize="6" fontWeight="bold" textAnchor="middle" fill="#000">Figure 1. Operational Efficacy by Dept</text>
+                            <text x="50" y="-5" fontSize="6" textAnchor="middle" fill="#000">Figure 1. Operational Efficacy by Dept</text>
 
                             <line x1="15" x2="15" y1="5" y2="65" stroke="#000" strokeWidth={0.5} />
                             <line x1="15" x2="90" y1="65" y2="65" stroke="#000" strokeWidth={0.5} />
@@ -293,7 +293,7 @@ function ExplainingVarianceDemo() {
 
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-4 flex justify-center items-end h-[200px] pb-8 relative">
-                    <svg viewBox="0 0 120 60" className="w-full h-full overflow-visible">
+                    <svg viewBox="0 0 480 220" className="w-full h-full overflow-visible">
                         {/* Axes */}
                         <line x1="10" x2="110" y1="50" y2="50" stroke="#a8a29e" strokeWidth={0.5} />
                         <line x1="10" x2="10" y1="10" y2="50" stroke="#a8a29e" strokeWidth={0.5} />
@@ -330,7 +330,7 @@ function ExplainingVarianceDemo() {
                         {view === 1 && (
                             <g>
                                 <line x1="10" x2="110" y1="35" y2="35" stroke="#2563eb" strokeWidth={1} strokeDasharray="2 2" />
-                                <text x="112" y="36" fontSize="4" fill="#2563eb" fontWeight="bold">Flat Baseline</text>
+                                <text x="112" y="36" fontSize="4" fill="#2563eb">Flat Baseline</text>
                             </g>
                         )}
 
@@ -340,7 +340,7 @@ function ExplainingVarianceDemo() {
                                 <circle cx="87" cy="22" r="2" fill="#f59e0b" />
                                 <circle cx="95" cy="18" r="2" fill="#f59e0b" />
                                 <circle cx="103" cy="20" r="2" fill="#f59e0b" />
-                                <text x="95" y="8" fontSize="4" fill="#d97706" textAnchor="middle" fontWeight="bold">Holiday Spike</text>
+                                <text x="95" y="8" fontSize="4" fill="#d97706" textAnchor="middle">Holiday Spike</text>
                             </g>
                         )}
 
@@ -349,7 +349,7 @@ function ExplainingVarianceDemo() {
                                 <circle cx="63" cy="15" r="3" fill="none" stroke="#e11d48" strokeWidth={1} />
                                 <circle cx="63" cy="15" r="1.5" fill="#e11d48" />
                                 <line x1="63" x2="63" y1="15" y2="5" stroke="#e11d48" strokeWidth={0.5} />
-                                <text x="63" y="3" fontSize="4" fill="#e11d48" textAnchor="middle" fontWeight="bold">Viral Video</text>
+                                <text x="63" y="3" fontSize="4" fill="#e11d48" textAnchor="middle">Viral Video</text>
                             </g>
                         )}
 
@@ -384,7 +384,7 @@ function AnalystChoicesDemo() {
                     </div>
 
                     <div className="flex justify-center h-[150px]">
-                        <svg viewBox="0 0 100 60" className="w-[80%] max-w-[250px] overflow-visible">
+                        <svg viewBox="0 0 480 220" className="w-[80%] max-w-[250px] overflow-visible">
                             {/* Region A: 20 -> 40 */}
                             {/* Region B: 30 -> 25 */}
                             {/* Region C: 15 -> 40 */}
@@ -483,7 +483,7 @@ function PurpleCowDemo() {
                     ) : (
                         <div className="w-full flex flex-col items-center mt-4">
                             <h4 className="text-[12px] font-bold text-fuchsia-900 mb-4 text-center tracking-widest uppercase">Global Control 2024</h4>
-                            <svg viewBox="0 0 100 100" className="w-[140px] h-[140px] drop-shadow-xl">
+                            <svg viewBox="0 0 480 220" className="w-[140px] h-[140px] drop-shadow-xl">
                                 {/* A highly stylized nested sunburst / nightingale rose approximation */}
                                 <circle cx="50" cy="50" r="45" fill="#fdf4ff" stroke="#f5d0fe" strokeWidth={1} />
 
@@ -498,12 +498,12 @@ function PurpleCowDemo() {
                                 <path d="M 50 50 L 45 2 A 48 48 0 0 1 50 2 Z" fill="#86198f" /> {/* fill gap */}
 
                                 <circle cx="50" cy="50" r="15" fill="#fff" />
-                                <text x="50" y="52" fontSize="6" fill="#701a75" fontWeight="bold" textAnchor="middle">CORE</text>
+                                <text x="50" y="52" fontSize="6" fill="#701a75" textAnchor="middle">CORE</text>
 
                                 {/* Floating labels */}
-                                <text x="18" y="25" fontSize="5" fill="#86198f" fontWeight="bold">Alpha</text>
-                                <text x="80" y="70" fontSize="5" fill="#c026d3" fontWeight="bold">Beta</text>
-                                <text x="70" y="25" fontSize="5" fill="#e879f9" fontWeight="bold">Gamma</text>
+                                <text x="18" y="25" fontSize="5" fill="#86198f">Alpha</text>
+                                <text x="80" y="70" fontSize="5" fill="#c026d3">Beta</text>
+                                <text x="70" y="25" fontSize="5" fill="#e879f9">Gamma</text>
                             </svg>
                         </div>
                     )}
@@ -538,8 +538,8 @@ function AudiencePersonasDemo() {
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-6 flex justify-center items-center h-[250px]">
                     {persona === 0 && (
                         <div className="w-full flex justify-center">
-                            <svg viewBox="0 0 100 80" className="w-[80%] max-w-[200px] overflow-visible">
-                                <text x="50" y="-5" fontSize="5" fontWeight="bold" textAnchor="middle" fill="#312e81">Fig 1. Distribution of Conversion Efficacy by Variant (n=10,492)</text>
+                            <svg viewBox="0 0 480 220" className="w-[80%] max-w-[200px] overflow-visible">
+                                <text x="50" y="-5" fontSize="5" textAnchor="middle" fill="#312e81">Fig 1. Distribution of Conversion Efficacy by Variant (n=10,492)</text>
                                 <line x1="15" x2="15" y1="5" y2="70" stroke="#312e81" strokeWidth={0.5} />
                                 <line x1="15" x2="90" y1="70" y2="70" stroke="#312e81" strokeWidth={0.5} />
 
@@ -566,8 +566,8 @@ function AudiencePersonasDemo() {
 
                     {persona === 1 && (
                         <div className="w-full flex justify-center">
-                            <svg viewBox="0 0 100 100" className="w-[80%] max-w-[200px] overflow-visible">
-                                <text x="50" y="0" fontSize="6" fontWeight="bold" textAnchor="middle" fill="#1e3a8a">Strategic Value Matrix</text>
+                            <svg viewBox="0 0 480 220" className="w-[80%] max-w-[200px] overflow-visible">
+                                <text x="50" y="0" fontSize="6" textAnchor="middle" fill="#1e3a8a">Strategic Value Matrix</text>
 
                                 <rect x="10" y="10" width="40" height="40" fill="#f8fafc" stroke="#94a3b8" />
                                 <rect x="50" y="10" width="40" height="40" fill="#eff6ff" stroke="#94a3b8" />
@@ -578,15 +578,15 @@ function AudiencePersonasDemo() {
                                 <line x1="50" x2="50" y1="10" y2="100" stroke="#1e3a8a" strokeWidth={1} />
 
                                 <text x="30" y="30" fontSize="5" fill="#64748b" textAnchor="middle">Risk Avoidance</text>
-                                <text x="70" y="30" fontSize="5" fill="#1d4ed8" textAnchor="middle" fontWeight="bold">Growth Engine</text>
+                                <text x="70" y="30" fontSize="5" fill="#1d4ed8" textAnchor="middle">Growth Engine</text>
                                 <text x="30" y="70" fontSize="5" fill="#64748b" textAnchor="middle">Divest</text>
                                 <text x="70" y="70" fontSize="5" fill="#64748b" textAnchor="middle">Maintain</text>
 
                                 <circle cx="75" cy="25" r="4" fill="#2563eb" />
-                                <text x="75" y="26.5" fontSize="4" fill="#fff" textAnchor="middle" fontWeight="bold">B</text>
+                                <text x="75" y="26.5" fontSize="4" fill="#fff" textAnchor="middle">B</text>
 
                                 <circle cx="40" cy="60" r="3" fill="#94a3b8" />
-                                <text x="40" y="61.5" fontSize="3" fill="#fff" textAnchor="middle" fontWeight="bold">A</text>
+                                <text x="40" y="61.5" fontSize="3" fill="#fff" textAnchor="middle">A</text>
 
                                 <text x="50" y="105" fontSize="4" textAnchor="middle" fill="#475569">Implementation Complexity &rarr;</text>
                                 <text x="5" y="50" fontSize="4" textAnchor="middle" fill="#475569" transform="rotate(-90 5 50)">Expected ROI &rarr;</text>

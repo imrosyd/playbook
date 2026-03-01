@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import EthicalLevelLesson from '../section05/EthicalLevelLesson';
+import EthicalLevelLesson from './EthicalLevelLesson';
 
 const crossRefs = [
     { sectionId: 'lab', slug: 'full-lab', label: '3.5 — Full Lab: reproduce Level 5 charts yourself' },
@@ -59,7 +59,7 @@ function NarrativeAxisToggleDemo() {
                                         className="transition-all duration-700 ease-in-out"
                                     />
                                     <text x={scaleX(i)} y={h - pad.b + 15} fill="#a8a29e" fontSize={11} textAnchor="middle">{labels[i]}</text>
-                                    <text x={scaleX(i)} y={y - 5} fill="#57534e" fontSize={10} fontWeight="bold" textAnchor="middle" className="transition-all duration-700 ease-in-out">{val}</text>
+                                    <text x={scaleX(i)} y={y - 5} fill="#57534e" fontSize={10} textAnchor="middle" className="transition-all duration-700 ease-in-out">{val}</text>
                                 </g>
                             )
                         })}

@@ -32,15 +32,15 @@ function WordcloudVsBarDemo() {
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-6 relative min-h-[250px] flex justify-center items-center">
                     {isWordcloud ? (
                         <div className="w-full flex justify-center items-center select-none">
-                            <svg viewBox="0 0 200 150" className="w-[80%] max-w-[300px] h-auto overflow-visible">
+                            <svg viewBox="0 0 480 220" className="w-[80%] max-w-[300px] h-auto overflow-visible">
                                 {/* Simple static layout simulating a word cloud */}
-                                <text x="100" y="70" fontSize={words[0].size} fill={words[0].color} fontWeight="bold" textAnchor="middle">{words[0].word}</text>
-                                <text x="60" y="40" fontSize={words[1].size} fill={words[1].color} fontWeight="bold" textAnchor="middle">{words[1].word}</text>
-                                <text x="140" y="100" fontSize={words[2].size} fill={words[2].color} fontWeight="bold" textAnchor="middle">{words[2].word}</text>
-                                <text x="50" y="110" fontSize={words[3].size} fill={words[3].color} fontWeight="bold" textAnchor="middle">{words[3].word}</text>
-                                <text x="160" y="45" fontSize={words[4].size} fill={words[4].color} fontWeight="bold" textAnchor="middle" transform="rotate(90, 160, 45)">{words[4].word}</text>
-                                <text x="90" y="20" fontSize={words[5].size} fill={words[5].color} fontWeight="bold" textAnchor="middle">{words[5].word}</text>
-                                <text x="100" y="130" fontSize={words[6].size} fill={words[6].color} fontWeight="bold" textAnchor="middle">{words[6].word}</text>
+                                <text x="100" y="70" fontSize={words[0].size} fill={words[0].color} textAnchor="middle">{words[0].word}</text>
+                                <text x="60" y="40" fontSize={words[1].size} fill={words[1].color} textAnchor="middle">{words[1].word}</text>
+                                <text x="140" y="100" fontSize={words[2].size} fill={words[2].color} textAnchor="middle">{words[2].word}</text>
+                                <text x="50" y="110" fontSize={words[3].size} fill={words[3].color} textAnchor="middle">{words[3].word}</text>
+                                <text x="160" y="45" fontSize={words[4].size} fill={words[4].color} textAnchor="middle" transform="rotate(90, 160, 45)">{words[4].word}</text>
+                                <text x="90" y="20" fontSize={words[5].size} fill={words[5].color} textAnchor="middle">{words[5].word}</text>
+                                <text x="100" y="130" fontSize={words[6].size} fill={words[6].color} textAnchor="middle">{words[6].word}</text>
                             </svg>
                         </div>
                     ) : (
@@ -89,16 +89,16 @@ function PsychologyOfDifferencesDemo() {
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-6 relative min-h-[300px] flex justify-center items-center">
 
                     {view === 0 && (
-                        <svg viewBox="0 0 100 80" className="w-[80%] max-w-[250px] overflow-visible">
-                            <text x="50" y="5" fontSize="5" fontWeight="bold" textAnchor="middle" fill="#334155">Segment Overlap</text>
+                        <svg viewBox="0 0 480 220" className="w-[80%] max-w-[250px] overflow-visible">
+                            <text x="50" y="5" fontSize="5" textAnchor="middle" fill="#334155">Segment Overlap</text>
 
                             {/* Venn diagrams are notoriously bad for actual data representation */}
                             <circle cx="40" cy="40" r="25" fill="#3b82f6" opacity="0.5" />
                             <circle cx="60" cy="40" r="25" fill="#10b981" opacity="0.5" />
 
-                            <text x="32" y="42" fontSize="5" fill="#1e3a8a" fontWeight="bold" textAnchor="middle">Mobile</text>
-                            <text x="68" y="42" fontSize="5" fill="#064e3b" fontWeight="bold" textAnchor="middle">Desktop</text>
-                            <text x="50" y="42" fontSize="4" fill="#334155" fontWeight="bold" textAnchor="middle">Both</text>
+                            <text x="32" y="42" fontSize="5" fill="#1e3a8a" textAnchor="middle">Mobile</text>
+                            <text x="68" y="42" fontSize="5" fill="#064e3b" textAnchor="middle">Desktop</text>
+                            <text x="50" y="42" fontSize="4" fill="#334155" textAnchor="middle">Both</text>
 
                             <text x="32" y="48" fontSize="4" fill="#1e3a8a" textAnchor="middle">45%</text>
                             <text x="68" y="48" fontSize="4" fill="#064e3b" textAnchor="middle">30%</text>
@@ -107,8 +107,8 @@ function PsychologyOfDifferencesDemo() {
                     )}
 
                     {view === 1 && (
-                        <svg viewBox="0 0 100 80" className="w-[80%] max-w-[250px] overflow-visible">
-                            <text x="50" y="5" fontSize="5" fontWeight="bold" textAnchor="middle" fill="#334155">Usage by Device Type</text>
+                        <svg viewBox="0 0 480 220" className="w-[80%] max-w-[250px] overflow-visible">
+                            <text x="50" y="5" fontSize="5" textAnchor="middle" fill="#334155">Usage by Device Type</text>
                             <line x1="20" x2="20" y1="15" y2="70" stroke="#cbd5e1" strokeWidth={0.5} />
                             <line x1="80" x2="80" y1="15" y2="70" stroke="#cbd5e1" strokeWidth={0.5} />
 
@@ -134,8 +134,8 @@ function PsychologyOfDifferencesDemo() {
                     )}
 
                     {view === 2 && (
-                        <svg viewBox="0 0 100 80" className="w-[80%] max-w-[250px] overflow-visible">
-                            <text x="50" y="5" fontSize="5" fontWeight="bold" textAnchor="middle" fill="#334155">The Inversion (Crossing Context)</text>
+                        <svg viewBox="0 0 480 220" className="w-[80%] max-w-[250px] overflow-visible">
+                            <text x="50" y="5" fontSize="5" textAnchor="middle" fill="#334155">The Inversion (Crossing Context)</text>
                             <line x1="20" x2="20" y1="15" y2="70" stroke="#cbd5e1" strokeWidth={0.5} />
                             <line x1="80" x2="80" y1="15" y2="70" stroke="#cbd5e1" strokeWidth={0.5} />
 
@@ -157,7 +157,7 @@ function PsychologyOfDifferencesDemo() {
                             <path d="M 20 65 L 80 15" fill="none" stroke="#3b82f6" strokeWidth={1.5} />
                             <circle cx="20" cy="65" r="2" fill="#2563eb" />
                             <circle cx="80" cy="15" r="2" fill="#2563eb" />
-                            <text x="15" y="66" fontSize="4" fill="#1e3a8a" textAnchor="end" fontWeight="bold">Seniors</text>
+                            <text x="15" y="66" fontSize="4" fill="#1e3a8a" textAnchor="end">Seniors</text>
 
                             {/* Line 4 - Context */}
                             <path d="M 20 30 L 80 40" fill="none" stroke="#e2e8f0" strokeWidth={1} />

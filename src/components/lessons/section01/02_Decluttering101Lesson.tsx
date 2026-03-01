@@ -68,7 +68,7 @@ function MillerLawChart() {
                     stroke="#f97316" strokeWidth={2} strokeDasharray="4,4"
                 />
                 <text x={pad.l + (87 / 100) * (w - pad.l - pad.r)} y={pad.t + 15}
-                    fill="#f97316" fontSize={10} fontWeight={900}>7±2 LIMIT</text>
+                    fill="#f97316" fontSize={8}>7±2 Limit</text>
 
                 {chunks.map((c, i) => {
                     const y = pad.t + gap + i * (barH + gap);
@@ -76,12 +76,12 @@ function MillerLawChart() {
                     return (
                         <g key={c.n}>
                             <text x={pad.l - 12} y={y + barH / 2 + 4} fill={c.ok ? '#78716c' : '#ef4444'}
-                                fontSize={11} fontWeight={900} textAnchor="end">{c.label.toUpperCase()}</text>
+                                fontSize={8} textAnchor="end">{c.label}</text>
                             <rect x={pad.l} y={y} width={bw} height={barH}
                                 fill={c.ok ? '#10b981' : '#ef4444'} rx={2} shadow-sm="true" />
                             {!c.ok && (
                                 <g transform={`translate(${pad.l + bw + 8}, ${y + barH / 2 + 3})`}>
-                                    <text fill="#ef4444" fontSize={9} fontWeight={900}>OVERLOAD</text>
+                                    <text fill="#ef4444" fontSize={7.5} fontWeight={500}>Overload</text>
                                 </g>
                             )}
                         </g>
@@ -118,21 +118,21 @@ function DataInkComparisonChart() {
                     <div className="flex bg-stone-100/80 backdrop-blur-sm rounded-lg p-0.5 border border-stone-200">
                         {(['high', 'low'] as Mode[]).map(m => (
                             <button key={m} onClick={() => setMode(m)}
-                                className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-tighter transition-all ${mode === m
-                                    ? 'bg-white text-brand shadow-sm'
-                                    : 'text-stone-500 hover:text-stone-600'}`}>
-                                {m === 'high' ? 'High Noise' : 'Tufte Style'}
+                                className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${mode === m
+                                    ? 'bg-white text-stone-800 shadow-sm'
+                                    : 'text-stone-400 hover:text-stone-600'}`}>
+                                {m === 'high' ? 'High noise' : 'Tufte style'}
                             </button>
                         ))}
                     </div>
                     <div className="flex gap-4">
                         <div className="flex items-center gap-1.5">
                             <div className={`w-2.5 h-2.5 rounded-full ${mode === 'high' ? 'bg-rose-500' : 'bg-stone-200 opacity-50'}`} />
-                            <span className="text-[10px] font-bold text-stone-400">NOISE</span>
+                            <span className="text-[11px] font-medium text-stone-400">Noise</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                            <span className="text-[10px] font-bold text-stone-400">DATA</span>
+                            <span className="text-[11px] font-medium text-stone-400">Data</span>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@ function DataInkComparisonChart() {
                     ))}
                     {/* Y-axis labels */}
                     {[0, 1, 2, 3, 4, 5].map(v => (
-                        <text key={v} x={pad.l - 10} y={toY(v) + 4} fill="#a8a29e" fontSize={10} fontWeight={900} textAnchor="end">{v}</text>
+                        <text key={v} x={pad.l - 10} y={toY(v) + 4} fill="#a8a29e" fontSize={8} textAnchor="end">{v}</text>
                     ))}
                     {/* Border */}
                     {mode === 'high' && (
@@ -170,7 +170,7 @@ function DataInkComparisonChart() {
                                 <rect x={x} y={toY(d.value)} width={bw} height={bH(d.value)}
                                     fill="#10b981" rx={2} />
                                 <text x={x + bw / 2} y={h - pad.b + 18} fill="#78716c"
-                                    fontSize={10} fontWeight={900} textAnchor="middle">{d.label}</text>
+                                    fontSize={8} textAnchor="middle">{d.label}</text>
                             </g>
                         );
                     })}
@@ -179,19 +179,19 @@ function DataInkComparisonChart() {
                 <div className="flex flex-wrap gap-x-6 gap-y-2 mt-2 px-2 border-t border-stone-100 pt-4">
                     <div className="flex items-center gap-2">
                         <Trash2 size={12} className={mode === 'high' ? 'text-rose-500' : 'text-stone-300'} />
-                        <span className={`text-[10px] font-black uppercase ${mode === 'high' ? 'text-rose-600' : 'text-stone-400 line-through'}`}>Zebra Stripes</span>
+                        <span className={`text-[11px] font-medium ${mode === 'high' ? 'text-rose-600 font-medium' : 'text-stone-400 line-through font-normal'}`}>Zebra Stripes</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Trash2 size={12} className={mode === 'high' ? 'text-rose-500' : 'text-stone-300'} />
-                        <span className={`text-[10px] font-black uppercase ${mode === 'high' ? 'text-rose-600' : 'text-stone-400 line-through'}`}>Heavy Border</span>
+                        <span className={`text-[11px] font-medium ${mode === 'high' ? 'text-rose-600 font-medium' : 'text-stone-400 line-through font-normal'}`}>Heavy Border</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Zap size={12} className="text-amber-500" />
-                        <span className="text-[10px] font-black uppercase text-stone-600">{mode === 'high' ? '12 Gridlines' : '3 Gridlines'}</span>
+                        <span className="text-[11px] font-medium text-stone-600">{mode === 'high' ? '12 Gridlines' : '3 Gridlines'}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Brain size={12} className="text-brand" />
-                        <span className="text-[10px] font-black uppercase text-emerald-600">6 DATA BARS</span>
+                        <span className="text-[11px] font-medium text-emerald-600">6 Data Bars</span>
                     </div>
                 </div>
             </div>
@@ -228,23 +228,23 @@ function StrategicHighlightingLab() {
         >
             <div className="space-y-6 p-6">
                 <div className="flex justify-between items-center mb-2">
-                    <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">
+                    <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
                         Performance by Region
                     </p>
                     <button
                         onClick={() => setIsCleaned(!isCleaned)}
-                        className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-all shadow-sm border ${isCleaned
-                            ? 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50'
-                            : 'bg-brand text-white border-brand hover:bg-brand-dark'}`}
+                        className={`px-4 py-2 rounded-lg text-[9px] font-medium transition-all shadow-sm border ${isCleaned
+                            ? 'bg-white text-stone-600 border-stone-200 hover:bg-stone-50 font-medium'
+                            : 'bg-brand text-white border-brand hover:bg-brand-dark font-medium'}`}
                     >
-                        {isCleaned ? 'Reset to Chaotic' : 'Clean & Highlight'}
+                        {isCleaned ? 'Reset to chaotic' : 'Clean & highlight'}
                     </button>
                 </div>
 
                 <div className="h-44 flex items-end justify-between gap-4 px-4 border-b border-stone-100 pb-0">
                     {displayData.map((d, i) => (
                         <div key={d.label} className="relative flex-1 flex flex-col justify-end items-center gap-2 h-full">
-                            <span className={`text-[11px] font-black transition-all duration-500 ${isCleaned && i === 0 ? 'text-rose-600 scale-125' : 'text-stone-300'}`}>
+                            <span className={`text-[9px] font-medium transition-all duration-500 ${isCleaned && i === 0 ? 'text-rose-600 scale-125' : 'text-stone-400'}`}>
                                 {d.value}
                             </span>
                             <div
@@ -256,13 +256,13 @@ function StrategicHighlightingLab() {
                             >
                                 {isCleaned && i === 0 && (
                                     <div className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap animate-bounce">
-                                        <div className="bg-rose-600 text-white text-[9px] font-black px-2 py-1 rounded shadow-lg">TARGET</div>
+                                        <div className="bg-rose-600 text-white text-[8px] font-medium px-2 py-1 rounded shadow-lg">Target</div>
                                         <div className="w-1.5 h-1.5 bg-rose-600 rotate-45 mx-auto -mt-1" />
                                     </div>
                                 )}
                             </div>
-                            <span className={`absolute -bottom-6 text-[9px] font-black transition-all duration-500 ${isCleaned && i === 0 ? 'text-stone-800' : 'text-stone-400'}`}>
-                                {d.label.toUpperCase()}
+                            <span className={`absolute -bottom-6 text-[8px] font-medium transition-all duration-500 ${isCleaned && i === 0 ? 'text-stone-800' : 'text-stone-500'}`}>
+                                {d.label}
                             </span>
                         </div>
                     ))}
@@ -359,7 +359,7 @@ export default function Decluttering101Lesson() {
             .call(d3.axisBottom(xScale).tickSize(0))
             .call((ax) => ax.select('.domain').attr('stroke', '#d6d3d1'))
             .selectAll('text')
-            .style('font-size', '11px')
+            .style('font-size', '8px')
             .style('fill', '#78716c');
 
         g.append('g')
@@ -371,7 +371,7 @@ export default function Decluttering101Lesson() {
             )
             .call((ax) => ax.select('.domain').attr('stroke', '#d6d3d1'))
             .selectAll('text')
-            .style('font-size', '11px')
+            .style('font-size', '8px')
             .style('fill', '#78716c');
     }, [lowNoise]);
 
@@ -425,13 +425,13 @@ export default function Decluttering101Lesson() {
                             },
                         ].map((item) => (
                             <div key={item.label} className={`rounded-xl border p-4 shadow-sm space-y-3 transition-transform hover:scale-[1.02] ${item.color === 'emerald' ? 'bg-emerald-50/50 border-emerald-200/50' : item.color === 'amber' ? 'bg-amber-50/50 border-amber-200/50' : 'bg-rose-50/50 border-rose-200/50'}`}>
-                                <p className={`text-[13px] font-black uppercase tracking-tighter ${item.color === 'emerald' ? 'text-emerald-800' : item.color === 'amber' ? 'text-amber-800' : 'text-rose-800'}`}>
+                                <p className={`text-[13px] font-bold uppercase tracking-tighter ${item.color === 'emerald' ? 'text-emerald-800' : item.color === 'amber' ? 'text-amber-800' : 'text-rose-800'}`}>
                                     {item.label}
                                 </p>
                                 <p className={`text-[12px] leading-relaxed font-medium ${item.color === 'emerald' ? 'text-emerald-700/80' : item.color === 'amber' ? 'text-amber-700/80' : 'text-rose-700/80'}`}>
                                     {item.desc}
                                 </p>
-                                <div className={`inline-block px-2 py-0.5 rounded text-[10px] font-black border ${item.color === 'emerald' ? 'bg-emerald-500 text-white border-emerald-600' : item.color === 'amber' ? 'bg-amber-500 text-white border-amber-600' : 'bg-rose-500 text-white border-rose-600'}`}>
+                                <div className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold border ${item.color === 'emerald' ? 'bg-emerald-500 text-white border-emerald-600' : item.color === 'amber' ? 'bg-amber-500 text-white border-amber-600' : 'bg-rose-500 text-white border-rose-600'}`}>
                                     {item.action}
                                 </div>
                             </div>
@@ -484,8 +484,8 @@ export default function Decluttering101Lesson() {
                             </div>
 
                             <div className="flex items-center justify-center gap-4 mt-8 bg-white p-2 rounded-full border border-stone-100 shadow-sm">
-                                <span className={`text-[11px] font-black uppercase tracking-tighter transition-colors ${!lowNoise ? 'text-stone-800' : 'text-stone-400'}`}>
-                                    Chaos (High Noise)
+                                <span className={`text-[13px] font-medium transition-colors ${!lowNoise ? 'text-stone-800' : 'text-stone-400'}`}>
+                                    Chaos (high noise)
                                 </span>
                                 <button
                                     onClick={() => setLowNoise((v) => !v)}
@@ -494,8 +494,8 @@ export default function Decluttering101Lesson() {
                                 >
                                     <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform ${lowNoise ? 'translate-x-8' : 'translate-x-1'}`} />
                                 </button>
-                                <span className={`text-[11px] font-black uppercase tracking-tighter transition-colors ${lowNoise ? 'text-stone-800' : 'text-stone-400'}`}>
-                                    Tufte (Clean)
+                                <span className={`text-[13px] font-medium transition-colors ${lowNoise ? 'text-stone-800' : 'text-stone-400'}`}>
+                                    Tufte (clean)
                                 </span>
                             </div>
                         </div>

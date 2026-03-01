@@ -59,7 +59,7 @@ function AccessibilityDemo() {
                 }
             >
                 <div className="flex justify-center p-4 py-8 w-full">
-                    <svg viewBox="0 0 100 100" className="w-[80%] max-w-[300px] h-auto overflow-visible block border border-stone-100 bg-stone-50/50 rounded-xl p-2 shadow-inner">
+                    <svg viewBox="0 0 480 220" className="w-[80%] max-w-[300px] h-auto overflow-visible block border border-stone-100 bg-stone-50/50 rounded-xl p-2 shadow-inner">
                         {/* Axes */}
                         <line x1="5" x2="95" y1="95" y2="95" stroke="#a8a29e" strokeWidth={0.5} />
                         <line x1="5" x2="5" y1="5" y2="95" stroke="#a8a29e" strokeWidth={0.5} />
@@ -103,7 +103,7 @@ function ScatterSmoothingDemo() {
                 }
             >
                 <div className="flex justify-center p-4 py-8 w-full">
-                    <svg viewBox="0 0 100 100" className="w-[80%] max-w-[300px] h-auto overflow-visible block border border-stone-100 bg-stone-50/50 rounded-xl p-2 shadow-inner">
+                    <svg viewBox="0 0 480 220" className="w-[80%] max-w-[300px] h-auto overflow-visible block border border-stone-100 bg-stone-50/50 rounded-xl p-2 shadow-inner">
                         {/* Axes */}
                         <line x1="5" x2="95" y1="95" y2="95" stroke="#a8a29e" strokeWidth={0.5} />
                         <line x1="5" x2="5" y1="5" y2="95" stroke="#a8a29e" strokeWidth={0.5} />

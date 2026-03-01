@@ -46,7 +46,7 @@ function TufteChallengerChart() {
                 <rect x={pad.l} y={pad.t} width={toX(60) - pad.l} height={axisY - pad.t} fill="#fee2e2" opacity={0.5} />
 
                 {/* "Danger zone" label — top-left inside zone */}
-                <text x={pad.l + 5} y={pad.t + 14} fill="#dc2626" fontSize={8} fontWeight={700}>Danger zone</text>
+                <text x={pad.l + 5} y={pad.t + 14} fill="#dc2626" fontSize={8}>Danger zone</text>
 
                 {/* Axes */}
                 <line x1={pad.l} x2={pad.l} y1={pad.t} y2={axisY} stroke="#e7e5e4" strokeWidth={1} />
@@ -68,7 +68,7 @@ function TufteChallengerChart() {
                     stroke="#dc2626" strokeWidth={1.5} strokeDasharray="3 2" />
 
                 {/* "Launch day: 26°F" label — below x-axis, next to the dashed line */}
-                <text x={launchX + 5} y={axisY + 16} fill="#dc2626" fontSize={8} fontWeight={700}>
+                <text x={launchX + 5} y={axisY + 16} fill="#dc2626" fontSize={8}>
                     Launch day: 26°F
                 </text>
 

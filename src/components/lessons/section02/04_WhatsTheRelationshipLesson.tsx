@@ -151,8 +151,8 @@ function SpuriousCorrelationChart() {
 
     return (
         <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-2xl mx-auto block">
-            <text x={pad.l} y={18} fill="#059669" fontSize={11} fontWeight={700}>Ice cream sales</text>
-            <text x={pad.l + 150} y={18} fill="#dc2626" fontSize={11} fontWeight={700}>Drowning deaths</text>
+            <text x={pad.l} y={18} fill="#059669" fontSize={11}>Ice cream sales</text>
+            <text x={pad.l + 150} y={18} fill="#dc2626" fontSize={11}>Drowning deaths</text>
             <text x={pad.l + 380} y={18} fill="#a8a29e" fontSize={10} fontStyle="italic">r = 0.97</text>
 
             <path d={iceLine} fill="none" stroke="#059669" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
@@ -165,7 +165,7 @@ function SpuriousCorrelationChart() {
             ))}
 
             <rect x={pad.l} y={h - 32} width={w - pad.l - pad.r} height={18} rx={4} fill="#fef9c3" opacity={0.9} />
-            <text x={w / 2} y={h - 19} fill="#92400e" fontSize={10} textAnchor="middle" fontWeight={600}>
+            <text x={w / 2} y={h - 19} fill="#92400e" fontSize={10} textAnchor="middle">
                 Confound: temperature drives BOTH variables. No causal link exists.
             </text>
         </svg>
@@ -209,12 +209,12 @@ function CategoricalHeatmapDemo() {
             <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-xl mx-auto block overflow-visible mt-2">
                 {/* Y Axis labels */}
                 {times.map((t, i) => (
-                    <text key={t} x={pad.l - 10} y={pad.t + i * cellH + cellH / 2} fill="#57534e" fontSize={11} fontWeight={600} textAnchor="end" dominantBaseline="middle">{t}</text>
+                    <text key={t} x={pad.l - 10} y={pad.t + i * cellH + cellH / 2} fill="#57534e" fontSize={11} textAnchor="end" dominantBaseline="middle">{t}</text>
                 ))}
 
                 {/* X Axis labels */}
                 {days.map((d, i) => (
-                    <text key={d} x={pad.l + i * cellW + cellW / 2} y={h - pad.b + 18} fill="#57534e" fontSize={11} fontWeight={600} textAnchor="middle">{d}</text>
+                    <text key={d} x={pad.l + i * cellW + cellW / 2} y={h - pad.b + 18} fill="#57534e" fontSize={11} textAnchor="middle">{d}</text>
                 ))}
 
                 {/* Grid cells */}

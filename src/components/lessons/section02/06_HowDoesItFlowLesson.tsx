@@ -166,7 +166,7 @@ function NetworkLayoutChart() {
                         {nodes.map(n => (
                             <g key={n.id} className="transition-transform duration-500 hover:scale-110">
                                 <circle cx={n.x} cy={n.y} r={n.r} fill={n.color} stroke="white" strokeWidth={1.5} />
-                                <text x={n.x} y={n.y + 2.5} fill={n.text} fontSize={5} textAnchor="middle" fontWeight={900}>{n.label}</text>
+                                <text x={n.x} y={n.y + 2.5} fill={n.text} fontSize={5} textAnchor="middle">{n.label}</text>
                             </g>
                         ))}
                     </svg>
@@ -196,7 +196,7 @@ function NetworkLayoutChart() {
 
 function ArrowRightIcon({ size }: { size: number }) {
     return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg className="w-full max-w-2xl mx-auto block" width={size} height={size} viewBox="0 0 480 220" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
         </svg>
     );

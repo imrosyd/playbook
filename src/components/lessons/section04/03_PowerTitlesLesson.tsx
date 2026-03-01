@@ -46,7 +46,7 @@ function RevenueTrendChart({ highlighted }: { highlighted: boolean }) {
                 {highlighted && (
                     <>
                         <line x1={toX(0)} x2={toX(0)} y1={toY(320)} y2={toY(242)} stroke="#dc2626" strokeWidth={1} strokeDasharray="3 3" />
-                        <text x={toX(0) + 4} y={toY(280)} fill="#dc2626" fontSize={9} fontWeight={700}>−24%</text>
+                        <text x={toX(0) + 4} y={toY(280)} fill="#dc2626" fontSize={9}>−24%</text>
                     </>
                 )}
                 {/* X labels */}

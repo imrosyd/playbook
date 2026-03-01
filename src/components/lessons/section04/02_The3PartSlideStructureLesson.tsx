@@ -68,8 +68,8 @@ function AttentionChart() {
                 <path d={areaD} fill="url(#attn)" />
                 <path d={pathD} fill="none" stroke="#1c1917" strokeWidth={2} strokeLinejoin="round" />
                 {/* Annotations */}
-                <text x={toX(0)} y={toY(98) - 6} fill="#1c1917" fontSize={9} fontWeight={700} textAnchor="middle">Opening</text>
-                <text x={toX(9)} y={toY(45) - 6} fill="#1c1917" fontSize={9} fontWeight={700} textAnchor="middle">Ending</text>
+                <text x={toX(0)} y={toY(98) - 6} fill="#1c1917" fontSize={9} textAnchor="middle">Opening</text>
+                <text x={toX(9)} y={toY(45) - 6} fill="#1c1917" fontSize={9} textAnchor="middle">Ending</text>
                 <text x={toX(5)} y={toY(40) + 12} fill="#a8a29e" fontSize={9} textAnchor="middle">Attention trough</text>
                 {/* Minutes */}
                 {[0, 2, 5, 8, 10].map((m) => {

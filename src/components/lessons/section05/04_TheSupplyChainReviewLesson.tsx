@@ -1,4 +1,4 @@
-import SimulatorLesson from '../section04/SimulatorLesson';
+import SimulatorLesson from './SimulatorLesson';
 
 const crossRefs = [
     { sectionId: 'perception', slug: 'cognitive-load', label: '1.2 — Cognitive Load: complexity in multi-category comparisons' },

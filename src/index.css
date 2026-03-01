@@ -43,6 +43,10 @@
         color: #1c1917;
     }
 
+    svg text, svg tspan {
+        font-family: inherit;
+    }
+
     ::selection {
         background-color: var(--brand-light);
         color: #065f46;
