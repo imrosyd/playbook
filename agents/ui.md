@@ -265,7 +265,74 @@ className="... bg-stone-100 text-stone-800"
 className="... text-stone-400 hover:bg-stone-100"
 ```
 
----
+### 5.8 Chart Standard (WAJIB diikuti)
+
+**Semua chart di lesson harus:**
+1. Dibungkus dengan komponen `<ChartFrame>` dari `src/components/ui/ChartFrame.tsx`
+2. Menggunakan SVG dengan `viewBox="0 0 480 220"` + `className="w-full"`
+3. Menggunakan padding standar: `const pad = { l: 40, r: 20, t: 16, b: 32 }` (dapat disesuaikan jika konten membutuhkan)
+
+```tsx
+import ChartFrame from '../../ui/ChartFrame';
+
+// Standard chart dimensions
+const w = 480, h = 220;
+const pad = { l: 40, r: 20, t: 16, b: 32 }; // adjust l/r based on label length
+
+function MyChart() {
+    return (
+        <svg viewBox={`0 0 ${w} ${h}`} className="w-full">
+            {/* chart content */}
+        </svg>
+    );
+}
+
+// Usage in lesson JSX:
+<ChartFrame
+    label="Judul chart dalam uppercase (deskripsi singkat)"
+    note="Catatan opsional di bawah chart — menjelaskan temuan utama."
+>
+    <MyChart />
+</ChartFrame>
+```
+
+**Font sizes standar dalam SVG (proporsional terhadap 480x220):**
+- Axis tick labels: `fontSize={9–10}`
+- Bar / data labels: `fontSize={11–12}`
+- Annotation text: `fontSize={10–11}`
+- Chart sub-titles: `fontSize={10}` (di luar ChartFrame label)
+
+**Aturan:**
+- ✅ Selalu gunakan `viewBox="0 0 480 220"` — BUKAN `width`/`height` inline
+- ✅ Semua SVG chart **wajib** menggunakan `className="w-full max-w-2xl mx-auto block"` agar ukuran konsisten (maks 672px, center)
+- ✅ `ChartFrame` otomatis membatasi lebar konten ke `max-w-2xl` — tidak perlu tambahkan lagi pada SVG di dalam `ChartFrame`
+- ✅ SVG yang berada di luar `ChartFrame` (misalnya di dalam card `div` biasa) **harus** menambahkan `max-w-2xl mx-auto block` secara manual
+- ✅ Chart lebih dari 1 panel (side-by-side) boleh menggunakan `220x170` per panel
+- ✅ Pastikan `pad.r` cukup besar untuk menampung teks label di kanan bar — minimal **70–90px** jika ada teks `overload`, `%`, atau keterangan di kanan bar
+- ✅ Teks judul di dalam SVG panel yang sempit harus **pendek dan uppercase** (`fontSize={9}`) agar tidak terpotong
+- ❌ Jangan gunakan dimensi kecil (160x90, 300x120, 320x130, dll.) untuk chart standalone
+- ❌ Jangan gunakan `style={{ width: N }}` untuk membatasi ukuran SVG
+- ❌ Jangan wrap chart dengan `<div className="bg-white border ...">` manual — gunakan `<ChartFrame>`
+- ❌ Hindari teks panjang dengan `textAnchor="middle"` pada panel sempit (< 200px) karena akan terpotong di tepi kiri/kanan
+
+**Contoh SVG di dalam ChartFrame (tidak perlu tambahan max-w):**
+```tsx
+<ChartFrame label="Judul chart">
+    <svg viewBox="0 0 480 220" className="w-full">  {/* ← cukup w-full */}
+        {/* chart content */}
+    </svg>
+</ChartFrame>
+```
+
+**Contoh SVG di luar ChartFrame (perlu max-w manual):**
+```tsx
+<div className="bg-white rounded-xl border border-stone-200 p-5">
+    <svg viewBox="0 0 480 220" className="w-full max-w-2xl mx-auto block">
+        {/* chart content */}
+    </svg>
+</div>
+```
+
 
 ## 6. Icon Usage
 

@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Check, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, ExternalLink, X } from 'lucide-react';
 import { getLessonBySlug, getNextLesson, getPrevLesson } from '../../data/curriculum';
 import { usePlaybook } from '../../contexts/PlaybookContext';
 import { useLang } from '../../contexts/LanguageContext';
@@ -19,7 +19,7 @@ interface LessonPageProps {
 
 export default function LessonPage({ children, crossRefs }: LessonPageProps) {
     const { sectionId, lessonSlug } = useParams();
-    const { completedLessons, markComplete } = usePlaybook();
+    const { completedLessons, markComplete, markUncomplete } = usePlaybook();
     const { lang } = useLang();
     const navigate = useNavigate();
 
@@ -96,16 +96,18 @@ export default function LessonPage({ children, crossRefs }: LessonPageProps) {
                 </div>
 
                 <button
-                    onClick={() => !isDone && markComplete(key)}
+                    onClick={() => isDone ? markUncomplete(key) : markComplete(key)}
                     className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${isDone
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-default'
-                            : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:shadow-lg hover:shadow-emerald-900/20'
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-red-50 hover:text-red-700 hover:border-red-200 group'
+                        : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:shadow-lg hover:shadow-emerald-900/20'
                         }`}
                 >
                     {isDone ? (
                         <>
-                            <Check size={14} />
-                            {t(lang, 'complete')}
+                            <Check size={14} className="group-hover:hidden" />
+                            <span className="group-hover:hidden">{t(lang, 'complete')}</span>
+                            <X size={14} className="hidden group-hover:block" />
+                            <span className="hidden group-hover:block">{t(lang, 'markUncomplete')}</span>
                         </>
                     ) : (
                         t(lang, 'markComplete')

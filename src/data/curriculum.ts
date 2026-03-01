@@ -50,6 +50,10 @@ export const SECTIONS: Section[] = [
             { id: '2.6', title: '"How does it flow?"', description: 'Charts for showing flows, hierarchies, and connections — Sankey, Network, and Tree diagrams explained clearly', slug: 'hierarchy', icon: Network },
             { id: '2.7', title: '"Are we on schedule?"', description: 'Operational and risk charts for tracking projects and targets — Gantt, Bullet, Funnel, and Gauge explained clearly', slug: 'operational', icon: CalendarClock },
             { id: '2.8', title: 'A Case for Tables', description: 'When a simple, well-formatted table is 10x better than any chart — and the rules for making tables that executives actually read', slug: 'tables', icon: Layers },
+            { id: '2.9', title: '"How did ranks change?"', description: 'Charts for showing transitions and rank changes over time — Slopegraph and Bump Chart explained clearly', slug: 'slopegraph', icon: TrendingDown },
+            { id: '2.10', title: 'Signal Boosters', description: 'Techniques to enhance line charts: turning points, confidence bands, missing data, and difference shading', slug: 'signal-techniques', icon: LineChart },
+            { id: '2.11', title: 'Deep Distribution', description: 'Beyond averages: Ridgelines, Violin plots, Beeswarms, and advanced histograms', slug: 'distribution-techniques', icon: Layers },
+            { id: '2.12', title: 'Specialty Frameworks', description: 'Quadrant scatters, Waffle charts, Likert progressions, and specialized plots', slug: 'special-charts', icon: PieChart },
         ],
     },
     {
@@ -64,7 +68,9 @@ export const SECTIONS: Section[] = [
             { id: '3.2', title: 'Hiding the Bad News (Data Tricks)', description: 'How smoothing, sampling, and "outlier removal" can quietly erase the most important signals in your data', slug: 'data-transform', icon: FlaskConical },
             { id: '3.3', title: 'The Spotlight Effect', description: 'Using color and opacity to force your audience\'s attention to exactly what you want — and the ethical line between editorial choice and manipulation', slug: 'visual-emphasis', icon: Palette },
             { id: '3.4', title: 'The Magic Words', description: 'How a single annotation or trendline rewrites the entire meaning of a chart — even when the data doesn\'t change at all', slug: 'annotation-trend', icon: MessageSquare },
-            { id: '3.5', title: 'The Full Lab', description: 'All controls active simultaneously — combine axis tricks, smoothing, color emphasis, and annotations to see how credibility collapses', slug: 'full-lab', icon: FlaskConical },
+            { id: '3.5', title: 'Signal vs Noise', description: 'Distinguishing true trends from random noise — and how aggressive smoothing can invent trends that don\'t exist.', slug: 'signal-noise', icon: Activity },
+            { id: '3.6', title: 'The Full Lab', description: 'All controls active simultaneously — combine axis tricks, smoothing, color emphasis, and annotations to see how credibility collapses', slug: 'full-lab', icon: FlaskConical },
+            { id: '3.7', title: 'Design Patterns', description: 'Learn how specific structural chart choices completely change the story to the viewer', slug: 'design-patterns', icon: Layers },
         ],
     },
     {
@@ -79,7 +85,9 @@ export const SECTIONS: Section[] = [
             { id: '4.2', title: 'The 3-Part Slide Structure', description: 'A foolproof recipe that works in every meeting: Headline → Chart → Takeaway. Why most slides fail before Slide 2', slug: 'slide-structure', icon: Layers },
             { id: '4.3', title: 'Power Titles', description: 'Transform a boring descriptive title ("Q3 Revenue") into an active, conclusion-driven headline ("Revenue Dropped 15% — Churn is the Root Cause")', slug: 'power-titles', icon: Zap },
             { id: '4.4', title: 'The Language of Authority', description: 'The exact words and phrases that signal data confidence — and the filler words that silently undermine your credibility in the room', slug: 'language-authority', icon: MessageSquare },
-            { id: '4.5', title: 'Bridging the Jargon Gap', description: 'How to explain a regression model, a confidence interval, or a p-value to a CEO in under 30 seconds — without dumbing it down', slug: 'jargon-gap', icon: Brain },
+            { id: '4.5', title: 'Narrative & Scale', description: 'How axis limits, anchors, annotations, and dimensional rendering actively shape the perception of truth', slug: 'narrative-scale', icon: Sliders },
+            { id: '4.6', title: 'Words & Psychology', description: 'Visualizing categorical data: Wordclouds vs Bar Charts, and the problem with Venn diagrams', slug: 'word-display', icon: MessageSquare },
+            { id: '4.7', title: 'Bridging the Jargon Gap', description: 'How to explain a regression model, a confidence interval, or a p-value to a CEO in under 30 seconds — without dumbing it down', slug: 'jargon-gap', icon: Brain },
         ],
     },
     {
@@ -124,6 +132,7 @@ export const SECTIONS: Section[] = [
             { id: '7.2', title: 'COVID Dashboard Wars (2020)', description: 'What the US, UK, and South Korea\'s pandemic dashboards revealed about how visualization choices under pressure shape public trust', slug: 'covid-dashboards', icon: Activity },
             { id: '7.3', title: 'The Boardroom Turnaround', description: 'Before-and-after analysis of a real data presentation makeover that flipped a board vote and unlocked $5M in funding', slug: 'boardroom-turnaround', icon: Briefcase },
             { id: '7.4', title: 'The Bad Chart Hall of Fame', description: 'A breakdown of the most notorious misleading charts from major media and corporations — and exactly what makes each one deceptive', slug: 'bad-chart-hall', icon: Zap },
+            { id: '7.5', title: 'Context & Accessibility', description: 'Advanced considerations for charting in the real world: handling noisy data gracefully and ensuring accessibility compliance', slug: 'data-context', icon: Target },
         ],
     },
     {

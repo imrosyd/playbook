@@ -4,6 +4,7 @@ import { SECTIONS, isSectionComplete, isSectionUnlocked } from '../data/curricul
 interface PlaybookContextValue {
     completedLessons: Set<string>;
     markComplete: (key: string) => void;
+    markUncomplete: (key: string) => void;
     isUnlocked: (sectionId: string) => boolean;
     isComplete: (sectionId: string) => boolean;
     getSectionProgress: (sectionId: string) => { done: number; total: number };
@@ -29,6 +30,14 @@ export function PlaybookProvider({ children }: { children: ReactNode }) {
         setCompletedLessons((prev) => new Set([...prev, key]));
     };
 
+    const markUncomplete = (key: string) => {
+        setCompletedLessons((prev) => {
+            const next = new Set(prev);
+            next.delete(key);
+            return next;
+        });
+    };
+
     const isUnlocked = (sectionId: string) => isSectionUnlocked(sectionId, completedLessons);
     const isComplete = (sectionId: string) => isSectionComplete(sectionId, completedLessons);
 
@@ -40,7 +49,7 @@ export function PlaybookProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <PlaybookContext.Provider value={{ completedLessons, markComplete, isUnlocked, isComplete, getSectionProgress }}>
+        <PlaybookContext.Provider value={{ completedLessons, markComplete, markUncomplete, isUnlocked, isComplete, getSectionProgress }}>
             {children}
         </PlaybookContext.Provider>
     );

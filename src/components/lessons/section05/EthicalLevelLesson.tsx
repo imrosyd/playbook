@@ -14,6 +14,7 @@ interface CrossRef {
 interface EthicalLevelLessonProps {
     levelIndex: number;
     crossRefs: CrossRef[];
+    children?: React.ReactNode;
 }
 
 interface EthicalLevelConfig {
@@ -405,7 +406,7 @@ function EthicalBarChart({
     );
 }
 
-export default function EthicalLevelLesson({ levelIndex, crossRefs }: EthicalLevelLessonProps) {
+export default function EthicalLevelLesson({ levelIndex, crossRefs, children }: EthicalLevelLessonProps) {
     const config = ETHICAL_LEVELS[Math.max(0, Math.min(4, levelIndex))];
     const chartParams: ChartParams = { ...DEFAULT_PARAMS, ...config.chartParams } as ChartParams;
 
@@ -503,6 +504,11 @@ export default function EthicalLevelLesson({ levelIndex, crossRefs }: EthicalLev
                     <p className="text-[14px] text-stone-700 leading-relaxed">{config.ethicalGuideline}</p>
                 </div>
             </div>
+            {children && (
+                <div className="mt-12 pt-10 border-t border-stone-200">
+                    {children}
+                </div>
+            )}
         </LessonPage>
     );
 }
