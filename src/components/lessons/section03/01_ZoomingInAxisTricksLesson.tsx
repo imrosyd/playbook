@@ -1,11 +1,13 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LabLesson from './LabLesson';
 
-const crossRefs = [
-    { sectionId: 'perception', slug: 'anchoring', label: '1.3 — Anchoring: how axis choice sets the frame' },
-    { sectionId: 'ethics', slug: 'distortion', label: '5.4 — Distortion: systematic perceptual errors from axis manipulation' },
-    { sectionId: 'lab', slug: 'full-lab', label: '3.5 — Full Lab: combine all manipulation techniques' },
-];
-
 export default function ZoomingInAxisTricksLesson() {
+    const { lang } = useLang();
+    const crossRefs = [
+        { sectionId: 'perception', slug: 'anchoring', label: t(lang, 's3.zoomingIn.crossRefs.0.label') },
+        { sectionId: 'ethics', slug: 'distortion', label: t(lang, 's3.zoomingIn.crossRefs.1.label') },
+        { sectionId: 'lab', slug: 'full-lab', label: t(lang, 's3.zoomingIn.crossRefs.2.label') },
+    ];
     return <LabLesson mode="axis-scale" crossRefs={crossRefs} />;
 }

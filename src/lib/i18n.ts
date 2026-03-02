@@ -1,3 +1,20 @@
+import { section01 as section01En } from '../locales/en/section01';
+import { section01 as section01Id } from '../locales/id/section01';
+import { section02 as section02En } from '../locales/en/section02';
+import { section02 as section02Id } from '../locales/id/section02';
+import { section03 as section03En } from '../locales/en/section03';
+import { section03 as section03Id } from '../locales/id/section03';
+import { section04 as section04En } from '../locales/en/section04';
+import { section04 as section04Id } from '../locales/id/section04';
+import { section05 as section05En } from '../locales/en/section05';
+import { section05 as section05Id } from '../locales/id/section05';
+import { section06 as section06En } from '../locales/en/section06';
+import { section06 as section06Id } from '../locales/id/section06';
+import { section07 as section07En } from '../locales/en/section07';
+import { section07 as section07Id } from '../locales/id/section07';
+import { section08 as section08En } from '../locales/en/section08';
+import { section08 as section08Id } from '../locales/id/section08';
+
 export const LANGUAGES = [
     { code: 'en', label: 'English', dir: 'ltr', flag: '🇺🇸' },
     { code: 'zh', label: '中文', dir: 'ltr', flag: '🇨🇳' },
@@ -13,7 +30,7 @@ export const LANGUAGES = [
 
 export type LangCode = typeof LANGUAGES[number]['code'];
 
-export const translations: Record<LangCode, Record<string, string>> = {
+export const translations: Record<LangCode, Record<string, any>> = {
     en: {
         appName: 'Chartosaur',
         appTagline: 'Present with Data Playbook',
@@ -40,6 +57,14 @@ export const translations: Record<LangCode, Record<string, string>> = {
         showSidebar: 'Show sidebar',
         presentWithData: 'Present with Data',
         language: 'Language',
+        s1: section01En,
+        s2: section02En,
+        s3: section03En,
+        s4: section04En,
+        s5: section05En,
+        s6: section06En,
+        s7: section07En,
+        s8: section08En,
     },
     zh: {
         appName: 'Chartosaur',
@@ -283,9 +308,43 @@ export const translations: Record<LangCode, Record<string, string>> = {
         showSidebar: 'Tampilkan bilah samping',
         presentWithData: 'Presentasi dengan Data',
         language: 'Bahasa',
+        s1: section01Id,
+        s2: section02Id,
+        s3: section03Id,
+        s4: section04Id,
+        s5: section05Id,
+        s6: section06Id,
+        s7: section07Id,
+        s8: section08Id,
     },
 };
 
-export function t(lang: LangCode, key: string): string {
-    return translations[lang]?.[key] ?? translations['en'][key] ?? key;
+export function t(lang: LangCode, key: string, ...args: (string | number)[]): string {
+    // Basic dot-notation resolver: 's1.blinkTest.intro1'
+    const keys = key.split('.');
+    let val: any = translations[lang];
+
+    for (const k of keys) {
+        if (!val) break;
+        val = val[k];
+    }
+
+    // Fallback to English if not found
+    if (val === undefined || typeof val !== 'string') {
+        let fallbackVal: any = translations['en'];
+        for (const k of keys) {
+            if (!fallbackVal) break;
+            fallbackVal = fallbackVal[k];
+        }
+        val = (fallbackVal !== undefined && typeof fallbackVal === 'string') ? fallbackVal : key;
+    }
+
+    // Replace {0}, {1}, etc. with provided args if applicable
+    if (typeof val === 'string' && args.length > 0) {
+        return val.replace(/\{(\d+)\}/g, (match, index) => {
+            return typeof args[index] !== 'undefined' ? String(args[index]) : match;
+        });
+    }
+
+    return val;
 }

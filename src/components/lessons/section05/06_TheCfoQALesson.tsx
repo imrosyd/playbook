@@ -1,11 +1,14 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import SimulatorLesson from './SimulatorLesson';
 
-const crossRefs = [
-    { sectionId: 'perception', slug: 'anchoring', label: '1.3 — Anchoring: how 100% baseline anchors budget perception' },
-    { sectionId: 'lab', slug: 'visual-emphasis', label: '3.3 — Visual Emphasis: hiding over-budget departments' },
-    { sectionId: 'ethics', slug: 'framing', label: '5.3 — Framing: favorable framing of budget overruns' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'perception', slug: 'anchoring', label: t(lang, 's5.cfoQA.crossRefs.0.label') },
+    { sectionId: 'lab', slug: 'visual-emphasis', label: t(lang, 's5.cfoQA.crossRefs.1.label') },
+    { sectionId: 'ethics', slug: 'framing', label: t(lang, 's5.cfoQA.crossRefs.2.label') },
 ];
 
 export default function TheCfoQALesson() {
-    return <SimulatorLesson scenarioKey="budget" crossRefs={crossRefs} />;
+    const { lang } = useLang();
+    return <SimulatorLesson scenarioKey="budget" crossRefs={crossRefs(lang)} />;
 }

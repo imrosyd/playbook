@@ -1,14 +1,16 @@
 import { useState, useMemo } from 'react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import EthicalLevelLesson from './EthicalLevelLesson';
 
-const crossRefs = [
-    { sectionId: 'perception', slug: 'anchoring', label: '1.3 — Anchoring: how framing exploits first-impression bias' },
-    { sectionId: 'lab', slug: 'annotation-trend', label: '3.4 — Annotation & Trend: build framing techniques' },
-    { sectionId: 'ethics', slug: 'emphasis', label: '5.2 — Level 2: Emphasis (previous level)' },
-    { sectionId: 'ethics', slug: 'distortion', label: '5.4 — Level 4: Distortion (next level)' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'perception', slug: 'anchoring', label: t(lang, 's8.level3.crossRefs.0.label') },
+    { sectionId: 'lab', slug: 'annotation-trend', label: t(lang, 's8.level3.crossRefs.1.label') },
+    { sectionId: 'ethics', slug: 'emphasis', label: t(lang, 's8.level3.crossRefs.2.label') },
+    { sectionId: 'ethics', slug: 'distortion', label: t(lang, 's8.level3.crossRefs.3.label') },
 ];
 
-function ThreeStoriesDemo() {
+function ThreeStoriesDemo({ lang }: { lang: any }) {
     const [story, setStory] = useState<'complete' | 'golden' | 'collapse'>('complete');
 
     const fullData = useMemo(() => [
@@ -37,16 +39,16 @@ function ThreeStoriesDemo() {
     const pathData = data.map((d, i) => `${i === 0 ? 'M' : 'L'} ${scaleX(i)} ${scaleY(d.val)}`).join(' ');
 
     const titles = {
-        complete: "14 Years of Volatility",
-        golden: "The Unstoppable Growth Era",
-        collapse: "The Sudden Collapse"
+        complete: t(lang, 's8.level3.demo.titles.complete'),
+        golden: t(lang, 's8.level3.demo.titles.golden'),
+        collapse: t(lang, 's8.level3.demo.titles.collapse')
     };
 
     return (
         <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-[13px] font-bold text-stone-700 tracking-wide uppercase">
-                    The 3 Stories of 1 Chart
+                    {t(lang, 's8.level3.demo.title')}
                 </h3>
             </div>
 
@@ -88,9 +90,9 @@ function ThreeStoriesDemo() {
                 <div className="flex-1">
                     <div className="bg-stone-50 rounded-lg p-5 border border-stone-100">
                         <p className="text-[13px] text-stone-600 leading-relaxed">
-                            {story === 'complete' && "Showing the complete 14-year history reveals massive early growth followed by a complete collapse. This is the neutral, unfiltered dataset."}
-                            {story === 'golden' && "By cherry-picking the X-axis to only show 2010-2015, the presenter completely hides the eventual failure. The chart is 'factually accurate' but ethically manipulative."}
-                            {story === 'collapse' && "By slicing the X-axis completely differently (2019-2024), the presenter frames a narrative of disastrous failure, hiding the fact that the company still operates above its original 2010 baseline."}
+                            {story === 'complete' && t(lang, 's8.level3.demo.desc.complete')}
+                            {story === 'golden' && t(lang, 's8.level3.demo.desc.golden')}
+                            {story === 'collapse' && t(lang, 's8.level3.demo.desc.collapse')}
                         </p>
                     </div>
                 </div>
@@ -100,13 +102,14 @@ function ThreeStoriesDemo() {
 }
 
 export default function Level3FramingLesson() {
+    const { lang } = useLang();
     return (
-        <EthicalLevelLesson levelIndex={2} crossRefs={crossRefs}>
+        <EthicalLevelLesson levelIndex={2} crossRefs={crossRefs(lang)}>
             <div className="space-y-6">
                 <p className="text-[15px] font-semibold text-stone-800 uppercase tracking-widest text-center mt-6">
-                    Hands-on Lab
+                    {t(lang, 's8.level3.labTitle')}
                 </p>
-                <ThreeStoriesDemo />
+                <ThreeStoriesDemo lang={lang} />
             </div>
         </EthicalLevelLesson>
     );

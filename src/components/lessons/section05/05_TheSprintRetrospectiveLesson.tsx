@@ -1,11 +1,14 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import SimulatorLesson from './SimulatorLesson';
 
-const crossRefs = [
-    { sectionId: 'perception', slug: 'pattern', label: '1.4 — Pattern Recognition: velocity trends and confirmation bias' },
-    { sectionId: 'lab', slug: 'data-transform', label: '3.2 — Data Transform: smoothing sprint data hides delivery risk' },
-    { sectionId: 'ethics', slug: 'manipulation', label: '5.5 — Manipulation: compound distortion in project reporting' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'perception', slug: 'pattern', label: t(lang, 's5.sprintRetrospective.crossRefs.0.label') },
+    { sectionId: 'lab', slug: 'data-transform', label: t(lang, 's5.sprintRetrospective.crossRefs.1.label') },
+    { sectionId: 'ethics', slug: 'manipulation', label: t(lang, 's5.sprintRetrospective.crossRefs.2.label') },
 ];
 
 export default function TheSprintRetrospectiveLesson() {
-    return <SimulatorLesson scenarioKey="project" crossRefs={crossRefs} />;
+    const { lang } = useLang();
+    return <SimulatorLesson scenarioKey="project" crossRefs={crossRefs(lang)} />;
 }

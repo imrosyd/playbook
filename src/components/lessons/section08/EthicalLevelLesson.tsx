@@ -4,6 +4,8 @@ import LessonPage from '../../layout/LessonPage';
 import type { ChartParams, DataPoint } from '../../../types/chart';
 import { DEFAULT_PARAMS } from '../../../types/chart';
 import { transformData } from '../../../lib/transforms';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 
 interface CrossRef {
     sectionId: string;
@@ -41,54 +43,48 @@ const BASE_DATA: DataPoint[] = [
     { label: 'Q8', value: 101 },
 ];
 
-const ETHICAL_LEVELS: EthicalLevelConfig[] = [
+const GET_ETHICAL_LEVELS = (lang: any): EthicalLevelConfig[] => [
     {
         level: 1,
-        name: 'Clarity',
+        name: t(lang, 's8.ethicalLevel.level1.name'),
         color: '#047857',
-        tagline: 'Accurate representation — the gold standard',
-        description:
-            'Level 1 charts present data with complete fidelity to the underlying numbers. The y-axis starts at zero, no smoothing is applied, all data points are visible, and any annotations directly reflect the data. The viewer\'s conclusions will align with the actual evidence. This is the professional standard for any chart used in a decision-making context.',
+        tagline: t(lang, 's8.ethicalLevel.level1.tagline'),
+        description: t(lang, 's8.ethicalLevel.level1.desc'),
         manipulationTypes: [
-            'None — this is the baseline of honest visualization',
-            'Minor editorial choices (annotation placement, color palette) that do not distort magnitude',
-            'Appropriate use of annotations to reduce cognitive load without implanting false frames',
+            t(lang, 's8.ethicalLevel.level1.manip1'),
+            t(lang, 's8.ethicalLevel.level1.manip2'),
+            t(lang, 's8.ethicalLevel.level1.manip3'),
         ],
-        realWorldExample:
-            'A CFO presents quarterly revenue with a zero-based y-axis, shows all 8 quarters without filtering, and adds an annotation noting that Q6 exceeded forecast by 3.2% — a factually accurate statement.',
+        realWorldExample: t(lang, 's8.ethicalLevel.level1.example'),
         brightLineTests: [
-            'Does the y-axis start at zero (or is the deviation from zero explicitly labeled)?',
-            'Are all data points in the relevant period shown?',
-            'Do annotations reflect what the data actually shows, not what you want it to show?',
-            'Would a statistician reviewing raw data reach the same conclusion as a viewer of this chart?',
+            t(lang, 's8.ethicalLevel.level1.test1'),
+            t(lang, 's8.ethicalLevel.level1.test2'),
+            t(lang, 's8.ethicalLevel.level1.test3'),
+            t(lang, 's8.ethicalLevel.level1.test4'),
         ],
-        ethicalGuideline:
-            'This is where every chart should start. Deviations from Level 1 require explicit justification and disclosure. The burden of proof is always on the presenter to explain why a deviation is necessary.',
+        ethicalGuideline: t(lang, 's8.ethicalLevel.level1.guideline'),
         chartParams: { ...DEFAULT_PARAMS },
     },
     {
         level: 2,
-        name: 'Emphasis',
+        name: t(lang, 's8.ethicalLevel.level2.name'),
         color: '#1d4ed8',
-        tagline: 'Directing attention without distorting magnitude',
-        description:
-            'Level 2 charts use emphasis techniques — highlighting, sorting, or color differentiation — to direct the viewer\'s attention toward a specific element. The underlying magnitudes remain accurate, but the pre-attentive system is being deliberately guided. This is editorially legitimate when the highlighted element is genuinely decision-relevant. It crosses into manipulation when emphasis is used to suppress context rather than illuminate it.',
+        tagline: t(lang, 's8.ethicalLevel.level2.tagline'),
+        description: t(lang, 's8.ethicalLevel.level2.desc'),
         manipulationTypes: [
-            'Color highlighting of a specific bar to draw attention to a result',
-            'Sorting data by value to create a ranking narrative',
-            'Selective labeling (showing only the highest and lowest values)',
-            'Using emphasis to guide the viewer toward a pre-determined conclusion',
+            t(lang, 's8.ethicalLevel.level2.manip1'),
+            t(lang, 's8.ethicalLevel.level2.manip2'),
+            t(lang, 's8.ethicalLevel.level2.manip3'),
+            t(lang, 's8.ethicalLevel.level2.manip4'),
         ],
-        realWorldExample:
-            'A marketing analyst highlights the single highest-performing channel in blue while showing all others in grey — directing attention to a success story while keeping other channels visible but visually subordinate.',
+        realWorldExample: t(lang, 's8.ethicalLevel.level2.example'),
         brightLineTests: [
-            'Is the emphasized element genuinely the most decision-relevant piece of information?',
-            'Are non-emphasized elements still visible and readable (not hidden)?',
-            'Would you be comfortable if the audience knew you were directing their attention?',
-            'Is the emphasis consistent with the analytical question being answered?',
+            t(lang, 's8.ethicalLevel.level2.test1'),
+            t(lang, 's8.ethicalLevel.level2.test2'),
+            t(lang, 's8.ethicalLevel.level2.test3'),
+            t(lang, 's8.ethicalLevel.level2.test4'),
         ],
-        ethicalGuideline:
-            'Emphasis is a legitimate editorial tool when applied honestly. Disclose what you are highlighting and why. If you cannot articulate a decision-relevant reason for the emphasis, reconsider.',
+        ethicalGuideline: t(lang, 's8.ethicalLevel.level2.guideline'),
         chartParams: {
             ...DEFAULT_PARAMS,
             colorEmphasis: { highlightedIndices: [7], dimOpacity: 0.35 },
@@ -98,27 +94,24 @@ const ETHICAL_LEVELS: EthicalLevelConfig[] = [
     },
     {
         level: 3,
-        name: 'Framing',
+        name: t(lang, 's8.ethicalLevel.level3.name'),
         color: '#92400e',
-        tagline: 'Favoring one interpretation of the same data',
-        description:
-            'Level 3 charts present accurate data in a frame that systematically favors one interpretation. The numbers are correct, but the combination of sorting, emphasis, selective annotation, and minor smoothing creates a perception that diverges from a neutral reading. This is the most common form of business chart manipulation — it operates below the threshold of obvious deception but reliably shifts viewer conclusions in the presenter\'s preferred direction.',
+        tagline: t(lang, 's8.ethicalLevel.level3.tagline'),
+        description: t(lang, 's8.ethicalLevel.level3.desc'),
         manipulationTypes: [
-            'Annotations that lead the viewer toward a conclusion rather than describing the data',
-            'Sorting combined with heavy emphasis to create a "best case" narrative',
-            'Minor axis truncation (under 20%) to make flat trends appear as growth',
-            'Framing labels that use positive language for negative results',
+            t(lang, 's8.ethicalLevel.level3.manip1'),
+            t(lang, 's8.ethicalLevel.level3.manip2'),
+            t(lang, 's8.ethicalLevel.level3.manip3'),
+            t(lang, 's8.ethicalLevel.level3.manip4'),
         ],
-        realWorldExample:
-            'A product manager shows flat user engagement data sorted highest-first, highlights the one outlier month, and adds the annotation "Engagement momentum building" — technically accurate individual elements combined to create a misleading overall impression.',
+        realWorldExample: t(lang, 's8.ethicalLevel.level3.example'),
         brightLineTests: [
-            'Would the same data, presented with neutral defaults, tell the same story?',
-            'Is the annotation phrased to describe what happened, or to advocate for a conclusion?',
-            'Have you suppressed any elements (via opacity, ordering, exclusion) that contradict the framing?',
-            'Would a skeptical analyst reach the same conclusion from raw numbers?',
+            t(lang, 's8.ethicalLevel.level3.test1'),
+            t(lang, 's8.ethicalLevel.level3.test2'),
+            t(lang, 's8.ethicalLevel.level3.test3'),
+            t(lang, 's8.ethicalLevel.level3.test4'),
         ],
-        ethicalGuideline:
-            'Framing is where professional responsibility diverges from legality. The chart is defensible in isolation, but the intent is to guide the audience to a conclusion the data does not fully support. If you are making choices specifically to favor one reading, you are in Level 3 territory.',
+        ethicalGuideline: t(lang, 's8.ethicalLevel.level3.guideline'),
         chartParams: {
             ...DEFAULT_PARAMS,
             colorEmphasis: { highlightedIndices: [7], dimOpacity: 0.25 },
@@ -130,27 +123,24 @@ const ETHICAL_LEVELS: EthicalLevelConfig[] = [
     },
     {
         level: 4,
-        name: 'Distortion',
+        name: t(lang, 's8.ethicalLevel.level4.name'),
         color: '#dc2626',
-        tagline: 'Systematic perceptual errors through axis and 3D manipulation',
-        description:
-            'Level 4 charts introduce systematic perceptual errors. Axis truncation above 20% causes the viewer\'s pre-attentive system to receive a corrupted signal — bar lengths no longer accurately encode the data values. The 3D perspective effect adds foreshortening distortion on top of truncation. Cleveland and McGill (1985) demonstrated that length is among the most accurately decoded visual channels; Level 4 techniques specifically corrupt this channel. Decisions based on Level 4 charts will be predictably wrong.',
+        tagline: t(lang, 's8.ethicalLevel.level4.tagline'),
+        description: t(lang, 's8.ethicalLevel.level4.desc'),
         manipulationTypes: [
-            'Axis truncation above 20% baseline — magnifies apparent differences 3-5x',
-            '3D perspective effect — introduces ~50% magnitude estimation error',
-            'Combination of truncation and 3D (compound distortion)',
-            'Excessive smoothing that hides meaningful variance',
+            t(lang, 's8.ethicalLevel.level4.manip1'),
+            t(lang, 's8.ethicalLevel.level4.manip2'),
+            t(lang, 's8.ethicalLevel.level4.manip3'),
+            t(lang, 's8.ethicalLevel.level4.manip4'),
         ],
-        realWorldExample:
-            'A division head presents a chart where sales increased from $980K to $1,020K — a 4% gain — but the y-axis starts at $950K with a 3D perspective applied. The bars appear to show one quarter as 4x the height of another, and the room approves a budget expansion that wasn\'t warranted by the actual data.',
+        realWorldExample: t(lang, 's8.ethicalLevel.level4.example'),
         brightLineTests: [
-            'Does the y-axis baseline exceed 20% of the minimum data value?',
-            'Is a 3D effect applied to any chart encoding magnitude as bar length?',
-            'Would removing the truncation or 3D effect change the viewer\'s conclusion?',
-            'Could a viewer accurately estimate the ratio between any two values from this chart?',
+            t(lang, 's8.ethicalLevel.level4.test1'),
+            t(lang, 's8.ethicalLevel.level4.test2'),
+            t(lang, 's8.ethicalLevel.level4.test3'),
+            t(lang, 's8.ethicalLevel.level4.test4'),
         ],
-        ethicalGuideline:
-            'Level 4 techniques cross the line from framing into distortion. The viewer cannot form accurate magnitude judgments, and the chart will produce systematically wrong decisions. These techniques are indefensible in professional contexts regardless of intent.',
+        ethicalGuideline: t(lang, 's8.ethicalLevel.level4.guideline'),
         chartParams: {
             ...DEFAULT_PARAMS,
             axisBaselinePct: 60,
@@ -161,28 +151,25 @@ const ETHICAL_LEVELS: EthicalLevelConfig[] = [
     },
     {
         level: 5,
-        name: 'Manipulation',
+        name: t(lang, 's8.ethicalLevel.level5.name'),
         color: '#991b1b',
-        tagline: 'Compound distortions with false narrative',
-        description:
-            'Level 5 charts combine multiple severe manipulation techniques with narrative elements specifically designed to prevent critical analysis. Three or more severe distortions compound to create a chart where the viewer\'s pre-attentive system, pattern recognition, and anchoring bias are all simultaneously exploited. The annotation, smoothing, and axis choices are coordinated to produce a specific false conclusion. This is the ethical equivalent of falsifying data.',
+        tagline: t(lang, 's8.ethicalLevel.level5.tagline'),
+        description: t(lang, 's8.ethicalLevel.level5.desc'),
         manipulationTypes: [
-            'Axis truncation + 3D effect (compound magnitude distortion)',
-            'Heavy smoothing + misleading trendline (false trend narrative)',
-            'Misleading annotation that anchors the viewer before they can form an independent judgment',
-            'Cherry-picked outlier exclusion from already small sample',
-            'Custom sort order to bury unfavorable periods',
+            t(lang, 's8.ethicalLevel.level5.manip1'),
+            t(lang, 's8.ethicalLevel.level5.manip2'),
+            t(lang, 's8.ethicalLevel.level5.manip3'),
+            t(lang, 's8.ethicalLevel.level5.manip4'),
+            t(lang, 's8.ethicalLevel.level5.manip5'),
         ],
-        realWorldExample:
-            'A startup founder presents a revenue chart to investors with 65% axis truncation, a 3D effect, a 5-period rolling average, and the annotation "Hockey-stick growth trajectory confirmed." The chart shows what appears to be 400% growth over 4 quarters. The actual growth was 11%. The company raises funding at a valuation reflecting the false trajectory.',
+        realWorldExample: t(lang, 's8.ethicalLevel.level5.example'),
         brightLineTests: [
-            'Are three or more severe manipulation techniques (each scoring -3 or worse) combined?',
-            'Does the annotation explicitly advocate for a decision rather than describe data?',
-            'Is a trendline applied to data that has been smoothed, filtered, and selectively sampled?',
-            'Would a transparent presentation of the same data reach the opposite conclusion?',
+            t(lang, 's8.ethicalLevel.level5.test1'),
+            t(lang, 's8.ethicalLevel.level5.test2'),
+            t(lang, 's8.ethicalLevel.level5.test3'),
+            t(lang, 's8.ethicalLevel.level5.test4'),
         ],
-        ethicalGuideline:
-            'Level 5 is active manipulation. The chart is not a representation of data — it is a weapon for extracting a specific decision. In regulated contexts (financial reporting, clinical trials, government data) this constitutes fraud. In business contexts, it is a breach of fiduciary duty. There is no legitimate use case for a Level 5 chart.',
+        ethicalGuideline: t(lang, 's8.ethicalLevel.level5.guideline'),
         chartParams: {
             ...DEFAULT_PARAMS,
             axisBaselinePct: 70,
@@ -407,28 +394,14 @@ function EthicalBarChart({
 }
 
 export default function EthicalLevelLesson({ levelIndex, crossRefs, children }: EthicalLevelLessonProps) {
+    const { lang } = useLang();
+    const ETHICAL_LEVELS = GET_ETHICAL_LEVELS(lang);
     const config = ETHICAL_LEVELS[Math.max(0, Math.min(4, levelIndex))];
     const chartParams: ChartParams = { ...DEFAULT_PARAMS, ...config.chartParams } as ChartParams;
 
     return (
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-8">
-                {/* Level header badge */}
-                <div className="flex items-center gap-4">
-                    <div
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 text-white font-black text-2xl shadow-sm"
-                        style={{ backgroundColor: config.color }}
-                    >
-                        {config.level}
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-bold text-stone-900">Level {config.level}: {config.name}</h2>
-                        <p className="text-[14px] font-medium mt-0.5" style={{ color: config.color }}>
-                            {config.tagline}
-                        </p>
-                    </div>
-                </div>
-
                 {/* Description */}
                 <p className="text-[15px] text-stone-600 leading-relaxed">{config.description}</p>
 
@@ -441,7 +414,7 @@ export default function EthicalLevelLesson({ levelIndex, crossRefs, children }: 
                         className="text-xs font-semibold uppercase tracking-wider mb-4"
                         style={{ color: config.color }}
                     >
-                        Level {config.level} — {config.name} Demonstration
+                        Level {config.level} — {config.name} {t(lang, 's8.ethicalLevel.demoLabel')}
                     </p>
                     <EthicalBarChart data={BASE_DATA} params={chartParams} color={config.color} />
                 </div>
@@ -449,7 +422,7 @@ export default function EthicalLevelLesson({ levelIndex, crossRefs, children }: 
                 {/* Manipulation types */}
                 <div className="space-y-3">
                     <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
-                        Techniques at this level
+                        {t(lang, 's8.ethicalLevel.techniquesTitle')}
                     </p>
                     <ul className="space-y-2">
                         {config.manipulationTypes.map((type, i) => (
@@ -473,7 +446,7 @@ export default function EthicalLevelLesson({ levelIndex, crossRefs, children }: 
                         className="text-xs font-semibold uppercase tracking-wider mb-3"
                         style={{ color: config.color }}
                     >
-                        Real-World Example
+                        {t(lang, 's8.ethicalLevel.realWorldTitle')}
                     </p>
                     <p className="text-[14px] text-stone-700 leading-relaxed">{config.realWorldExample}</p>
                 </div>
@@ -481,7 +454,7 @@ export default function EthicalLevelLesson({ levelIndex, crossRefs, children }: 
                 {/* Bright-line tests */}
                 <div className="space-y-3">
                     <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
-                        Bright-Line Tests
+                        {t(lang, 's8.ethicalLevel.brightLineTitle')}
                     </p>
                     <div className="space-y-2">
                         {config.brightLineTests.map((test, i) => (
@@ -499,7 +472,7 @@ export default function EthicalLevelLesson({ levelIndex, crossRefs, children }: 
                 {/* Ethical guideline */}
                 <div className="rounded-xl bg-stone-50 border border-stone-200 px-5 py-4">
                     <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">
-                        Ethical Guideline
+                        {t(lang, 's8.ethicalLevel.guidelineTitle')}
                     </p>
                     <p className="text-[14px] text-stone-700 leading-relaxed">{config.ethicalGuideline}</p>
                 </div>

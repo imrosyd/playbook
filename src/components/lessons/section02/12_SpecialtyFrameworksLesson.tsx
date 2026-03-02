@@ -3,6 +3,8 @@ import LessonPage from '../../../components/layout/LessonPage';
 import ChartFrame from '../../../components/ui/ChartFrame';
 import { SECTION_COLORS } from '../../../lib/design-tokens';
 import { Lightbulb, Info } from 'lucide-react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 
 const sectionColor = SECTION_COLORS['02'].base;
 
@@ -10,14 +12,21 @@ const crossRefs = [
     { sectionId: 'mechanics', slug: 'comparison', label: '2.1 — Standard Comparison charts' },
 ];
 
-function StandoutScatterDemo() {
+function StandoutScatterDemo({ lang }: { lang: any }) {
     const w = 480, h = 220, pad = { t: 16, r: 20, b: 32, l: 30 };
+    // Pre-seeded dots so they don't flash on re-render
+    const noiseDots = [
+        [12, 18], [28, 72], [55, 35], [80, 90], [105, 62], [130, 15], [160, 80], [185, 40], [210, 95], [235, 55],
+        [260, 20], [285, 75], [310, 45], [335, 88], [360, 30], [395, 65], [420, 10], [445, 82], [415, 50], [370, 70],
+        [340, 25], [295, 90], [270, 48], [245, 15], [220, 85], [195, 62], [170, 35], [145, 78], [120, 22], [95, 68],
+        [70, 50], [45, 28], [25, 88], [350, 55], [380, 30], [300, 15], [250, 70], [200, 45], [150, 90], [100, 38],
+    ];
     return (
         <div className="space-y-4 mb-16">
-            <h3 className="text-xl font-bold text-stone-900">1. Show the Standout</h3>
+            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.specialtyFrameworks.demos.standoutScatter.title')}</h3>
             <ChartFrame
-                label="AD SPEND VS CONVERSIONS"
-                note="Instead of coloring every data point by category, map context points to gray. Reserve a high-contrast hue exclusively for the specific data point you want to highlight."
+                label={t(lang, 's2.specialtyFrameworks.demos.standoutScatter.chartLabel')}
+                note={t(lang, 's2.specialtyFrameworks.demos.standoutScatter.note')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {/* Axes */}
@@ -27,30 +36,30 @@ function StandoutScatterDemo() {
                     {/* Fake gridlines */}
                     {[20, 40, 60, 80].map(val => {
                         const vx = pad.l + (val / 100) * (w - pad.l - pad.r);
-                        return <line key={`x-${val}`} x1={vx} x2={vx} y1={pad.t} y2={h - pad.b} stroke="#e7e5e4" strokeWidth={1} strokeDasharray="2 2" />
+                        return <line key={`x-${val}`} x1={vx} x2={vx} y1={pad.t} y2={h - pad.b} stroke="#e7e5e4" strokeWidth={1} strokeDasharray="2 2" />;
                     })}
                     {[20, 40, 60, 80].map(val => {
                         const vy = pad.t + (val / 100) * (h - pad.t - pad.b);
-                        return <line key={`y-${val}`} x1={pad.l} x2={w - pad.r} y1={vy} y2={vy} stroke="#e7e5e4" strokeWidth={1} strokeDasharray="2 2" />
+                        return <line key={`y-${val}`} x1={pad.l} x2={w - pad.r} y1={vy} y2={vy} stroke="#e7e5e4" strokeWidth={1} strokeDasharray="2 2" />;
                     })}
 
                     {/* Gray background dots (Noise) */}
-                    {[...Array(40)].map((_, i) => (
-                        <circle key={i} cx={pad.l + 10 + Math.random() * (w - pad.l - pad.r - 20)} cy={pad.t + 10 + Math.random() * (h - pad.t - pad.b - 20)} r="3" fill="#cbd5e1" opacity={0.6} />
+                    {noiseDots.map(([cx, cy], i) => (
+                        <circle key={i} cx={pad.l + cx} cy={pad.t + cy} r="3" fill="#cbd5e1" opacity={0.6} />
                     ))}
 
                     {/* The standout */}
                     <circle cx={pad.l + (85 / 100) * (w - pad.l - pad.r)} cy={pad.t + (15 / 100) * (h - pad.t - pad.b)} r="6" fill="#ef4444" stroke="#fff" strokeWidth={1} className="animate-pulse" />
-                    <circle cx={pad.l + (85 / 100) * (w - pad.l - pad.r)} cy={pad.t + (15 / 100) * (h - pad.t - pad.b)} r="9" fill="none" stroke="#ef4444" strokeWidth={1} opacity={0.5} />
-                    <text x={pad.l + (82 / 100) * (w - pad.l - pad.r)} y={pad.t + (16 / 100) * (h - pad.t - pad.b)} fill="#ef4444" fontSize="10" textAnchor="end">Campaign Alpha</text>
-                    <text x={pad.l + (82 / 100) * (w - pad.l - pad.r)} y={pad.t + (24 / 100) * (h - pad.t - pad.b)} fill="#7f1d1d" fontSize="8" textAnchor="end">High spend, massive return</text>
+                    <circle cx={pad.l + (85 / 100) * (w - pad.l - pad.r)} cy={pad.t + (15 / 100) * (h - pad.t - pad.b)} r="10" fill="none" stroke="#ef4444" strokeWidth={1} opacity={0.4} />
+                    <text x={pad.l + (82 / 100) * (w - pad.l - pad.r)} y={pad.t + (14 / 100) * (h - pad.t - pad.b)} fill="#ef4444" fontSize="10" textAnchor="end">{t(lang, 's2.specialtyFrameworks.demos.standoutScatter.label1')}</text>
+                    <text x={pad.l + (82 / 100) * (w - pad.l - pad.r)} y={pad.t + (22 / 100) * (h - pad.t - pad.b)} fill="#7f1d1d" fontSize="8" textAnchor="end">{t(lang, 's2.specialtyFrameworks.demos.standoutScatter.label2')}</text>
                 </svg>
             </ChartFrame>
         </div>
     );
 }
 
-function StripTierDemo() {
+function StripTierDemo({ lang }: { lang: any }) {
     const [isBar, setIsBar] = useState(true);
     const w = 480, h = 140, pad = { t: 16, r: 20, b: 32, l: 30 };
     // Salary context: Regional Sales Managers (K$)
@@ -61,8 +70,8 @@ function StripTierDemo() {
         <div className="space-y-4 mb-16">
             <div className="flex justify-between items-end">
                 <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-stone-900">2. 1D Strip / Dot Plot</h3>
-                    <p className="text-[13px] text-stone-500 max-w-md">Revealing every data point to show performance tiers.</p>
+                    <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.specialtyFrameworks.demos.stripTier.title')}</h3>
+                    <p className="text-[13px] text-stone-500 max-w-md">{t(lang, 's2.specialtyFrameworks.demos.stripTier.desc')}</p>
                 </div>
                 <button
                     onClick={() => setIsBar(!isBar)}
@@ -71,12 +80,12 @@ function StripTierDemo() {
                         : 'bg-white text-stone-700 border border-stone-200 hover:border-stone-300 hover:shadow-md'
                         }`}
                 >
-                    {isBar ? 'Unpack to Strip Plot' : 'Collapse to Average Bar'}
+                    {isBar ? t(lang, 's2.specialtyFrameworks.demos.stripTier.btnShow') : t(lang, 's2.specialtyFrameworks.demos.stripTier.btnHide')}
                 </button>
             </div>
             <ChartFrame
-                label="SALARY SPREAD ($K)"
-                note={isBar ? "A single aggregate bar chart hides the reality of the team. We know the average is $83k, but we know nothing about the spread." : "A 1D strip plot reveals the entire distribution. Overlaying background shading creates instant performance tiers (Needs Review / Target / Top)."}
+                label={t(lang, 's2.specialtyFrameworks.demos.stripTier.chartLabel')}
+                note={isBar ? t(lang, 's2.specialtyFrameworks.demos.stripTier.noteShow') : t(lang, 's2.specialtyFrameworks.demos.stripTier.noteHide')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {/* Horizontal Axis */}
@@ -96,7 +105,7 @@ function StripTierDemo() {
                     {isBar ? (
                         <g>
                             <rect x={pad.l} y={pad.t + 20} width={(avg / 150) * (w - pad.l - pad.r)} height="30" fill="#3b82f6" opacity={0.8} />
-                            <text x={pad.l + (avg / 150) * (w - pad.l - pad.r) + 8} y={pad.t + 38} fontSize="12" fill="#1e40af">Avg: ${avg}k</text>
+                            <text x={pad.l + (avg / 150) * (w - pad.l - pad.r) + 8} y={pad.t + 38} fontSize="12" fill="#1e40af">{t(lang, 's2.specialtyFrameworks.demos.stripTier.avgLabel')}: ${avg}k</text>
                         </g>
                     ) : (
                         <g>
@@ -105,9 +114,9 @@ function StripTierDemo() {
                             <rect x={pad.l + (65 / 150) * (w - pad.l - pad.r)} y={pad.t} width={(45 / 150) * (w - pad.l - pad.r)} height={h - pad.t - pad.b} fill="#fef08a" opacity={0.2} />
                             <rect x={pad.l + (110 / 150) * (w - pad.l - pad.r)} y={pad.t} width={(40 / 150) * (w - pad.l - pad.r)} height={h - pad.t - pad.b} fill="#bbf7d0" opacity={0.2} />
 
-                            <text x={pad.l + (32.5 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#ef4444" textAnchor="middle" opacity={0.7}>NEEDS REVIEW</text>
-                            <text x={pad.l + (87.5 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#ca8a04" textAnchor="middle" opacity={0.7}>TARGET ZONE</text>
-                            <text x={pad.l + (130 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#22c55e" textAnchor="middle" opacity={0.7}>TOP PERFORMERS</text>
+                            <text x={pad.l + (32.5 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#ef4444" textAnchor="middle" opacity={0.7}>{t(lang, 's2.specialtyFrameworks.demos.stripTier.tiers.0')}</text>
+                            <text x={pad.l + (87.5 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#ca8a04" textAnchor="middle" opacity={0.7}>{t(lang, 's2.specialtyFrameworks.demos.stripTier.tiers.1')}</text>
+                            <text x={pad.l + (130 / 150) * (w - pad.l - pad.r)} y={pad.t + 12} fontSize="9" fill="#22c55e" textAnchor="middle" opacity={0.7}>{t(lang, 's2.specialtyFrameworks.demos.stripTier.tiers.2')}</text>
 
                             {data.map((d, i) => {
                                 const x = pad.l + (d / 150) * (w - pad.l - pad.r);
@@ -124,19 +133,19 @@ function StripTierDemo() {
     );
 }
 
-function ProgressBarsDemo() {
+function ProgressBarsDemo({ lang }: { lang: any }) {
     const bars = [
-        { label: 'Q1 Target', val: 100, achieved: 100 },
-        { label: 'Q2 Target', val: 85, achieved: 85 },
-        { label: 'Q3 Target', val: 62, achieved: 62 },
-        { label: 'Q4 Target', val: 15, achieved: 15 },
+        { label: t(lang, 's2.specialtyFrameworks.demos.progressBars.labels.0'), val: 100, achieved: 100 },
+        { label: t(lang, 's2.specialtyFrameworks.demos.progressBars.labels.1'), val: 85, achieved: 85 },
+        { label: t(lang, 's2.specialtyFrameworks.demos.progressBars.labels.2'), val: 62, achieved: 62 },
+        { label: t(lang, 's2.specialtyFrameworks.demos.progressBars.labels.3'), val: 15, achieved: 15 },
     ];
     return (
         <div className="space-y-4 mb-16">
-            <h3 className="text-xl font-bold text-stone-900">3. Show the Evaluation (Progress)</h3>
+            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.specialtyFrameworks.demos.progressBars.title')}</h3>
             <ChartFrame
-                label="QUARTERLY PROGRESS"
-                note="Progress bars effectively communicate evaluation because they bake the 'denominator' (the 100% target) directly into the visual background framework."
+                label={t(lang, 's2.specialtyFrameworks.demos.progressBars.chartLabel')}
+                note={t(lang, 's2.specialtyFrameworks.demos.progressBars.note')}
             >
                 <div className="flex justify-center p-6 w-full">
                     <div className="flex flex-col gap-6 w-full max-w-sm">
@@ -163,14 +172,14 @@ function ProgressBarsDemo() {
     );
 }
 
-function QuadrantScatterDemo() {
+function QuadrantScatterDemo({ lang }: { lang: any }) {
     const w = 480, h = 300, pad = { t: 20, r: 20, b: 40, l: 40 };
     return (
         <div className="space-y-4 mb-16">
-            <h3 className="text-xl font-bold text-stone-900">4. Quadrant Meaning</h3>
+            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.title')}</h3>
             <ChartFrame
-                label="EFFORT VS REWARD"
-                note="By physically dividing a scatter plot into shaded colored quadrants and giving them conceptual names ('Stars', 'High Risk'), you relieve the user from having to mentally calculate what high-effort vs low-reward means."
+                label={t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.chartLabel')}
+                note={t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.note')}
             >
                 <div className="flex justify-center p-4">
                     <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-[500px] block">
@@ -189,14 +198,14 @@ function QuadrantScatterDemo() {
                         <line x1={pad.l + (w - pad.l - pad.r) / 2} x2={pad.l + (w - pad.l - pad.r) / 2} y1={pad.t} y2={h - pad.b} stroke="white" strokeWidth="2" />
 
                         {/* Labels within quadrants */}
-                        <text x={pad.l + 10} y={pad.t + 18} fill="#ef4444" fontSize="10" opacity={0.8}>HIGH RISK</text>
-                        <text x={pad.l + (w - pad.l - pad.r) / 2 + 10} y={pad.t + 18} fill="#16a34a" fontSize="10" opacity={0.8}>STARS</text>
-                        <text x={pad.l + 10} y={pad.t + (h - pad.t - pad.b) / 2 + 18} fill="#9ca3af" fontSize="10" opacity={0.8}>IGNORE</text>
-                        <text x={pad.l + (w - pad.l - pad.r) / 2 + 10} y={pad.t + (h - pad.t - pad.b) / 2 + 18} fill="#ca8a04" fontSize="10" opacity={0.8}>POTENTIAL</text>
+                        <text x={pad.l + 10} y={pad.t + 18} fill="#ef4444" fontSize="10" opacity={0.8}>{t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.quadrants.0')}</text>
+                        <text x={pad.l + (w - pad.l - pad.r) / 2 + 10} y={pad.t + 18} fill="#16a34a" fontSize="10" opacity={0.8}>{t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.quadrants.1')}</text>
+                        <text x={pad.l + 10} y={pad.t + (h - pad.t - pad.b) / 2 + 18} fill="#9ca3af" fontSize="10" opacity={0.8}>{t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.quadrants.2')}</text>
+                        <text x={pad.l + (w - pad.l - pad.r) / 2 + 10} y={pad.t + (h - pad.t - pad.b) / 2 + 18} fill="#ca8a04" fontSize="10" opacity={0.8}>{t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.quadrants.3')}</text>
 
                         {/* Axis Labels */}
-                        <text x={pad.l + (w - pad.l - pad.r) / 2} y={h - 10} fill="#78716c" fontSize="10" textAnchor="middle" letterSpacing="0.5">REWARD / ROI</text>
-                        <text x={15} y={pad.t + (h - pad.t - pad.b) / 2} fill="#78716c" fontSize="10" textAnchor="middle" transform={`rotate(-90 15 ${pad.t + (h - pad.t - pad.b) / 2})`} letterSpacing="0.5">EFFORT / COST</text>
+                        <text x={pad.l + (w - pad.l - pad.r) / 2} y={h - 10} fill="#78716c" fontSize="10" textAnchor="middle" letterSpacing="0.5">{t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.xAxis')}</text>
+                        <text x={15} y={pad.t + (h - pad.t - pad.b) / 2} fill="#78716c" fontSize="10" textAnchor="middle" transform={`rotate(-90 15 ${pad.t + (h - pad.t - pad.b) / 2})`} letterSpacing="0.5">{t(lang, 's2.specialtyFrameworks.demos.quadrantScatter.yAxis')}</text>
 
                         {/* Data Points */}
                         {/* High risk */}
@@ -221,7 +230,7 @@ function QuadrantScatterDemo() {
     );
 }
 
-function WafflePieDemo() {
+function WafflePieDemo({ lang }: { lang: any }) {
     const [isPie, setIsPie] = useState(false);
 
     // 68% representation
@@ -232,8 +241,8 @@ function WafflePieDemo() {
         <div className="space-y-4 mb-16">
             <div className="flex justify-between items-end">
                 <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-stone-900">5. Waffle vs Pie</h3>
-                    <p className="text-[13px] text-stone-500 max-w-md">Comparing area-based vs grid-based part-to-whole estimation.</p>
+                    <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.specialtyFrameworks.demos.wafflePie.title')}</h3>
+                    <p className="text-[13px] text-stone-500 max-w-md">{t(lang, 's2.specialtyFrameworks.demos.wafflePie.desc')}</p>
                 </div>
                 <button
                     onClick={() => setIsPie(!isPie)}
@@ -242,12 +251,12 @@ function WafflePieDemo() {
                         : 'bg-white text-stone-700 border border-stone-200 hover:border-stone-300 hover:shadow-md'
                         }`}
                 >
-                    {isPie ? 'Show Waffle Grid' : 'Show Pie Chart'}
+                    {isPie ? t(lang, 's2.specialtyFrameworks.demos.wafflePie.btnShow') : t(lang, 's2.specialtyFrameworks.demos.wafflePie.btnHide')}
                 </button>
             </div>
             <ChartFrame
-                label="MARKET SHARE"
-                note={isPie ? "Humans are notoriously bad at estimating angles and areas. Without explicitly writing '68%' on this pie, most people would struggle to guess the fraction." : "A 10x10 Waffle chart leverages our innate ability to quickly count discrete items and intuitively estimate grid proportions."}
+                label={t(lang, 's2.specialtyFrameworks.demos.wafflePie.chartLabel')}
+                note={isPie ? t(lang, 's2.specialtyFrameworks.demos.wafflePie.noteShow') : t(lang, 's2.specialtyFrameworks.demos.wafflePie.noteHide')}
             >
                 <div className="flex justify-center py-6 w-full relative">
                     {isPie ? (
@@ -280,26 +289,26 @@ function WafflePieDemo() {
     );
 }
 
-function LikertScaleDemo() {
+function LikertScaleDemo({ lang }: { lang: any }) {
     const [mode, setMode] = useState<0 | 1 | 2>(0); // 0=stacked, 1=diverging, 2=diverging separated
 
     return (
         <div className="space-y-4 mb-16">
             <div className="flex flex-col sm:flex-row justify-between sm:items-end mb-2 gap-4">
-                <h3 className="text-xl font-bold text-stone-900">6. Likert Scale Progression</h3>
+                <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.specialtyFrameworks.demos.likertScale.title')}</h3>
                 <div className="flex bg-stone-100 p-1 rounded-lg border border-stone-200 shadow-inner">
-                    <button onClick={() => setMode(0)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 0 ? 'bg-white text-indigo-600 shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}>1. Stacked</button>
-                    <button onClick={() => setMode(1)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 1 ? 'bg-white text-indigo-600 shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}>2. Diverging</button>
-                    <button onClick={() => setMode(2)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 2 ? 'bg-white text-emerald-600 shadow-sm border border-emerald-100' : 'text-stone-600 hover:text-stone-800'}`}>3. Split Neutral</button>
+                    <button onClick={() => setMode(0)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 0 ? 'bg-white text-indigo-600 shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}>{t(lang, 's2.specialtyFrameworks.demos.likertScale.modes.0')}</button>
+                    <button onClick={() => setMode(1)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 1 ? 'bg-white text-indigo-600 shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}>{t(lang, 's2.specialtyFrameworks.demos.likertScale.modes.1')}</button>
+                    <button onClick={() => setMode(2)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 2 ? 'bg-white text-emerald-600 shadow-sm border border-emerald-100' : 'text-stone-600 hover:text-stone-800'}`}>{t(lang, 's2.specialtyFrameworks.demos.likertScale.modes.2')}</button>
                 </div>
             </div>
 
             <ChartFrame
-                label="SURVEY RESULTS: COURSE SATISFACTION"
+                label={t(lang, 's2.specialtyFrameworks.demos.likertScale.chartLabel')}
                 note={
-                    mode === 0 ? "A standard stacked bar forces the 'Agree' segments to start at arbitrary positions based on the size of Negative and Neutral votes, making it impossible to compare true positivity across rows." :
-                        mode === 1 ? "A diverging stacked bar aligns against the center point of Neutral on a fixed vertical axis. This allows easy visual left vs right net-sentiment comparison." :
-                            "The Gold Standard: Extract the Neutral votes entirely. 'Neutral' fundamentally implies 'no opinion/abstain'. By injecting it into a left-vs-right ideological axis, you visually dilute the actual polarity."
+                    mode === 0 ? t(lang, 's2.specialtyFrameworks.demos.likertScale.notes.0') :
+                        mode === 1 ? t(lang, 's2.specialtyFrameworks.demos.likertScale.notes.1') :
+                            t(lang, 's2.specialtyFrameworks.demos.likertScale.notes.2')
                 }
             >
                 <div className="flex flex-col w-full">
@@ -317,7 +326,8 @@ function LikertScaleDemo() {
                     </div>
 
                     <div className="flex justify-center p-6 w-full">
-                        <svg viewBox="0 0 480 220" className="w-full max-w-[400px] overflow-visible block">
+                        {/* Fixed coordinate space: 0 0 120 50 with padding */}
+                        <svg viewBox="-10 -8 140 65" className="w-full max-w-[500px] overflow-visible block">
                             {mode === 0 && (
                                 // Standard 100% stacked right from 0
                                 <g>
@@ -326,13 +336,13 @@ function LikertScaleDemo() {
                                     <rect x="30" y="15" width="15" height="10" fill="#e2e8f0" />
                                     <rect x="45" y="15" width="25" height="10" fill="#86efac" />
                                     <rect x="70" y="15" width="30" height="10" fill="#16a34a" />
-                                    <line x1="0" x2="0" y1="10" y2="30" stroke="#000" strokeWidth="1" />
+                                    <line x1="0" x2="0" y1="10" y2="30" stroke="#000" strokeWidth="0.5" />
 
-                                    <text x="50" y="10" fontSize="4" fill="#64748b" textAnchor="middle">Center of positivity floats aimlessly &rarr;</text>
+                                    <text x="50" y="10" fontSize="4" fill="#64748b" textAnchor="middle" dangerouslySetInnerHTML={{ __html: t(lang, 's2.specialtyFrameworks.demos.likertScale.text1') }} />
                                 </g>
                             )}
                             {mode === 1 && (
-                                // Diverging centered on the Neutral's middle (Width=15, 7.5 half)
+                                // Diverging centered on the Neutral's middle
                                 <g transform="translate(12.5, 0)">
                                     <rect x="0" y="15" width="20" height="10" fill="#dc2626" />
                                     <rect x="20" y="15" width="10" height="10" fill="#fca5a5" />
@@ -341,7 +351,7 @@ function LikertScaleDemo() {
                                     <rect x="70" y="15" width="30" height="10" fill="#16a34a" />
                                     <line x1="37.5" x2="37.5" y1="5" y2="35" stroke="#334155" strokeWidth="0.5" strokeDasharray="2 2" />
 
-                                    <text x="37.5" y="4" fontSize="4" fill="#64748b" fontStyle="italic" textAnchor="middle">Neutral Midpoint</text>
+                                    <text x="37.5" y="4" fontSize="4" fill="#64748b" fontStyle="italic" textAnchor="middle">{t(lang, 's2.specialtyFrameworks.demos.likertScale.text2')}</text>
                                 </g>
                             )}
                             {mode === 2 && (
@@ -361,7 +371,7 @@ function LikertScaleDemo() {
 
                                     {/* Separated Neutral */}
                                     <rect x="10" y="3" width="15" height="4" fill="#cbd5e1" />
-                                    <text x="27" y="6" fontSize="4" fill="#64748b" fontStyle="italic">15% Neutral Abstentions</text>
+                                    <text x="27" y="6" fontSize="4" fill="#64748b" fontStyle="italic">{t(lang, 's2.specialtyFrameworks.demos.likertScale.text3')}</text>
                                 </g>
                             )}
                         </svg>
@@ -372,15 +382,15 @@ function LikertScaleDemo() {
     );
 }
 
-function CumulativeStepDemo() {
+function CumulativeStepDemo({ lang }: { lang: any }) {
     return (
         <ChartFrame
-            label="CUMULATIVE STEP CHART"
-            note="Highlights state persistence. A value remains exactly flat until a discrete event triggers an instant change (unlike organic diagonal slopes)."
+            label={t(lang, 's2.specialtyFrameworks.toolbox.cumulativeStep.chartLabel')}
+            note={t(lang, 's2.specialtyFrameworks.toolbox.cumulativeStep.note')}
             className="h-full flex flex-col"
         >
             <div className="flex-1 w-full bg-white rounded-lg relative flex items-center justify-center min-h-[140px] px-2">
-                <svg viewBox="0 0 480 220" className="w-full block overflow-visible">
+                <svg viewBox="0 -5 95 55" className="w-full block overflow-visible">
                     {/* Axes */}
                     <line x1="5" x2="95" y1="45" y2="45" stroke="#a8a29e" strokeWidth={0.5} />
                     <line x1="5" x2="5" y1="5" y2="45" stroke="#a8a29e" strokeWidth={0.5} />
@@ -402,15 +412,15 @@ function CumulativeStepDemo() {
     );
 }
 
-function LogScaleDemo() {
+function LogScaleDemo({ lang }: { lang: any }) {
     return (
         <ChartFrame
-            label="LOG-SCALE SCATTER"
-            note="Without a log scale, comparing variables with extreme outliers (10 vs 1 Billion) would squeeze 99% of points into a single useless cluster."
+            label={t(lang, 's2.specialtyFrameworks.toolbox.logScale.chartLabel')}
+            note={t(lang, 's2.specialtyFrameworks.toolbox.logScale.note')}
             className="h-full flex flex-col"
         >
             <div className="flex-1 w-full bg-white rounded-lg relative flex items-center justify-center min-h-[140px] px-2">
-                <svg viewBox="0 0 480 220" className="w-full block overflow-visible">
+                <svg viewBox="5 0 93 52" className="w-full block overflow-visible">
                     {/* Axes */}
                     <line x1="10" x2="95" y1="40" y2="40" stroke="#a8a29e" strokeWidth={0.5} />
                     <line x1="10" x2="10" y1="5" y2="40" stroke="#a8a29e" strokeWidth={0.5} />
@@ -435,11 +445,11 @@ function LogScaleDemo() {
     );
 }
 
-function HeatmapDemo() {
+function HeatmapDemo({ lang }: { lang: any }) {
     return (
         <ChartFrame
-            label="CATEGORICAL HEATMAP"
-            note="Cross-tabulates two categories using color intensity to instantly reveal density clusters (hotspots)."
+            label={t(lang, 's2.specialtyFrameworks.toolbox.heatmap.chartLabel')}
+            note={t(lang, 's2.specialtyFrameworks.toolbox.heatmap.note')}
             className="h-full flex flex-col"
         >
             <div className="flex-1 w-full flex items-center justify-center p-4">
@@ -458,15 +468,16 @@ function HeatmapDemo() {
     );
 }
 
-function TreemapDemo() {
+function TreemapDemo({ lang }: { lang: any }) {
     return (
         <ChartFrame
-            label="TREEMAP"
-            note="Displays vast hierarchical data by nesting rectangles. Size represents magnitude (e.g. Market Cap), color represents performance."
+            label={t(lang, 's2.specialtyFrameworks.toolbox.treemap.chartLabel')}
+            note={t(lang, 's2.specialtyFrameworks.toolbox.treemap.note')}
             className="h-full flex flex-col"
         >
             <div className="flex-1 w-full bg-white rounded-lg p-2 relative flex items-center justify-center min-h-[140px]">
-                <svg viewBox="0 0 480 220" className="w-full block h-full">
+                {/* Corrected viewBox to match coordinate space (0 0 100 60) */}
+                <svg viewBox="0 0 100 60" className="w-full block h-full">
                     {/* Simulated Finviz-style tech sector breakdown */}
                     <g>
                         <rect x="0" y="0" width="60" height="60" fill="#15803d" stroke="#fff" strokeWidth={0.5} />
@@ -492,17 +503,18 @@ function TreemapDemo() {
     );
 }
 
-function MisleadingRecoveryDemo() {
+function MisleadingRecoveryDemo({ lang }: { lang: any }) {
     return (
         <div className="col-span-1 md:col-span-2">
             <ChartFrame
-                label="WARNING: MISLEADING % RECOVERY"
-                note="A common error in financial reporting: A stock drops 50% ($100 → $50). It then gains 50% ($50 → $75). Intuitively, audiences think they are back to $100. Always plot the absolute reality, not abstract percentages in a void."
+                label={t(lang, 's2.specialtyFrameworks.toolbox.misleading.chartLabel')}
+                note={t(lang, 's2.specialtyFrameworks.toolbox.misleading.note')}
                 className="h-full flex flex-col border-red-200"
             >
                 <div className="flex-1 w-full bg-white rounded-lg p-5 flex items-center justify-center">
-                    <div className="w-full max-w-[300px]">
-                        <svg viewBox="0 0 480 220" className="w-full block overflow-visible">
+                    <div className="w-full max-w-[360px]">
+                        {/* Corrected viewBox to coordinate space (0 0 100 50) with slight padding */}
+                        <svg viewBox="0 -5 100 55" className="w-full block overflow-visible">
                             <line x1="5" x2="95" y1="45" y2="45" stroke="#a8a29e" strokeWidth={0.5} />
 
                             {/* Bars representing actual dollar value */}
@@ -528,8 +540,7 @@ function MisleadingRecoveryDemo() {
                             {/* Gap marker */}
                             <line x1="15" x2="95" y1="5" y2="5" stroke="#ef4444" strokeWidth={0.5} strokeDasharray="1 1" />
                             <path d="M 90 5 L 90 12.5" stroke="#ef4444" strokeWidth={0.5} fill="none" />
-                            <text x="92" y="9" fontSize="3" fill="#ef4444" textAnchor="start">Still down $25!</text>
-
+                            <text x="92" y="9" fontSize="3" fill="#ef4444" textAnchor="start">{t(lang, 's2.specialtyFrameworks.toolbox.misleading.stillDown')}</text>
                         </svg>
                     </div>
                 </div>
@@ -539,12 +550,12 @@ function MisleadingRecoveryDemo() {
 }
 
 export default function SpecialtyFrameworksLesson() {
+    const { lang } = useLang();
+
     return (
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-6">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Beyond standard bars and lines, specific data questions require specific visual frameworks. These specialty charts solve complex multi-dimensional problems — from evaluating survey sentiment correctly to mapping entire market hierarchies.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.specialtyFrameworks.intro1') }} />
 
                 {/* Tip Block */}
                 <div
@@ -563,35 +574,33 @@ export default function SpecialtyFrameworksLesson() {
                         </div>
                         <div className="space-y-1">
                             <p className="text-xs font-bold uppercase tracking-wider" style={{ color: sectionColor }}>
-                                The Context Rule
+                                {t(lang, 's2.specialtyFrameworks.contextRule.title')}
                             </p>
-                            <p className="text-[14px] text-stone-700 leading-relaxed">
-                                Avoid using complex charts just for the sake of novelty. A specialty chart is only successful if it makes a complex relationship <strong>easier</strong> to understand than a standard bar chart.
-                            </p>
+                            <p className="text-[14px] text-stone-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.specialtyFrameworks.contextRule.rule') }} />
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-3">
-                    <StandoutScatterDemo />
-                    <StripTierDemo />
-                    <ProgressBarsDemo />
-                    <QuadrantScatterDemo />
-                    <WafflePieDemo />
-                    <LikertScaleDemo />
+                    <StandoutScatterDemo lang={lang} />
+                    <StripTierDemo lang={lang} />
+                    <ProgressBarsDemo lang={lang} />
+                    <QuadrantScatterDemo lang={lang} />
+                    <WafflePieDemo lang={lang} />
+                    <LikertScaleDemo lang={lang} />
 
                     <div className="pt-8 border-t border-stone-200 space-y-4">
                         <div className="space-y-1">
-                            <h3 className="text-xl font-bold text-stone-900">Toolbox Additions</h3>
-                            <p className="text-[14px] text-stone-500 leading-relaxed">Specialized tools that shine in very specific mathematical or hierarchical constraints.</p>
+                            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.specialtyFrameworks.toolbox.title')}</h3>
+                            <p className="text-[14px] text-stone-500 leading-relaxed">{t(lang, 's2.specialtyFrameworks.toolbox.desc')}</p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="lg:col-span-2"><CumulativeStepDemo /></div>
-                            <div className="lg:col-span-2"><LogScaleDemo /></div>
-                            <div className="lg:col-span-2"><HeatmapDemo /></div>
-                            <div className="lg:col-span-2"><TreemapDemo /></div>
-                            <MisleadingRecoveryDemo />
+                            <div className="lg:col-span-2"><CumulativeStepDemo lang={lang} /></div>
+                            <div className="lg:col-span-2"><LogScaleDemo lang={lang} /></div>
+                            <div className="lg:col-span-2"><HeatmapDemo lang={lang} /></div>
+                            <div className="lg:col-span-2"><TreemapDemo lang={lang} /></div>
+                            <MisleadingRecoveryDemo lang={lang} />
                         </div>
                     </div>
                 </div>
@@ -600,11 +609,9 @@ export default function SpecialtyFrameworksLesson() {
                 <div className="bg-stone-50 rounded-2xl p-8 border border-stone-200 space-y-4">
                     <div className="flex items-center gap-3 text-stone-900">
                         <Info size={20} className="text-stone-400" />
-                        <h4 className="text-lg font-bold">When to Go Custom?</h4>
+                        <h4 className="text-lg font-bold">{t(lang, 's2.specialtyFrameworks.conclusion.title')}</h4>
                     </div>
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        Use specialty charts when the narrative depends on <strong>relativity</strong> (Quadrants), <strong>compositional precision</strong> (Waffle), or <strong>hierarchical scale</strong> (Treemap). If your audience looks confused for more than 5 seconds, revert to a simpler form and use annotations.
-                    </p>
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.specialtyFrameworks.conclusion.text') }} />
                 </div>
             </div>
         </LessonPage>

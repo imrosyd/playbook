@@ -1,11 +1,14 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import SimulatorLesson from './SimulatorLesson';
 
-const crossRefs = [
-    { sectionId: 'perception', slug: 'preattentive', label: '1.1 — Pre-attentive: color emphasis in channel comparison' },
-    { sectionId: 'lab', slug: 'visual-emphasis', label: '3.3 — Visual Emphasis: highlighting winning channels' },
-    { sectionId: 'ethics', slug: 'emphasis', label: '5.2 — Emphasis: cherry-picking channel performance' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'perception', slug: 'preattentive', label: t(lang, 's5.budgetWarRoom.crossRefs.0.label') },
+    { sectionId: 'lab', slug: 'visual-emphasis', label: t(lang, 's5.budgetWarRoom.crossRefs.1.label') },
+    { sectionId: 'ethics', slug: 'emphasis', label: t(lang, 's5.budgetWarRoom.crossRefs.2.label') },
 ];
 
 export default function TheBudgetWarRoomLesson() {
-    return <SimulatorLesson scenarioKey="marketing" crossRefs={crossRefs} />;
+    const { lang } = useLang();
+    return <SimulatorLesson scenarioKey="marketing" crossRefs={crossRefs(lang)} />;
 }

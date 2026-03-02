@@ -69,8 +69,8 @@ export const SECTIONS: Section[] = [
             { id: '3.3', title: 'The Spotlight Effect', description: 'Using color and opacity to force your audience\'s attention to exactly what you want — and the ethical line between editorial choice and manipulation', slug: 'visual-emphasis', icon: Palette },
             { id: '3.4', title: 'The Magic Words', description: 'How a single annotation or trendline rewrites the entire meaning of a chart — even when the data doesn\'t change at all', slug: 'annotation-trend', icon: MessageSquare },
             { id: '3.5', title: 'Signal vs Noise', description: 'Distinguishing true trends from random noise — and how aggressive smoothing can invent trends that don\'t exist.', slug: 'signal-noise', icon: Activity },
-            { id: '3.6', title: 'The Full Lab', description: 'All controls active simultaneously — combine axis tricks, smoothing, color emphasis, and annotations to see how credibility collapses', slug: 'full-lab', icon: FlaskConical },
-            { id: '3.7', title: 'Design Patterns', description: 'Learn how specific structural chart choices completely change the story to the viewer', slug: 'design-patterns', icon: Layers },
+            { id: '3.6', title: 'Design Patterns', description: 'Learn how specific structural chart choices completely change the story to the viewer', slug: 'design-patterns', icon: Layers },
+            { id: '3.7', title: 'The Full Lab', description: 'All controls active simultaneously — combine axis tricks, smoothing, color emphasis, and annotations to see how credibility collapses', slug: 'full-lab', icon: FlaskConical },
         ],
     },
     {

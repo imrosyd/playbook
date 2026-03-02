@@ -1,30 +1,33 @@
 import { useState } from 'react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../../components/layout/LessonPage';
 
-const crossRefs = [];
+const crossRefs: never[] = [];
 
 function WordcloudVsBarDemo() {
+    const { lang } = useLang();
     const [isWordcloud, setIsWordcloud] = useState(true);
 
     const words = [
-        { word: "Reliability", count: 85, color: "#1e3a8a", size: 40 },
-        { word: "Cost", count: 72, color: "#2563eb", size: 32 },
-        { word: "Speed", count: 68, color: "#3b82f6", size: 28 },
-        { word: "Quality", count: 54, color: "#60a5fa", size: 24 },
-        { word: "Service", count: 41, color: "#93c5fd", size: 20 },
-        { word: "Features", count: 35, color: "#94a3b8", size: 16 },
-        { word: "Brand", count: 28, color: "#cbd5e1", size: 14 }
+        { word: t(lang, 's4.wordsPsychology.wordcloudDemo.words.0.word'), count: 85, color: "#1e3a8a", size: 40 },
+        { word: t(lang, 's4.wordsPsychology.wordcloudDemo.words.1.word'), count: 72, color: "#2563eb", size: 32 },
+        { word: t(lang, 's4.wordsPsychology.wordcloudDemo.words.2.word'), count: 68, color: "#3b82f6", size: 28 },
+        { word: t(lang, 's4.wordsPsychology.wordcloudDemo.words.3.word'), count: 54, color: "#60a5fa", size: 24 },
+        { word: t(lang, 's4.wordsPsychology.wordcloudDemo.words.4.word'), count: 41, color: "#93c5fd", size: 20 },
+        { word: t(lang, 's4.wordsPsychology.wordcloudDemo.words.5.word'), count: 35, color: "#94a3b8", size: 16 },
+        { word: t(lang, 's4.wordsPsychology.wordcloudDemo.words.6.word'), count: 28, color: "#cbd5e1", size: 14 }
     ];
 
     return (
         <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm">
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-[14px] font-bold text-stone-800 uppercase tracking-wide">Wordcloud vs. Bar Chart</h3>
+                <h3 className="text-[14px] font-bold text-stone-800 uppercase tracking-wide">{t(lang, 's4.wordsPsychology.wordcloudDemo.title')}</h3>
                 <button
                     onClick={() => setIsWordcloud(!isWordcloud)}
                     className="px-4 py-2 rounded-lg text-xs font-bold transition-all bg-stone-100 text-stone-800 border border-stone-200 shadow-sm hover:bg-stone-200"
                 >
-                    {isWordcloud ? 'Convert to Bar Chart' : 'Revert to Wordcloud'}
+                    {isWordcloud ? t(lang, 's4.wordsPsychology.wordcloudDemo.btnBar') : t(lang, 's4.wordsPsychology.wordcloudDemo.btnCloud')}
                 </button>
             </div>
 
@@ -32,7 +35,7 @@ function WordcloudVsBarDemo() {
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-6 relative min-h-[250px] flex justify-center items-center">
                     {isWordcloud ? (
                         <div className="w-full flex justify-center items-center select-none">
-                            <svg viewBox="0 0 480 220" className="w-[80%] max-w-[300px] h-auto overflow-visible">
+                            <svg viewBox="0 0 200 150" className="w-[80%] max-w-[300px] h-auto overflow-visible">
                                 {/* Simple static layout simulating a word cloud */}
                                 <text x="100" y="70" fontSize={words[0].size} fill={words[0].color} textAnchor="middle">{words[0].word}</text>
                                 <text x="60" y="40" fontSize={words[1].size} fill={words[1].color} textAnchor="middle">{words[1].word}</text>
@@ -45,7 +48,7 @@ function WordcloudVsBarDemo() {
                         </div>
                     ) : (
                         <div className="w-full max-w-[300px]">
-                            <h4 className="text-[12px] font-bold text-stone-700 mb-4 border-b border-stone-300 pb-2">Top Customer Values (Q1 Survey)</h4>
+                            <h4 className="text-[12px] font-bold text-stone-700 mb-4 border-b border-stone-300 pb-2">{t(lang, 's4.wordsPsychology.wordcloudDemo.chartTitle')}</h4>
                             <div className="flex flex-col gap-3">
                                 {words.map((w, i) => (
                                     <div key={i} className="flex items-center gap-3">
@@ -62,9 +65,7 @@ function WordcloudVsBarDemo() {
                 </div>
                 <div className="flex-1 flex flex-col justify-center">
                     <p className="text-[14px] text-stone-600 bg-white border border-stone-200 p-5 rounded-xl shadow-sm leading-relaxed">
-                        {isWordcloud ?
-                            "Word clouds are popular but analytically useless. The human eye cannot accurately compare the area of text, length of words confounds the size calculation (longer words look bigger), and placement is completely random." :
-                            "A sorted horizontal bar chart delivers exactly what the user actually wants when they ask for a word cloud: an ordered ranking of the most frequent categorical observations. It is boring, but it works."}
+                        {isWordcloud ? t(lang, 's4.wordsPsychology.wordcloudDemo.descWordcloud') : t(lang, 's4.wordsPsychology.wordcloudDemo.descBarChart')}
                     </p>
                 </div>
             </div>
@@ -73,32 +74,33 @@ function WordcloudVsBarDemo() {
 }
 
 function PsychologyOfDifferencesDemo() {
+    const { lang } = useLang();
     const [view, setView] = useState<0 | 1 | 2>(0);
     // 0: Venn, 1: Flat Differences, 2: Crossing Differences
 
     return (
         <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm">
-            <h3 className="text-[14px] font-bold text-stone-800 uppercase tracking-wide mb-6">Psychology of Differences</h3>
+            <h3 className="text-[14px] font-bold text-stone-800 uppercase tracking-wide mb-6">{t(lang, 's4.wordsPsychology.differencesDemo.title')}</h3>
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-                <button onClick={() => setView(0)} className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 0 ? 'bg-indigo-900 text-indigo-50' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}>1. The Venn Diagram</button>
-                <button onClick={() => setView(1)} className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 1 ? 'bg-blue-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}>2. Parallel Lines</button>
-                <button onClick={() => setView(2)} className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 2 ? 'bg-rose-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}>3. Crossing Context</button>
+                <button onClick={() => setView(0)} className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 0 ? 'bg-indigo-900 text-indigo-50' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}>{t(lang, 's4.wordsPsychology.differencesDemo.btnVenn')}</button>
+                <button onClick={() => setView(1)} className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 1 ? 'bg-blue-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}>{t(lang, 's4.wordsPsychology.differencesDemo.btnParallel')}</button>
+                <button onClick={() => setView(2)} className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-all ${view === 2 ? 'bg-rose-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}>{t(lang, 's4.wordsPsychology.differencesDemo.btnCrossing')}</button>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 w-full bg-stone-50 border border-stone-100 rounded-xl p-6 relative min-h-[300px] flex justify-center items-center">
 
                     {view === 0 && (
-                        <svg viewBox="0 0 480 220" className="w-[80%] max-w-[250px] overflow-visible">
-                            <text x="50" y="5" fontSize="5" textAnchor="middle" fill="#334155">Segment Overlap</text>
+                        <svg viewBox="0 0 100 80" className="w-[80%] max-w-[250px] overflow-visible">
+                            <text x="50" y="5" fontSize="5" fontWeight="bold" textAnchor="middle" fill="#334155">{t(lang, 's4.wordsPsychology.differencesDemo.labels.segmentOverlap')}</text>
 
                             {/* Venn diagrams are notoriously bad for actual data representation */}
                             <circle cx="40" cy="40" r="25" fill="#3b82f6" opacity="0.5" />
                             <circle cx="60" cy="40" r="25" fill="#10b981" opacity="0.5" />
 
-                            <text x="32" y="42" fontSize="5" fill="#1e3a8a" textAnchor="middle">Mobile</text>
-                            <text x="68" y="42" fontSize="5" fill="#064e3b" textAnchor="middle">Desktop</text>
-                            <text x="50" y="42" fontSize="4" fill="#334155" textAnchor="middle">Both</text>
+                            <text x="32" y="42" fontSize="5" fill="#1e3a8a" fontWeight="bold" textAnchor="middle">{t(lang, 's4.wordsPsychology.differencesDemo.labels.mobile')}</text>
+                            <text x="68" y="42" fontSize="5" fill="#064e3b" textAnchor="middle" fontWeight="bold">{t(lang, 's4.wordsPsychology.differencesDemo.labels.desktop')}</text>
+                            <text x="50" y="42" fontSize="4" fill="#334155" textAnchor="middle" fontWeight="bold">{t(lang, 's4.wordsPsychology.differencesDemo.labels.both')}</text>
 
                             <text x="32" y="48" fontSize="4" fill="#1e3a8a" textAnchor="middle">45%</text>
                             <text x="68" y="48" fontSize="4" fill="#064e3b" textAnchor="middle">30%</text>
@@ -107,40 +109,40 @@ function PsychologyOfDifferencesDemo() {
                     )}
 
                     {view === 1 && (
-                        <svg viewBox="0 0 480 220" className="w-[80%] max-w-[250px] overflow-visible">
-                            <text x="50" y="5" fontSize="5" textAnchor="middle" fill="#334155">Usage by Device Type</text>
+                        <svg viewBox="0 0 100 80" className="w-[80%] max-w-[250px] overflow-visible">
+                            <text x="50" y="5" fontSize="5" fontWeight="bold" textAnchor="middle" fill="#334155">{t(lang, 's4.wordsPsychology.differencesDemo.labels.usageByDevice')}</text>
                             <line x1="20" x2="20" y1="15" y2="70" stroke="#cbd5e1" strokeWidth={0.5} />
                             <line x1="80" x2="80" y1="15" y2="70" stroke="#cbd5e1" strokeWidth={0.5} />
 
-                            <text x="20" y="12" fontSize="4" fill="#64748b" textAnchor="middle">Mobile Only (45%)</text>
-                            <text x="80" y="12" fontSize="4" fill="#64748b" textAnchor="middle">Desktop Only (30%)</text>
+                            <text x="20" y="12" fontSize="4" fill="#64748b" textAnchor="middle">{t(lang, 's4.wordsPsychology.differencesDemo.labels.mobileOnly45')}</text>
+                            <text x="80" y="12" fontSize="4" fill="#64748b" textAnchor="middle">{t(lang, 's4.wordsPsychology.differencesDemo.labels.desktopOnly30')}</text>
 
                             {/* Parallel parallel lines to show magnitude, no crossing */}
                             <line x1="20" x2="80" y1="25" y2="25" stroke="#94a3b8" strokeWidth={1} />
                             <circle cx="20" cy="25" r="2" fill="#3b82f6" />
                             <circle cx="80" cy="25" r="2" fill="#10b981" />
-                            <text x="15" y="26.5" fontSize="4" fill="#334155" textAnchor="end">Demographic A</text>
+                            <text x="15" y="26.5" fontSize="4" fill="#334155" textAnchor="end">{t(lang, 's4.wordsPsychology.differencesDemo.labels.demographicA')}</text>
 
                             <line x1="20" x2="80" y1="40" y2="40" stroke="#94a3b8" strokeWidth={1} />
                             <circle cx="20" cy="40" r="2" fill="#3b82f6" />
                             <circle cx="80" cy="40" r="2" fill="#10b981" />
-                            <text x="15" y="41.5" fontSize="4" fill="#334155" textAnchor="end">Demographic B</text>
+                            <text x="15" y="41.5" fontSize="4" fill="#334155" textAnchor="end">{t(lang, 's4.wordsPsychology.differencesDemo.labels.demographicB')}</text>
 
                             <line x1="20" x2="80" y1="55" y2="55" stroke="#94a3b8" strokeWidth={1} />
                             <circle cx="20" cy="55" r="2" fill="#3b82f6" />
                             <circle cx="80" cy="55" r="2" fill="#10b981" />
-                            <text x="15" y="56.5" fontSize="4" fill="#334155" textAnchor="end">Demographic C</text>
+                            <text x="15" y="56.5" fontSize="4" fill="#334155" textAnchor="end">{t(lang, 's4.wordsPsychology.differencesDemo.labels.demographicC')}</text>
                         </svg>
                     )}
 
                     {view === 2 && (
-                        <svg viewBox="0 0 480 220" className="w-[80%] max-w-[250px] overflow-visible">
-                            <text x="50" y="5" fontSize="5" textAnchor="middle" fill="#334155">The Inversion (Crossing Context)</text>
+                        <svg viewBox="0 0 100 80" className="w-[80%] max-w-[250px] overflow-visible">
+                            <text x="50" y="5" fontSize="5" fontWeight="bold" textAnchor="middle" fill="#334155">{t(lang, 's4.wordsPsychology.differencesDemo.labels.inversion')}</text>
                             <line x1="20" x2="20" y1="15" y2="70" stroke="#cbd5e1" strokeWidth={0.5} />
                             <line x1="80" x2="80" y1="15" y2="70" stroke="#cbd5e1" strokeWidth={0.5} />
 
-                            <text x="20" y="12" fontSize="4" fill="#64748b" textAnchor="middle">Mobile Only</text>
-                            <text x="80" y="12" fontSize="4" fill="#64748b" textAnchor="middle">Desktop Only</text>
+                            <text x="20" y="12" fontSize="4" fill="#64748b" textAnchor="middle">{t(lang, 's4.wordsPsychology.differencesDemo.labels.mobileOnly')}</text>
+                            <text x="80" y="12" fontSize="4" fill="#64748b" textAnchor="middle">{t(lang, 's4.wordsPsychology.differencesDemo.labels.desktopOnly')}</text>
 
                             {/* Crossing lines immediately draw the eye and imply a structural flip in behavior */}
                             {/* Line 1 */}
@@ -157,7 +159,7 @@ function PsychologyOfDifferencesDemo() {
                             <path d="M 20 65 L 80 15" fill="none" stroke="#3b82f6" strokeWidth={1.5} />
                             <circle cx="20" cy="65" r="2" fill="#2563eb" />
                             <circle cx="80" cy="15" r="2" fill="#2563eb" />
-                            <text x="15" y="66" fontSize="4" fill="#1e3a8a" textAnchor="end">Seniors</text>
+                            <text x="15" y="66" fontSize="4" fill="#1e3a8a" textAnchor="end" fontWeight="bold">{t(lang, 's4.wordsPsychology.differencesDemo.labels.seniors')}</text>
 
                             {/* Line 4 - Context */}
                             <path d="M 20 30 L 80 40" fill="none" stroke="#e2e8f0" strokeWidth={1} />
@@ -169,9 +171,9 @@ function PsychologyOfDifferencesDemo() {
                 </div>
                 <div className="flex-1 flex flex-col justify-center">
                     <p className="text-[14px] text-stone-600 bg-white border border-stone-200 p-5 rounded-xl shadow-sm leading-relaxed">
-                        {view === 0 && "Venn diagrams are notoriously difficult for audiences to parse when comparing more than 3 sets. The intersection areas rarely scale proportionally to the data, turning them into conceptual illustrations rather than data visualizations."}
-                        {view === 1 && "By abandoning the Venn diagram for a structural layout (like a dumbbell or slopegraph), we can introduce other dimensions. Here, parallel lines imply stability across cohorts—everyone behaves roughly the same way."}
-                        {view === 2 && "The human eye is hypersensitive to intersecting lines. By using a slopegraph, we instantly highlight 'The Inversion'—the one demographic cohort (Seniors) whose behavior completely contradicts the rest of the market. The crossing line becomes the immediate focal point of the presentation."}
+                        {view === 0 && t(lang, 's4.wordsPsychology.differencesDemo.descVenn')}
+                        {view === 1 && t(lang, 's4.wordsPsychology.differencesDemo.descParallel')}
+                        {view === 2 && t(lang, 's4.wordsPsychology.differencesDemo.descCrossing')}
                     </p>
                 </div>
             </div>
@@ -180,13 +182,14 @@ function PsychologyOfDifferencesDemo() {
 }
 
 export default function WordsPsychologyLesson() {
+    const { lang } = useLang();
     return (
         <LessonPage crossRefs={crossRefs}>
-            <div className="space-y-8 max-w-5xl mx-auto">
+            <div className="space-y-8">
                 <div>
-                    <h2 className="text-2xl font-bold text-stone-800 mb-4">Words & Psychology</h2>
+
                     <p className="text-[15px] text-stone-600 leading-relaxed mb-4">
-                        Visualizing categorical data and text requires overcoming deeply ingrained (but often bad) habits like Wordclouds and Venn Diagrams. Modern charting replaces these with robust, sortable, and psychologically impactful alternatives.
+                        {t(lang, 's4.wordsPsychology.intro1')}
                     </p>
                 </div>
 

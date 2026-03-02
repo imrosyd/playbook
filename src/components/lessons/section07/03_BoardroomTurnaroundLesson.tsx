@@ -1,25 +1,27 @@
 import { useState } from 'react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import TheoryBlock from '../../ui/TheoryBlock';
 
-const crossRefs = [
-    { sectionId: 'storytelling', slug: 'power-titles', label: 'Power Titles' },
-    { sectionId: 'storytelling', slug: 'so-what', label: 'Crafting the "So What"' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'storytelling', slug: 'power-titles', label: t(lang, 's7.boardroom.crossRefs.0.label') },
+    { sectionId: 'storytelling', slug: 'so-what', label: t(lang, 's7.boardroom.crossRefs.1.label') },
 ];
 
 // Before / after dumbbell chart
-function DumbbellChart() {
+function DumbbellChart({ lang }: { lang: any }) {
     const items = [
-        { metric: 'Revenue forecast (yr 1)', before: 2.1, after: 4.8, unit: '$M', good: true },
-        { metric: 'Time to breakeven', before: 36, after: 18, unit: ' mo', good: false }, // lower is better
-        { metric: 'Market share target', before: 3, after: 9, unit: '%', good: true },
-        { metric: 'Customer acq. cost', before: 420, after: 210, unit: '$', good: false },
+        { metric: t(lang, 's7.boardroom.chart.metrics.0'), before: 2.1, after: 4.8, unit: '$M', good: true },
+        { metric: t(lang, 's7.boardroom.chart.metrics.1'), before: 36, after: 18, unit: ' mo', good: false }, // lower is better
+        { metric: t(lang, 's7.boardroom.chart.metrics.2'), before: 3, after: 9, unit: '%', good: true },
+        { metric: t(lang, 's7.boardroom.chart.metrics.3'), before: 420, after: 210, unit: '$', good: false },
     ];
 
     return (
         <div className="bg-white border border-stone-200 rounded-xl p-5">
             <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-4">
-                How the forecast changed when the chart was restructured
+                {t(lang, 's7.boardroom.chart.title')}
             </p>
             <div className="space-y-5">
                 {items.map(d => {
@@ -50,31 +52,31 @@ function DumbbellChart() {
                                 <div className="absolute top-1/2 w-3 h-3 bg-stone-900 rounded-full border-2 border-white -translate-y-1/2" style={{ left: `calc(${aPct}% - 6px)` }} />
                             </div>
                             <div className="flex items-center justify-between mt-1 text-[10px] text-stone-400">
-                                <span>Before: {d.before}{d.unit}</span>
-                                <span>After: <strong className="text-stone-700">{d.after}{d.unit}</strong></span>
+                                <span>{t(lang, 's7.boardroom.chart.before')}: {d.before}{d.unit}</span>
+                                <span>{t(lang, 's7.boardroom.chart.after')}: <strong className="text-stone-700">{d.after}{d.unit}</strong></span>
                             </div>
                         </div>
                     );
                 })}
             </div>
             <div className="flex items-center gap-4 mt-3 text-[10px] text-stone-400">
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-stone-400 inline-block" /> Initial projection</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-stone-900 inline-block" /> Restated projection</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-stone-400 inline-block" /> {t(lang, 's7.boardroom.chart.legend.initial')}</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-stone-900 inline-block" /> {t(lang, 's7.boardroom.chart.legend.restated')}</span>
             </div>
         </div>
     );
 }
 
 // Purple Cow vs Standard chart
-function PurpleCowDemo() {
+function PurpleCowDemo({ lang }: { lang: any }) {
     const [radial, setRadial] = useState(false);
 
     const data = [
-        { label: 'Platform', val: 85, color: '#6366f1' },
-        { label: 'Services', val: 60, color: '#8b5cf6' },
-        { label: 'Data API', val: 45, color: '#a855f7' },
-        { label: 'Hardware', val: 25, color: '#d946ef' },
-        { label: 'Consulting', val: 15, color: '#ec4899' },
+        { label: t(lang, 's7.boardroom.purpleCow.labels.0'), val: 85, color: '#6366f1' },
+        { label: t(lang, 's7.boardroom.purpleCow.labels.1'), val: 60, color: '#8b5cf6' },
+        { label: t(lang, 's7.boardroom.purpleCow.labels.2'), val: 45, color: '#a855f7' },
+        { label: t(lang, 's7.boardroom.purpleCow.labels.3'), val: 25, color: '#d946ef' },
+        { label: t(lang, 's7.boardroom.purpleCow.labels.4'), val: 15, color: '#ec4899' },
     ];
 
     const w = 400, h = 300;
@@ -98,13 +100,13 @@ function PurpleCowDemo() {
         <div className="bg-white border border-stone-200 rounded-xl p-5 mt-8">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-[13px] font-bold text-stone-700 tracking-wide uppercase">
-                    The "Purple Cow" Effect
+                    {t(lang, 's7.boardroom.purpleCow.title')}
                 </h3>
                 <button
                     onClick={() => setRadial(!radial)}
                     className={`px-4 py-2 rounded-lg text-[12px] font-bold transition-colors ${radial ? 'bg-fuchsia-600 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}
                 >
-                    {radial ? "Show Standard Chart" : "Show Radial Chart (Purple Cow)"}
+                    {radial ? t(lang, 's7.boardroom.purpleCow.btnStandard') : t(lang, 's7.boardroom.purpleCow.btnRadial')}
                 </button>
             </div>
 
@@ -188,12 +190,12 @@ function PurpleCowDemo() {
                 <div className="flex-1">
                     <div className="bg-stone-50 rounded-lg p-5 border border-stone-100">
                         <h4 className="text-[14px] font-bold text-stone-800 mb-2">
-                            {radial ? "Striking, Memorable, Different" : "Standard, Safe, Invisible"}
+                            {radial ? t(lang, 's7.boardroom.purpleCow.descRadial.title') : t(lang, 's7.boardroom.purpleCow.descStandard.title')}
                         </h4>
                         <p className="text-[13px] text-stone-600 leading-relaxed">
                             {radial ?
-                                "The exact same data presented in a radial or 'Nightingale Rose' format. While Cleveland and McGill proved that radial charts are mathematically harder to decode accurately, Seth Godin notes that to be effective, you must first be noticed. A 'Purple Cow' chart commands attention in a 50-slide deck of boring bar charts." :
-                                "This is the default, mathematically correct way to show the data. It is safe. It is also completely forgettable. If you are Slide #42 in a long boardroom meeting, a standard bar chart fails at the first requirement of communication: getting the audience to look at the screen."}
+                                t(lang, 's7.boardroom.purpleCow.descRadial.body') :
+                                t(lang, 's7.boardroom.purpleCow.descStandard.body')}
                         </p>
                     </div>
                 </div>
@@ -203,50 +205,42 @@ function PurpleCowDemo() {
 }
 
 export default function BoardroomTurnaroundLesson() {
+    const { lang } = useLang();
     return (
-        <LessonPage crossRefs={crossRefs}>
+        <LessonPage crossRefs={crossRefs(lang)}>
             <div className="space-y-8">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    In 2019, a growth-stage SaaS company presented to its board of directors seeking Series B funding. The first presentation was rejected — not because the business metrics were bad, but because the charts made them look uncertain and scattered. Three weeks later, the exact same data, restructured with Power Titles and a clear decision framing, was approved. No numbers changed.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's7.boardroom.intro') }} />
 
                 <TheoryBlock
-                    title="Framing and Prospect Theory"
-                    theory="Kahneman & Tversky's Prospect Theory (1979) + Framing Effect"
-                    explanation="People respond differently to the same information depending on how it is framed. 'We lost $400K' and 'We are $400K behind a plan that grows 4× by Year 3' are mathematically identical — but produce different emotional and cognitive responses. The second frame activates opportunity orientation; the first activates loss aversion. Charts that frame data correctly do not change the numbers; they change the question the decision-maker is answering."
+                    title={t(lang, 's7.boardroom.theory.title')}
+                    theory={t(lang, 's7.boardroom.theory.subtitle')}
+                    explanation={t(lang, 's7.boardroom.theory.explanation')}
                 />
 
-                <DumbbellChart />
+                <DumbbellChart lang={lang} />
 
                 <div className="space-y-3">
-                    <h3 className="text-base font-bold text-stone-800">What changed between the two versions</h3>
+                    <h3 className="text-base font-bold text-stone-800">{t(lang, 's7.boardroom.changes.title')}</h3>
                     <div className="rounded-xl border border-stone-200 overflow-hidden">
                         <div className="grid grid-cols-2 bg-stone-50 border-b border-stone-200">
-                            <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider px-5 py-3">Version 1 (rejected)</p>
-                            <p className="text-[10px] font-bold text-stone-800 uppercase tracking-wider px-5 py-3">Version 2 (approved)</p>
+                            <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider px-5 py-3">{t(lang, 's7.boardroom.changes.col1')}</p>
+                            <p className="text-[10px] font-bold text-stone-800 uppercase tracking-wider px-5 py-3">{t(lang, 's7.boardroom.changes.col2')}</p>
                         </div>
-                        {[
-                            { v1: 'Slide title: "Q3 Performance"', v2: 'Slide title: "Revenue is 15% behind plan — and recoverable by Q1"' },
-                            { v1: '12-series chart with quarterly breakdown by product line', v2: 'Single annotated line chart showing the gap and the recovery curve' },
-                            { v1: 'Buried takeaway in slide 14 closing thoughts', v2: 'Action framed as first bullet: "$4M bridge request enables breakeven by Month 18"' },
-                            { v1: 'Descriptive axis: "Revenue USD 000s"', v2: 'Annotated: "Target" reference line, current position labeled, gap labeled "$1.2M"' },
-                        ].map((r, i) => (
+                        {[0, 1, 2, 3].map((i) => (
                             <div key={i} className="grid grid-cols-2 border-b border-stone-100 last:border-0">
-                                <p className="text-[12px] text-stone-400 px-5 py-3 leading-relaxed italic border-r border-stone-100">{r.v1}</p>
-                                <p className="text-[12px] text-stone-700 px-5 py-3 leading-relaxed">{r.v2}</p>
+                                <p className="text-[12px] text-stone-400 px-5 py-3 leading-relaxed italic border-r border-stone-100">{t(lang, `s7.boardroom.changes.items.${i}.v1`)}</p>
+                                <p className="text-[12px] text-stone-700 px-5 py-3 leading-relaxed">{t(lang, `s7.boardroom.changes.items.${i}.v2`)}</p>
                             </div>
                         ))}
                     </div>
                 </div>
 
                 <div className="bg-stone-800 rounded-xl p-5 text-white">
-                    <p className="text-sm font-bold text-amber-400 mb-2">Why this matters beyond fundraising</p>
-                    <p className="text-[14px] text-stone-200 leading-relaxed">
-                        Every internal budget request, project approval, and hiring decision is a form of fundraising. You are asking someone to allocate scarce resources based on the picture you paint with data. The chart that makes the decision obvious will always outperform the chart that makes the decision possible.
-                    </p>
+                    <p className="text-sm font-bold text-amber-400 mb-2">{t(lang, 's7.boardroom.takeaway.title')}</p>
+                    <p className="text-[14px] text-stone-200 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's7.boardroom.takeaway.desc') }} />
                 </div>
 
-                <PurpleCowDemo />
+                <PurpleCowDemo lang={lang} />
             </div>
         </LessonPage>
     );

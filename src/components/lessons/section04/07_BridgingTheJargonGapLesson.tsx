@@ -1,37 +1,37 @@
 import { useState } from 'react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import TheoryBlock from '../../ui/TheoryBlock';
 
-const crossRefs = [
-    { sectionId: 'storytelling', slug: 'language-authority', label: 'The Language of Authority' },
-    { sectionId: 'perception', slug: 'cognitive-load', label: 'Cognitive Load' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'storytelling', slug: 'language-authority', label: t(lang, 's4.jargonGap.crossRefs.0.label') },
+    { sectionId: 'perception', slug: 'cognitive-load', label: t(lang, 's4.jargonGap.crossRefs.1.label') },
 ];
 
-const JARGON_MAP: Array<{ jargon: string; plain: string; context: string }> = [
-    { jargon: 'Statistically significant', plain: 'Not a coincidence', context: '"This drop is statistically significant" = "We are confident this drop is real, not just random chance"' },
-    { jargon: 'Orthogonal', plain: 'Unrelated', context: '"That metric is orthogonal" = "That metric is unrelated to what we are discussing"' },
-    { jargon: 'Over-indexed', plain: 'Higher than average', context: '"We over-index on mobile users" = "We have a higher proportion of mobile users than average"' },
-    { jargon: 'Directionally correct', plain: 'Roughly accurate', context: '"The data is directionally correct" = "The exact numbers might be off, but the trend is right"' },
-    { jargon: 'Delta', plain: 'Difference / Change', context: '"What is the delta between Q1 and Q2?" = "How much did performance change from Q1 to Q2?"' },
-    { jargon: 'Cohort', plain: 'Group of users', context: '"The Q1 cohort retained better" = "The users who joined in Q1 stayed with us longer"' },
-    { jargon: 'Priors', plain: 'Existing assumption', context: '"Update my priors" = "Change my mind based on this new data"' },
-    { jargon: 'Granular', plain: 'Detailed', context: '"Let\'s get more granular" = "Let\'s look at the detailed breakdown"' },
-];
+const JARGON_MAP = (lang: any): Array<{ jargon: string; plain: string; context: string }> => {
+    return [0, 1, 2, 3, 4, 5, 6, 7].map(i => ({
+        jargon: t(lang, `s4.jargonGap.jargonMap.${i}.jargon`),
+        plain: t(lang, `s4.jargonGap.jargonMap.${i}.plain`),
+        context: t(lang, `s4.jargonGap.jargonMap.${i}.context`)
+    }));
+};
 
 // Bar chart: comprehension score by audience
 function ComprehensionChart() {
+    const { lang } = useLang();
     const groups = [
-        { label: 'Your team', score: 91, },
-        { label: 'Adjacent teams', score: 67, },
-        { label: 'Other functions', score: 48, },
-        { label: 'C-suite', score: 31, },
-        { label: 'Board / investors', score: 19, },
+        { label: t(lang, 's4.jargonGap.chart.groups.0'), score: 91, },
+        { label: t(lang, 's4.jargonGap.chart.groups.1'), score: 67, },
+        { label: t(lang, 's4.jargonGap.chart.groups.2'), score: 48, },
+        { label: t(lang, 's4.jargonGap.chart.groups.3'), score: 31, },
+        { label: t(lang, 's4.jargonGap.chart.groups.4'), score: 19, },
     ];
 
     return (
         <div className="bg-white border border-stone-200 rounded-xl p-5">
             <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-4">
-                Estimated comprehension of technical jargon by audience distance
+                {t(lang, 's4.jargonGap.chart.title')}
             </p>
             <div className="space-y-3">
                 {groups.map((g) => (
@@ -53,36 +53,38 @@ function ComprehensionChart() {
                 ))}
             </div>
             <p className="text-[11px] text-stone-400 mt-4 leading-relaxed">
-                The higher the stakes of your audience, the less technical domain knowledge they have. Jargon creates distance exactly when you need to close it.
+                {t(lang, 's4.jargonGap.chart.caption')}
             </p>
         </div>
     );
 }
 
 export default function BridgingTheJargonGapLesson() {
+    const { lang } = useLang();
     const [selected, setSelected] = useState<string | null>(null);
-    const current = JARGON_MAP.find(j => j.jargon === selected);
+    const map = JARGON_MAP(lang);
+    const current = map.find(j => j.jargon === selected);
 
     return (
-        <LessonPage crossRefs={crossRefs}>
+        <LessonPage crossRefs={crossRefs(lang)}>
             <div className="space-y-8">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Every function develops its own dialect. Engineers say "refactor." Finance says "haircut." Marketing says "CAC." When you're presenting to the C-suite or board, you are crossing dialect boundaries. Jargon that signals expertise to your team signals opacity to everyone else.
+                    {t(lang, 's4.jargonGap.intro1')}
                 </p>
 
                 <ComprehensionChart />
 
                 <TheoryBlock
-                    title="Why Jargon Backfires Under Pressure"
-                    theory="Cognitive Load Theory + Communication Accommodation Theory"
-                    explanation="When a listener doesn't understand a word, they divert cognitive resources to decoding it — at the expense of processing your argument. Communication Accommodation Theory shows that audiences cognitively 'distance' themselves from speakers who don't adapt. Jargon signals in-group membership — which is a problem when the audience is outside your group."
+                    title={t(lang, 's4.jargonGap.theory.title')}
+                    theory={t(lang, 's4.jargonGap.theory.subtitle')}
+                    explanation={t(lang, 's4.jargonGap.theory.explanation')}
                 />
 
                 <div className="space-y-3">
-                    <h3 className="text-base font-bold text-stone-800">Jargon quick-reference</h3>
-                    <p className="text-[13px] text-stone-500">Select a term to see its plain-English translation and an example in context.</p>
+                    <h3 className="text-base font-bold text-stone-800">{t(lang, 's4.jargonGap.jargonReferenceTitle')}</h3>
+                    <p className="text-[13px] text-stone-500">{t(lang, 's4.jargonGap.jargonReferenceDesc')}</p>
                     <div className="flex flex-wrap gap-2">
-                        {JARGON_MAP.map(j => (
+                        {map.map(j => (
                             <button
                                 key={j.jargon}
                                 onClick={() => setSelected(s => s === j.jargon ? null : j.jargon)}
@@ -108,9 +110,9 @@ export default function BridgingTheJargonGapLesson() {
                 </div>
 
                 <div className="bg-stone-50 border border-stone-200 rounded-xl p-4">
-                    <p className="text-[12px] font-bold text-stone-600 mb-3">The translation rule</p>
+                    <p className="text-[12px] font-bold text-stone-600 mb-3">{t(lang, 's4.jargonGap.ruleTitle')}</p>
                     <p className="text-[13px] text-stone-600 leading-relaxed">
-                        Before every presentation, identify three terms your audience might not share with you, and prepare a plain-English version. Use the plain version by default. Use the jargon term only when speaking to an audience that you are certain shares your vocabulary.
+                        {t(lang, 's4.jargonGap.ruleDesc')}
                     </p>
                 </div>
             </div>

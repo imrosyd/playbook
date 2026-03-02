@@ -1,4 +1,6 @@
 import LessonPage from '../../layout/LessonPage';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import ChartFrame from '../../ui/ChartFrame';
 import ChartFamilyLesson, { type ChartSpec } from './ChartFamilyLesson';
 import { Layout as LayoutIcon, AlertTriangle } from 'lucide-react';
@@ -11,135 +13,135 @@ import {
     NetworkMini,
 } from '../../charts/demos/MiniCharts';
 
-const charts: ChartSpec[] = [
+const getCharts = (lang: any): ChartSpec[] => [
     {
         slug: 'tree-diagram',
-        name: 'Tree Diagram',
+        name: t(lang, 's2.howDoesItFlow.charts.tree.name'),
         whenToUse: [
-            'Representing strict parent-child hierarchies such as org charts, file systems, or taxonomies',
-            'When the direction of authority or inheritance flows clearly in one direction',
-            'Decision tree visualizations where each split leads to a defined set of outcomes',
+            t(lang, 's2.howDoesItFlow.charts.tree.whenToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.tree.whenToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.tree.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Graphs where nodes have multiple parents (use a network/DAG instead)',
-            'Very deep or wide trees — nodes quickly become too small to label or read',
-            'When the sibling relationships between leaf nodes are as important as the parent-child links',
+            t(lang, 's2.howDoesItFlow.charts.tree.whenNotToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.tree.whenNotToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.tree.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Tree diagrams imply strict hierarchical authority. Representing a cross-functional team as a tree imposes a command-structure reading that may not reflect how the team actually works, potentially misrepresenting shared or matrix reporting.',
-        cognitiveRef: 'Gestalt: connection, proximity',
-        ethicalRef: 'Risk: Hierarchy imposition',
+        interpretationRisk: t(lang, 's2.howDoesItFlow.charts.tree.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howDoesItFlow.charts.tree.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howDoesItFlow.charts.tree.ethicalRef'),
         demo: <TreeDiagramMini />,
     },
     {
         slug: 'dendrogram',
-        name: 'Dendrogram',
+        name: t(lang, 's2.howDoesItFlow.charts.dendrogram.name'),
         whenToUse: [
-            'Visualizing results of hierarchical clustering algorithms in statistical analysis',
-            'Phylogenetic trees in biology or evolutionary data',
-            'When the height of the merge point encodes the distance or dissimilarity between clusters',
+            t(lang, 's2.howDoesItFlow.charts.dendrogram.whenToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.dendrogram.whenToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.dendrogram.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Non-hierarchical clustering results — k-means or DBSCAN clusters have no tree structure',
-            'Very large datasets — with > 50 leaf nodes, labels overlap and the structure is unreadable',
-            'General business audiences unfamiliar with clustering methodology',
+            t(lang, 's2.howDoesItFlow.charts.dendrogram.whenNotToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.dendrogram.whenNotToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.dendrogram.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Dendrograms from agglomerative clustering are sensitive to linkage method (single, complete, average, Ward). Two identical datasets with different linkage methods can produce dramatically different tree shapes, implying different cluster structures.',
-        cognitiveRef: 'Gestalt: connection',
-        ethicalRef: 'Risk: Linkage method sensitivity',
+        interpretationRisk: t(lang, 's2.howDoesItFlow.charts.dendrogram.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howDoesItFlow.charts.dendrogram.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howDoesItFlow.charts.dendrogram.ethicalRef'),
         demo: <DendrogramMini />,
     },
     {
         slug: 'icicle',
-        name: 'Icicle / Partition Chart',
+        name: t(lang, 's2.howDoesItFlow.charts.icicle.name'),
         whenToUse: [
-            'Hierarchical data where quantitative proportions at each level are meaningful',
-            'Visualizing directory structures, budget hierarchies, or nested categorical data',
-            'When the partition needs to be visually aligned with a linear scale',
+            t(lang, 's2.howDoesItFlow.charts.icicle.whenToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.icicle.whenToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.icicle.whenToUse.2'),
         ],
         whenNotToUse: [
-            'When the hierarchy is deep (> 4 levels) — leaf rectangles become hairline slivers',
-            'Interactive-only contexts — horizontal space is consumed rapidly with many children',
-            'Audiences who find tree diagrams more intuitive than space-filling approaches',
+            t(lang, 's2.howDoesItFlow.charts.icicle.whenNotToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.icicle.whenNotToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.icicle.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Width encodes quantitative proportion but depth (level) is purely structural. Readers may misread a deep but narrow branch as having more total weight than a shallow but wide one, confusing structural depth with quantitative magnitude.',
-        cognitiveRef: 'Pre-attentive: length, area',
-        ethicalRef: 'Risk: Depth vs. width confusion',
+        interpretationRisk: t(lang, 's2.howDoesItFlow.charts.icicle.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howDoesItFlow.charts.icicle.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howDoesItFlow.charts.icicle.ethicalRef'),
         demo: <IcicleMini />,
     },
     {
         slug: 'sankey',
-        name: 'Sankey Diagram',
+        name: t(lang, 's2.howDoesItFlow.charts.sankey.name'),
         whenToUse: [
-            'Showing flow volumes between stages in a process (energy, money, traffic, conversions)',
-            'When the total flow is conserved and losses or gains at each stage are meaningful',
-            'Funnel-like processes where the magnitude of flow at each transition is the story',
+            t(lang, 's2.howDoesItFlow.charts.sankey.whenToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.sankey.whenToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.sankey.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Non-flow data — Sankey diagrams carry a strong "flow" implication that misrepresents static snapshots',
-            'More than 5–7 source or destination nodes — the diagram becomes a tangled ribbon',
-            'When the proportion of flow between specific nodes needs to be read precisely',
+            t(lang, 's2.howDoesItFlow.charts.sankey.whenNotToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.sankey.whenNotToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.sankey.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Flow width encodes magnitude, but the curved, organic ribbons make precise comparison extremely difficult. Designers sometimes adjust curvature or node ordering to make small flows appear more significant, a subtle but effective form of visual manipulation.',
-        cognitiveRef: 'Pre-attentive: width (flow)',
-        ethicalRef: 'Risk: Visual weight manipulation',
+        interpretationRisk: t(lang, 's2.howDoesItFlow.charts.sankey.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howDoesItFlow.charts.sankey.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howDoesItFlow.charts.sankey.ethicalRef'),
         demo: <SankeyMini />,
     },
     {
         slug: 'chord',
-        name: 'Chord Diagram',
+        name: t(lang, 's2.howDoesItFlow.charts.chord.name'),
         whenToUse: [
-            'Symmetric matrix data showing bidirectional flows or relationships between a small set of entities',
-            'Migration, trade flow, or communication data between groups',
-            'Exploratory analysis of complex interconnections where the matrix structure would be hard to see',
+            t(lang, 's2.howDoesItFlow.charts.chord.whenToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.chord.whenToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.chord.whenToUse.2'),
         ],
         whenNotToUse: [
-            'More than 7–8 nodes — chord diagrams become unreadable with many overlapping ribbons',
-            'When precise flow values need to be read — chord widths are hard to decode',
-            'Non-symmetric relationships where directionality (A→B ≠ B→A) is critical',
+            t(lang, 's2.howDoesItFlow.charts.chord.whenNotToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.chord.whenNotToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.chord.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Arc width at the node encodes total flow but ribbon width encodes bilateral flow between two specific nodes. These two encodings are often confused, leading readers to misread total connection strength as bilateral exchange.',
-        cognitiveRef: 'Pre-attentive: arc width',
-        ethicalRef: 'Risk: Total vs. bilateral flow confusion',
+        interpretationRisk: t(lang, 's2.howDoesItFlow.charts.chord.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howDoesItFlow.charts.chord.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howDoesItFlow.charts.chord.ethicalRef'),
         demo: <ChordMini />,
     },
     {
         slug: 'network',
-        name: 'Network Graph',
+        name: t(lang, 's2.howDoesItFlow.charts.network.name'),
         whenToUse: [
-            'Representing genuine graph-structured data: social networks, dependency graphs, knowledge graphs',
-            'When the topology (connectivity pattern, hubs, clusters) is the analytical focus',
-            'Exploratory visualization of relational data before quantitative network analysis',
+            t(lang, 's2.howDoesItFlow.charts.network.whenToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.network.whenToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.network.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Hierarchical data — a tree diagram is cleaner and more intuitive',
-            'Very dense networks (> 100 nodes) — "hairball" graphs convey nothing analytically',
-            'When the reader needs to count paths, measure distances, or compare centrality precisely',
+            t(lang, 's2.howDoesItFlow.charts.network.whenNotToUse.0'),
+            t(lang, 's2.howDoesItFlow.charts.network.whenNotToUse.1'),
+            t(lang, 's2.howDoesItFlow.charts.network.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Node positions in most network layouts (force-directed, Fruchterman-Reingold) are non-deterministic and change on every render. A node placed in the "center" appears more important, but centrality is a function of the algorithm, not the data.',
-        cognitiveRef: 'Gestalt: proximity, connection',
-        ethicalRef: 'Risk: Layout-implied importance',
+        interpretationRisk: t(lang, 's2.howDoesItFlow.charts.network.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howDoesItFlow.charts.network.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howDoesItFlow.charts.network.ethicalRef'),
         demo: <NetworkMini />,
     },
 ];
 
 
 // Network layout sensitivity demo
-function NetworkLayoutChart() {
+function NetworkLayoutChart({ lang }: { lang: any }) {
     const nodesA = [
-        { id: 'A', x: 50, y: 50, label: 'CEO', r: 14, color: '#059669', text: 'white' },
-        { id: 'B', x: 20, y: 20, label: 'CTO', r: 9, color: '#d1fae5', text: '#064e3b' },
-        { id: 'C', x: 80, y: 20, label: 'CFO', r: 9, color: '#d1fae5', text: '#064e3b' },
-        { id: 'D', x: 20, y: 80, label: 'CMO', r: 9, color: '#d1fae5', text: '#064e3b' },
-        { id: 'E', x: 80, y: 80, label: 'COO', r: 9, color: '#d1fae5', text: '#064e3b' },
-        { id: 'F', x: 50, y: 15, label: 'CRO', r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'A', x: 50, y: 50, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.0'), r: 14, color: '#059669', text: 'white' },
+        { id: 'B', x: 20, y: 20, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.1'), r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'C', x: 80, y: 20, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.2'), r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'D', x: 20, y: 80, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.3'), r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'E', x: 80, y: 80, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.4'), r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'F', x: 50, y: 15, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.5'), r: 9, color: '#d1fae5', text: '#064e3b' },
     ];
     const nodesB = [
-        { id: 'B', x: 50, y: 50, label: 'CTO', r: 14, color: '#059669', text: 'white' },
-        { id: 'A', x: 20, y: 20, label: 'CEO', r: 9, color: '#d1fae5', text: '#064e3b' },
-        { id: 'C', x: 80, y: 25, label: 'CFO', r: 9, color: '#d1fae5', text: '#064e3b' },
-        { id: 'D', x: 15, y: 75, label: 'CMO', r: 9, color: '#d1fae5', text: '#064e3b' },
-        { id: 'E', x: 85, y: 75, label: 'COO', r: 9, color: '#d1fae5', text: '#064e3b' },
-        { id: 'F', x: 50, y: 85, label: 'CRO', r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'B', x: 50, y: 50, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.1'), r: 14, color: '#059669', text: 'white' },
+        { id: 'A', x: 20, y: 20, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.0'), r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'C', x: 80, y: 25, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.2'), r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'D', x: 15, y: 75, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.3'), r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'E', x: 85, y: 75, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.4'), r: 9, color: '#d1fae5', text: '#064e3b' },
+        { id: 'F', x: 50, y: 85, label: t(lang, 's2.howDoesItFlow.networkDemo.roles.5'), r: 9, color: '#d1fae5', text: '#064e3b' },
     ];
     const edges = [['A', 'B'], ['A', 'C'], ['A', 'D'], ['A', 'E'], ['A', 'F'], ['B', 'C']];
 
@@ -152,7 +154,7 @@ function NetworkLayoutChart() {
                 <div className="text-center">
                     <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-1">{title}</p>
                     <div className="inline-block px-2 py-0.5 rounded bg-stone-100 border border-stone-200 text-[9px] font-bold text-stone-600">
-                        {status === 'ceo' ? 'Traditional Hierarchy' : 'Matrix Perception'}
+                        {status === 'ceo' ? t(lang, 's2.howDoesItFlow.networkDemo.layoutA.status') : t(lang, 's2.howDoesItFlow.networkDemo.layoutB.status')}
                     </div>
                 </div>
                 <div className="bg-white rounded-xl border border-stone-100 p-4 shadow-inner overflow-hidden">
@@ -180,15 +182,15 @@ function NetworkLayoutChart() {
 
     return (
         <ChartFrame
-            label="Layout-Implied Importance"
-            note="The internal connections are identical. By simply shifting which node occupies the geometric center, the visual narrative changes from 'CEO-centric' to 'Tech-driven.' Center = Power is a hardwired heuristic."
+            label={t(lang, 's2.howDoesItFlow.networkDemo.title')}
+            note={t(lang, 's2.howDoesItFlow.networkDemo.note')}
         >
             <div className="flex flex-wrap gap-8 p-6 justify-center bg-stone-50/50">
-                <Layout nodes={nodesA} title="Layout A" status="ceo" note="Implies strict CEO authority" />
+                <Layout nodes={nodesA} title={t(lang, 's2.howDoesItFlow.networkDemo.layoutA.title')} status="ceo" note={t(lang, 's2.howDoesItFlow.networkDemo.layoutA.note')} />
                 <div className="hidden sm:flex items-center text-stone-300">
                     <ArrowRightIcon size={24} />
                 </div>
-                <Layout nodes={nodesB} title="Layout B" status="cto" note="Implies CTO as the strategic hub" />
+                <Layout nodes={nodesB} title={t(lang, 's2.howDoesItFlow.networkDemo.layoutB.title')} status="cto" note={t(lang, 's2.howDoesItFlow.networkDemo.layoutB.note')} />
             </div>
         </ChartFrame>
     );
@@ -202,7 +204,7 @@ function ArrowRightIcon({ size }: { size: number }) {
     );
 }
 
-function StressfulTreemapDemo() {
+function StressfulTreemapDemo({ lang }: { lang: any }) {
     const cells = [
         { s: 3, w: '20%', c: '#16a34a', t: 'MSFT', v: '+2.4%' },
         { s: 5, w: '35%', c: '#ef4444', t: 'AAPL', v: '-1.2%' },
@@ -216,8 +218,8 @@ function StressfulTreemapDemo() {
 
     return (
         <ChartFrame
-            label="Cognitive Overload: Dense Treemaps"
-            note="Financial 'heatmaps' maximize density but create overwhelming load. Competing intensive colors cause visual vibration, and area comparisons across non-adjacent rectangles are perceptually imprecise."
+            label={t(lang, 's2.howDoesItFlow.treemapDemo.title')}
+            note={t(lang, 's2.howDoesItFlow.treemapDemo.note')}
         >
             <div className="p-6 space-y-4">
                 <div className="flex flex-col md:flex-row gap-6 items-center">
@@ -233,17 +235,13 @@ function StressfulTreemapDemo() {
                     <div className="flex-1 space-y-4">
                         <div className="flex items-center gap-2">
                             <AlertTriangle size={14} className="text-amber-500" />
-                            <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Analysis Friction</p>
+                            <p className="text-[10px] font-black text-stone-400 uppercase tracking-widest">{t(lang, 's2.howDoesItFlow.treemapDemo.frictionTitle')}</p>
                         </div>
                         <ul className="space-y-2">
-                            {[
-                                'Intense colors (red/green) create visual vibration',
-                                'Area estimation is significantly less accurate than length',
-                                'Rapid updates (live stock prices) saturate working memory',
-                            ].map((text, i) => (
+                            {[0, 1, 2].map(i => (
                                 <li key={i} className="flex items-start gap-2 text-[12px] text-stone-600 font-medium">
                                     <div className="w-1.5 h-1.5 rounded-full bg-stone-300 mt-1.5 shrink-0" />
-                                    <span>{text}</span>
+                                    <span>{t(lang, `s2.howDoesItFlow.treemapDemo.points.${i}`)}</span>
                                 </li>
                             ))}
                         </ul>
@@ -255,6 +253,8 @@ function StressfulTreemapDemo() {
 }
 
 export default function HowDoesItFlowLesson() {
+    const { lang } = useLang();
+
     return (
         <LessonPage
             crossRefs={[
@@ -264,48 +264,35 @@ export default function HowDoesItFlowLesson() {
             ]}
         >
             <div className="space-y-6">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Hierarchy and network charts encode structural relationships — how entities are connected, nested, or flow between each other. Unlike quantitative charts where a specific axis encodes a specific variable with measurable accuracy, hierarchy charts encode topology: which nodes are connected, how deep the hierarchy is, and what flows between clusters. The Gestalt principles of <strong>connection</strong> (lines between nodes imply direct relationships) and <strong>proximity</strong> (nearby nodes appear related) are the dominant perceptual mechanisms, working automatically in the viewer's visual system before any conscious reading occurs.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The most consequential risk in hierarchy charts is that <strong>visual layout algorithms impose structure that reflects computational convenience, not genuine data hierarchy</strong>. Force-directed graph layouts (the algorithm behind most network visualizations) place nodes in positions that minimize edge crossings and distribute nodes evenly — but these positions carry no semantic meaning. A node placed in the visual center appears more important, more central, and more powerful, even if it has the same number of connections as a node at the visual periphery. The same network data with different layout seeds or algorithms produces entirely different visual narratives about which node "controls" the structure.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Choosing the right chart for hierarchical data requires understanding the structural type of the data itself: <strong>strict hierarchies</strong> (org charts, taxonomies, file systems) suit tree diagrams; <strong>hierarchical quantitative partitions</strong> (budget allocation, file size breakdown) suit treemaps or icicle charts; <strong>flow processes</strong> (conversion funnels, energy systems, money flows) suit Sankey diagrams; and <strong>genuine graph data</strong> (social networks, dependency graphs, biological pathways) suit network graphs. Choosing the wrong structural chart type imposes a false topology on the data — a tree diagram applied to graph-structured data creates false parent-child authority relationships that do not exist.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.howDoesItFlow.intro1') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.howDoesItFlow.intro2') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.howDoesItFlow.intro3') }} />
 
                 {/* Network layout demo */}
-                <NetworkLayoutChart />
+                <NetworkLayoutChart lang={lang} />
 
                 {/* Treemap demo */}
-                <StressfulTreemapDemo />
+                <StressfulTreemapDemo lang={lang} />
 
                 {/* Chart type decision guide */}
                 <div className="rounded-2xl bg-stone-50 border border-stone-200 p-6 shadow-sm">
                     <div className="flex items-center gap-2 mb-4">
                         <LayoutIcon size={18} className="text-brand" />
                         <p className="text-[11px] font-black text-stone-400 uppercase tracking-widest">
-                            Topology Selection Matrix
+                            {t(lang, 's2.howDoesItFlow.guide.title')}
                         </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {[
-                            { structure: 'Strict parent-child hierarchy', chart: 'Tree Diagram', note: 'Single parent per node' },
-                            { structure: 'Space-filling partition', chart: 'Treemap / Icicle', note: 'Quantitative nesting' },
-                            { structure: 'Flow volumes between stages', chart: 'Sankey Diagram', note: 'Process conversion' },
-                            { structure: 'Bidirectional flows', chart: 'Chord Diagram', note: 'Small node set matrix' },
-                            { structure: 'Graph with cycles', chart: 'Network (DAG)', note: 'Interconnected web' },
-                            { structure: 'Clustering results', chart: 'Dendrogram', note: 'Algorithmic distance' },
-                        ].map((d, i) => (
+                        {[0, 1, 2, 3, 4, 5].map(i => (
                             <div key={i} className="bg-white rounded-xl border border-stone-100 p-4 flex items-center justify-between group hover:border-brand/30 transition-all">
                                 <div>
-                                    <p className="text-[12px] font-semibold text-stone-600">{d.structure}</p>
-                                    <p className="text-[10px] text-stone-400 font-medium">{d.note}</p>
+                                    <p className="text-[12px] font-semibold text-stone-600">{t(lang, `s2.howDoesItFlow.guide.items.${i}.structure`)}</p>
+                                    <p className="text-[10px] text-stone-400 font-medium">{t(lang, `s2.howDoesItFlow.guide.items.${i}.note`)}</p>
                                 </div>
                                 <div className="text-brand font-black text-[11px] flex items-center gap-1">
-                                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">CHOOSE</span>
+                                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">{t(lang, 's2.howDoesItFlow.guide.chooseBtn')}</span>
                                     <ArrowRightIcon size={12} />
-                                    <span>{d.chart.toUpperCase()}</span>
+                                    <span>{t(lang, `s2.howDoesItFlow.guide.items.${i}.chart`).toUpperCase()}</span>
                                 </div>
                             </div>
                         ))}
@@ -314,8 +301,8 @@ export default function HowDoesItFlowLesson() {
             </div>
 
             <ChartFamilyLesson
-                charts={charts}
-                clevelandNote="Connection and proximity (Gestalt) are not in Cleveland & McGill's original hierarchy, which focused on quantitative encodings. For structural/topological data, the standard accuracy rankings do not apply — but this also means there is no baseline for 'accurate decoding.' Hierarchy charts carry especially high risk of over-interpretation."
+                charts={getCharts(lang)}
+                clevelandNote={t(lang, 's2.howDoesItFlow.clevelandNote')}
             />
         </LessonPage>
     );

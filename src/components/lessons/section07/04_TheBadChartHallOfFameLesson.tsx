@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import TheoryBlock from '../../ui/TheoryBlock';
 
-const crossRefs = [
-    { sectionId: 'lab', slug: 'axis-scale', label: 'Axis & Scale Manipulation' },
-    { sectionId: 'ethics', slug: 'distortion', label: 'Level 4: Distortion' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'lab', slug: 'axis-scale', label: t(lang, 's7.badChart.crossRefs.0.label') },
+    { sectionId: 'ethics', slug: 'distortion', label: t(lang, 's7.badChart.crossRefs.1.label') },
 ];
 
 type BadChartId = 'truncated' | 'area' | '3d' | 'pie';
@@ -17,39 +19,39 @@ interface BadChart {
     fix: string;
 }
 
-const BAD_CHARTS: BadChart[] = [
+const BAD_CHARTS = (lang: any): BadChart[] => [
     {
         id: 'truncated',
-        name: 'The Truncated Axis',
-        flaw: 'Y-axis starts at 96% instead of 0%, making a 1% difference look like a 4× gap.',
-        why: 'Exploits pre-attentive length perception. The bar that is 4× taller appears to represent 4× the value.',
-        fix: 'Always start bar chart Y-axes at zero. Use annotations if you need to highlight a small difference within a narrow range.',
+        name: t(lang, 's7.badChart.charts.truncated.name'),
+        flaw: t(lang, 's7.badChart.charts.truncated.flaw'),
+        why: t(lang, 's7.badChart.charts.truncated.why'),
+        fix: t(lang, 's7.badChart.charts.truncated.fix'),
     },
     {
         id: 'area',
-        name: 'The Irrelevant Area Explosion',
-        flaw: 'A circle\'s area is scaled to a value, but area perception is the weakest visual encoding.',
-        why: 'Cleveland & McGill (1984): area is rank 6 of 8 in perceptual accuracy. A circle that is 2× the area appears ~1.4× larger, not 2× larger.',
-        fix: 'Use length (bar chart) instead of area for quantity comparison. Reserve area charts for geographic maps where spatial area carries meaning.',
+        name: t(lang, 's7.badChart.charts.area.name'),
+        flaw: t(lang, 's7.badChart.charts.area.flaw'),
+        why: t(lang, 's7.badChart.charts.area.why'),
+        fix: t(lang, 's7.badChart.charts.area.fix'),
     },
     {
         id: '3d',
-        name: 'The 3D Perspective Trap',
-        flaw: '3D perspective causes rear bars to appear shorter and angles to distort proportional reading.',
-        why: 'Perspective foreshortening applies non-linear transformations to length — the primary channel for bar charts. Bars at the back of a 3D chart appear shorter than identical bars in the front.',
-        fix: 'Never use 3D for data charts. Dimensionality adds cognitive load with zero informational value.',
+        name: t(lang, 's7.badChart.charts.3d.name'),
+        flaw: t(lang, 's7.badChart.charts.3d.flaw'),
+        why: t(lang, 's7.badChart.charts.3d.why'),
+        fix: t(lang, 's7.badChart.charts.3d.fix'),
     },
     {
         id: 'pie',
-        name: 'The 11-Slice Pie Chart',
-        flaw: 'A pie chart with 11 slices forces angle comparison — the second-weakest encoding after volume.',
-        why: 'Humans cannot accurately compare angles for slices separated by other slices. The same data in a sorted horizontal bar chart would be decoded in under 2 seconds; the pie requires 8–10 seconds of scanning.',
-        fix: 'Use a sorted horizontal bar chart for category comparison. Reserve pie charts for 2–3 segment share comparisons where the part-to-whole relationship is the only message.',
+        name: t(lang, 's7.badChart.charts.pie.name'),
+        flaw: t(lang, 's7.badChart.charts.pie.flaw'),
+        why: t(lang, 's7.badChart.charts.pie.why'),
+        fix: t(lang, 's7.badChart.charts.pie.fix'),
     },
 ];
 
 // Chart 1: Truncated axis toggle
-function TruncatedBarChart() {
+function TruncatedBarChart({ lang }: { lang: any }) {
     const data = [97.2, 97.8, 98.1, 98.9];
     const labels = ['Q1', 'Q2', 'Q3', 'Q4'];
     const [trunc, setTrunc] = useState(true);
@@ -64,10 +66,10 @@ function TruncatedBarChart() {
     return (
         <div className="space-y-3">
             <div className="flex items-center gap-2">
-                <span className="text-[11px] text-stone-400">Y-axis starts at:</span>
+                <span className="text-[11px] text-stone-400">{t(lang, 's7.badChart.truncated.axisStarts')}:</span>
                 <button onClick={() => setTrunc(v => !v)}
                     className={`px-3 py-1 rounded text-[11px] font-bold border transition-all ${trunc ? 'bg-stone-900 text-white border-stone-900' : 'bg-white text-stone-600 border-stone-200'}`}>
-                    {trunc ? '96 (truncated)' : '0 (honest)'}
+                    {trunc ? t(lang, 's7.badChart.truncated.btnTruncated') : t(lang, 's7.badChart.truncated.btnHonest')}
                 </button>
             </div>
             <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-2xl mx-auto block">
@@ -90,20 +92,20 @@ function TruncatedBarChart() {
             </svg>
             <p className="text-[11px] text-stone-400 leading-relaxed">
                 {trunc
-                    ? 'The bars look dramatically different. But the actual difference is only 1.7 percentage points.'
-                    : 'Starting at zero shows the truth: all bars are nearly identical.'}
+                    ? t(lang, 's7.badChart.truncated.descTruncated')
+                    : t(lang, 's7.badChart.truncated.descHonest')}
             </p>
         </div>
     );
 }
 
 // Chart 2: Bubble chart showing area distortion
-function AreaDistortionChart() {
+function AreaDistortionChart({ lang }: { lang: any }) {
     // Values: 10, 20, 40 — last should be 4× first, not 2×
     const data = [
-        { label: 'Country A', value: 10, correct: true },
-        { label: 'Country B', value: 20, correct: true },
-        { label: 'Country C', value: 40, correct: true },
+        { label: t(lang, 's7.badChart.area.countryA'), value: 10, correct: true },
+        { label: t(lang, 's7.badChart.area.countryB'), value: 20, correct: true },
+        { label: t(lang, 's7.badChart.area.countryC'), value: 40, correct: true },
     ];
 
     // Correct: radius proportional to value (encodes area correctly)
@@ -114,7 +116,7 @@ function AreaDistortionChart() {
         return (
             <div className="flex-1">
                 <p className="text-[9px] font-bold uppercase tracking-wider mb-2 text-center" style={{ color: byArea ? '#1c1917' : '#a8a29e' }}>
-                    {byArea ? 'Correct (by area)' : 'Wrong (by radius)'}
+                    {byArea ? t(lang, 's7.badChart.area.correctLabel') : t(lang, 's7.badChart.area.wrongLabel')}
                 </p>
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-2xl mx-auto block">
                     {data.map((d, i) => {
@@ -142,14 +144,14 @@ function AreaDistortionChart() {
                 {renderBubbles(true)}
             </div>
             <p className="text-[11px] text-stone-400 leading-relaxed">
-                When radius is used directly (left), Country C looks 4× bigger than Country A, but the actual difference should only appear 4× in area — which is half the visual size. The correct version (right) shows the true 4× relationship.
+                {t(lang, 's7.badChart.area.description')}
             </p>
         </div>
     );
 }
 
 // Chart 3: Simulated 3D perspective distortion
-function ThreeDPerspectiveChart() {
+function ThreeDPerspectiveChart({ lang }: { lang: any }) {
     const data = [50, 48, 49, 51]; // almost identical values
     const labels = ['Q1', 'Q2', 'Q3', 'Q4'];
     const w = 260, h = 120, pad = { l: 12, r: 12, t: 12, b: 36 };
@@ -197,14 +199,14 @@ function ThreeDPerspectiveChart() {
                 })}
             </svg>
             <p className="text-[11px] text-stone-400 leading-relaxed">
-                All four bars represent nearly identical values (48–51). The 3D perspective makes Q1 appear significantly shorter than Q4 — a visual lie created entirely by angle, not data.
+                {t(lang, 's7.badChart.3d.description')}
             </p>
         </div>
     );
 }
 
 // Chart 4: 11-slice pie vs. sorted horizontal bar — side by side
-function ElevenSlicePieChart() {
+function ElevenSlicePieChart({ lang }: { lang: any }) {
     const data = [
         { label: 'A', v: 22 }, { label: 'B', v: 18 }, { label: 'C', v: 14 },
         { label: 'D', v: 11 }, { label: 'E', v: 9 }, { label: 'F', v: 8 },
@@ -235,7 +237,7 @@ function ElevenSlicePieChart() {
         <div className="space-y-2">
             <div className="flex items-start gap-4">
                 <div>
-                    <p className="text-[9px] font-bold text-stone-400 uppercase tracking-wider mb-2 text-center">11-slice pie (weak)</p>
+                    <p className="text-[9px] font-bold text-stone-400 uppercase tracking-wider mb-2 text-center">{t(lang, 's7.badChart.pie.pieLabel')}</p>
                     <svg viewBox="0 0 480 220" className="w-full max-w-[140px]">
                         {slices.map((s, i) => (
                             <path key={i} d={s.path} fill={s.fill} stroke="white" strokeWidth={1} />
@@ -243,7 +245,7 @@ function ElevenSlicePieChart() {
                     </svg>
                 </div>
                 <div className="flex-1">
-                    <p className="text-[9px] font-bold text-stone-800 uppercase tracking-wider mb-2">Sorted bar chart (clear)</p>
+                    <p className="text-[9px] font-bold text-stone-800 uppercase tracking-wider mb-2">{t(lang, 's7.badChart.pie.barLabel')}</p>
                     <div className="space-y-1.5">
                         {data.map((d, i) => (
                             <div key={i} className="flex items-center gap-2">
@@ -258,40 +260,40 @@ function ElevenSlicePieChart() {
                 </div>
             </div>
             <p className="text-[11px] text-stone-400 leading-relaxed">
-                The pie makes it nearly impossible to compare slices G–K. The sorted bar chart makes rank immediately obvious — in under 2 seconds.
+                {t(lang, 's7.badChart.pie.description')}
             </p>
         </div>
     );
 }
 
-const CHART_RENDERERS: Record<BadChartId, React.ReactNode> = {
-    truncated: <TruncatedBarChart />,
-    area: <AreaDistortionChart />,
-    '3d': <ThreeDPerspectiveChart />,
-    pie: <ElevenSlicePieChart />,
+const CHART_RENDERERS: Record<BadChartId, (lang: any) => React.ReactNode> = {
+    truncated: (lang) => <TruncatedBarChart lang={lang} />,
+    area: (lang) => <AreaDistortionChart lang={lang} />,
+    '3d': (lang) => <ThreeDPerspectiveChart lang={lang} />,
+    pie: (lang) => <ElevenSlicePieChart lang={lang} />,
 };
 
 export default function TheBadChartHallOfFameLesson() {
+    const { lang } = useLang();
+    const badCharts = BAD_CHARTS(lang);
     const [selected, setSelected] = useState<BadChartId>('truncated');
-    const chart = BAD_CHARTS.find(c => c.id === selected)!;
+    const chart = badCharts.find(c => c.id === selected)!;
 
     return (
-        <LessonPage crossRefs={crossRefs}>
+        <LessonPage crossRefs={crossRefs(lang)}>
             <div className="space-y-8">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The most effective way to internalize what you should not do is to study real examples of failure. Every chart type below has appeared legitimately in major business publications, government reports, and corporate earnings calls. Each one distorts perception in a specific, identifiable way.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's7.badChart.intro') }} />
 
                 <TheoryBlock
-                    title="Why Bad Charts Persist"
-                    theory="Alberto Cairo's 'The Functional Art' + Status Quo Bias"
-                    explanation="Many chart design errors are not malicious — they are defaults. Software defaults to 3D charts, truncated axes, and pie charts because they look visually impressive. Status quo bias means that once a chart format is embedded in a template, it persists unchallenged. The antidote is a checklist applied before finalizing any chart."
+                    title={t(lang, 's7.badChart.theory.title')}
+                    theory={t(lang, 's7.badChart.theory.subtitle')}
+                    explanation={t(lang, 's7.badChart.theory.explanation')}
                 />
 
                 <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-4">
-                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Select a chart type to dissect</p>
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">{t(lang, 's7.badChart.selectPrompt')}</p>
                     <div className="flex flex-wrap gap-2">
-                        {BAD_CHARTS.map(c => (
+                        {badCharts.map(c => (
                             <button
                                 key={c.id}
                                 onClick={() => setSelected(c.id)}
@@ -306,18 +308,18 @@ export default function TheBadChartHallOfFameLesson() {
                     </div>
 
                     <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 space-y-4">
-                        {CHART_RENDERERS[selected]}
+                        {CHART_RENDERERS[selected](lang)}
                         <div className="space-y-3 pt-2 border-t border-stone-200">
                             <div>
-                                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">The flaw</p>
+                                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">{t(lang, 's7.badChart.details.flaw')}</p>
                                 <p className="text-[13px] text-stone-700 leading-relaxed">{chart.flaw}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">Why the brain is fooled</p>
+                                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">{t(lang, 's7.badChart.details.why')}</p>
                                 <p className="text-[13px] text-stone-600 leading-relaxed">{chart.why}</p>
                             </div>
                             <div className="bg-white border border-stone-200 rounded-lg p-3">
-                                <p className="text-[10px] font-bold text-stone-800 uppercase tracking-wider mb-1">How to fix it</p>
+                                <p className="text-[10px] font-bold text-stone-800 uppercase tracking-wider mb-1">{t(lang, 's7.badChart.details.fix')}</p>
                                 <p className="text-[13px] text-stone-700 leading-relaxed">{chart.fix}</p>
                             </div>
                         </div>

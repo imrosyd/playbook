@@ -1,6 +1,8 @@
 import { useRef, useEffect, useState, useMemo } from 'react';
 import * as d3 from 'd3';
 import LessonPage from '../../../components/layout/LessonPage';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 
 const crossRefs = [
     {
@@ -49,7 +51,7 @@ const W = 480;
 const H = 220;
 
 // Window size effect chart: shows how smoothing window changes perception
-function SmoothingWindowChart() {
+function SmoothingWindowChart({ lang }: { lang: any }) {
     const rawData = useMemo(() => buildData(), []);
     const [window3, setWindow3] = useState(true);
     const windows = window3 ? [3] : [7];
@@ -75,7 +77,7 @@ function SmoothingWindowChart() {
                         className={`px-3 py-1 rounded-lg text-[11px] font-semibold border transition-all ${(wn === 3) === window3
                             ? 'bg-brand text-white border-brand'
                             : 'bg-white text-stone-500 border-stone-200'}`}>
-                        {wn}-period MA
+                        {wn === 3 ? t(lang, 's1.spottingTheSignal.btn3Period') : t(lang, 's1.spottingTheSignal.btn7Period')}
                     </button>
                 ))}
             </div>
@@ -90,7 +92,7 @@ function SmoothingWindowChart() {
                     y1={toY(FLAT_MEAN)} y2={toY(FLAT_MEAN)}
                     stroke="#059669" strokeWidth={1.5} strokeDasharray="6,4" opacity={0.6} />
                 <text x={pad.l + 4} y={toY(FLAT_MEAN) - 4} fill="#059669" fontSize={8}>
-                    True mean (50)
+                    {t(lang, 's1.spottingTheSignal.trueMeanLbl')}
                 </text>
                 {/* Raw line */}
                 {rawData.map((d, i) => i > 0 && (
@@ -116,17 +118,16 @@ function SmoothingWindowChart() {
                 ))}
             </svg>
             <p className="text-[11px] text-stone-400 leading-relaxed">
-                Grey = raw data (flat noise). Colored = moving average overlay.
                 {window3
-                    ? ' A 3-period MA already creates apparent trends from pure noise.'
-                    : ' A 7-period MA produces an even smoother curve — making randomness look like a discovered pattern.'}
+                    ? t(lang, 's1.spottingTheSignal.windowCaption3')
+                    : t(lang, 's1.spottingTheSignal.windowCaption7')}
             </p>
         </div>
     );
 }
 
 // Apophenia demo: random walk that looks like trends
-function ApopheniaDemo() {
+function ApopheniaDemo({ lang }: { lang: any }) {
     const [seed, setSeed] = useState(42);
     const data = useMemo(() => {
         const rand = seededRand(seed);
@@ -185,24 +186,25 @@ function ApopheniaDemo() {
             </svg>
             <div className="flex items-center justify-between">
                 <p className={`text-[12px] font-semibold ${increasing ? 'text-brand' : 'text-red-600'}`}>
-                    Brain sees: {increasing ? '↑ upward trend' : '↓ downward trend'}
+                    {increasing ? t(lang, 's1.spottingTheSignal.brainSeesUp') : t(lang, 's1.spottingTheSignal.brainSeesDown')}
                 </p>
-                <p className="text-[11px] text-stone-400">Reality: random walk</p>
+                <p className="text-[11px] text-stone-400">{t(lang, 's1.spottingTheSignal.reality')}</p>
             </div>
             <button
                 onClick={() => setSeed(s => (s * 7 + 13) % 1000)}
                 className="w-full py-1.5 rounded-lg border border-stone-200 text-[11px] text-stone-500 hover:border-stone-400 transition-colors"
             >
-                Regenerate random data →
+                {t(lang, 's1.spottingTheSignal.regenBtn')}
             </button>
             <p className="text-[11px] text-stone-400 leading-relaxed">
-                Each click generates a new random walk. The red trendline is mathematically fitted — but the underlying data has no trend. Notice how compelling the "trend story" is regardless of the direction.
+                {t(lang, 's1.spottingTheSignal.regenDesc')}
             </p>
         </div>
     );
 }
 
 export default function SpottingTheSignalLesson() {
+    const { lang } = useLang();
     const [withSmoothing, setWithSmoothing] = useState(false);
     const svgRef = useRef<SVGSVGElement>(null);
 
@@ -247,14 +249,14 @@ export default function SpottingTheSignalLesson() {
                 .attr('x', 30).attr('y', 11)
                 .style('font-size', '8px')
                 .style('fill', '#dc2626')
-                .text('3-period moving avg');
+                .text(t(lang, 's1.spottingTheSignal.btnSmoothed'));
 
             g.append('g').attr('class', 'x-axis').attr('transform', `translate(0,${innerH})`);
             g.append('g').attr('class', 'y-axis');
         }
 
         const g = svg.select('.main-group');
-        const t = svg.transition().duration(800).ease(d3.easeCubicOut) as any;
+        const trans = svg.transition().duration(800).ease(d3.easeCubicOut) as any;
 
         const xScale = d3
             .scalePoint()
@@ -318,12 +320,12 @@ export default function SpottingTheSignalLesson() {
             .attr('stroke-width', 2.5)
             .attr('stroke-dasharray', '5,3')
             .attr('d', smoothGen as any)
-            .transition(t)
+            .transition(trans)
             .attr('opacity', withSmoothing ? 1 : 0);
 
         // Legend Transition
         g.select('.legend')
-            .transition(t)
+            .transition(trans)
             .attr('opacity', withSmoothing ? 1 : 0);
 
         // X Axis
@@ -350,57 +352,51 @@ export default function SpottingTheSignalLesson() {
 
                 {/* Main explanation */}
                 <div className="space-y-4">
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        The human brain is a pattern-detection engine. This capacity — called <strong>apophenia</strong> — is not a flaw but an evolutionary adaptation: detecting a pattern (even a false one) is far less costly than missing a real one. As a result, the visual system imposes narrative structure on any time-series data, regardless of whether a genuine trend exists. Random noise will appear to "show something" to the untrained eye, especially when the data is presented without baseline context or statistical reference lines.
-                    </p>
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        In charts, this vulnerability manifests in two ways. First, moving average smoothing removes variance from the data, producing a curve that looks like a discovered trend but was mathematically manufactured. Second, selective time-window framing allows a presenter to choose a segment of a longer series that shows favorable movement, presenting it without the surrounding context that would reveal the overall flat or declining pattern. Both techniques exploit the brain's automatic tendency to connect visible dots into a meaningful story.
-                    </p>
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        The critical defense is <strong>statistical skepticism</strong>: always ask whether a visible trend would survive a simple significance test, whether the smoothing window is disclosed, and whether the full data series has been shown. A trend that disappears when the y-axis is extended to zero, or when the time window is widened to include the prior year, is not a trend — it is a framing artifact.
-                    </p>
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.spottingTheSignal.intro1') }} />
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.spottingTheSignal.intro2') }} />
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.spottingTheSignal.intro3') }} />
                 </div>
 
                 {/* Apophenia demo */}
                 <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
-                        Apophenia in action: the brain finds trends in random data
+                        {t(lang, 's1.spottingTheSignal.apopheniaTitle')}
                     </p>
                     <p className="text-[13px] text-stone-500 leading-relaxed">
-                        The chart below is a pure random walk — each month's value is the previous month plus a random amount. There is no underlying trend. Yet a fitted trendline almost always looks compelling and "real."
+                        {t(lang, 's1.spottingTheSignal.apopheniaDesc')}
                     </p>
-                    <ApopheniaDemo />
+                    <ApopheniaDemo lang={lang} />
                 </div>
 
                 {/* Manipulation techniques */}
                 <div className="space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Techniques that exploit pattern recognition
+                        {t(lang, 's1.spottingTheSignal.techTitle')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {[
                             {
-                                technique: 'Moving average smoothing',
-                                mechanism: 'Replaces each data point with the average of surrounding points. Mathematically valid for noise reduction — but also manufactures a visible trend from a flat signal. The window size controls how much "trend" appears.',
-                                detection: 'Smoothed lines that don\'t show the underlying raw data are a red flag. Always ask: "What does the raw series look like?"',
+                                technique: t(lang, 's1.spottingTheSignal.tech1Name'),
+                                mechanism: t(lang, 's1.spottingTheSignal.tech1Mech'),
+                                detection: t(lang, 's1.spottingTheSignal.tech1Det'),
                                 severity: 'Medium',
                             },
                             {
-                                technique: 'Selective time window',
-                                mechanism: 'Choosing start and end dates that capture a favorable segment of a longer series. The segment may show genuine growth while the full series shows flat or declining performance.',
-                                detection: 'Request the full historical series. Ask why the shown window begins and ends when it does.',
+                                technique: t(lang, 's1.spottingTheSignal.tech2Name'),
+                                mechanism: t(lang, 's1.spottingTheSignal.tech2Mech'),
+                                detection: t(lang, 's1.spottingTheSignal.tech2Det'),
                                 severity: 'High',
                             },
                             {
-                                technique: 'Spline interpolation',
-                                mechanism: 'Using a smooth curve interpolation (e.g., Catmull-Rom spline) instead of straight lines between data points. Creates the visual impression of a smoother, more predictable series.',
-                                detection: 'A smooth curve through discrete monthly data is mathematically misleading — values between data points are invented, not measured.',
+                                technique: t(lang, 's1.spottingTheSignal.tech3Name'),
+                                mechanism: t(lang, 's1.spottingTheSignal.tech3Mech'),
+                                detection: t(lang, 's1.spottingTheSignal.tech3Det'),
                                 severity: 'Medium',
                             },
                             {
-                                technique: 'Trendline without R²',
-                                mechanism: 'Overlaying a linear regression trendline without disclosing the coefficient of determination (R²). An R² of 0.08 means the trend explains only 8% of variance — statistically meaningless.',
-                                detection: 'Always check the R² of any displayed trendline. An R² below 0.3 indicates the trend line explains very little of the data\'s variation.',
+                                technique: t(lang, 's1.spottingTheSignal.tech4Name'),
+                                mechanism: t(lang, 's1.spottingTheSignal.tech4Mech'),
+                                detection: t(lang, 's1.spottingTheSignal.tech4Det'),
                                 severity: 'High',
                             },
                         ].map((item) => (
@@ -410,12 +406,12 @@ export default function SpottingTheSignalLesson() {
                                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.severity === 'High'
                                         ? 'bg-red-100 text-red-700'
                                         : 'bg-amber-100 text-amber-700'}`}>
-                                        {item.severity} risk
+                                        {item.severity === 'High' ? t(lang, 's1.spottingTheSignal.riskHigh') : t(lang, 's1.spottingTheSignal.riskMedium')}
                                     </span>
                                 </div>
                                 <p className="text-[12px] text-stone-600 leading-relaxed">{item.mechanism}</p>
                                 <div className="rounded-lg bg-brand-muted border border-brand/30 px-3 py-2">
-                                    <p className="text-[11px] font-semibold text-brand mb-0.5">Detection</p>
+                                    <p className="text-[11px] font-semibold text-brand mb-0.5">{t(lang, 's1.spottingTheSignal.detectLbl')}</p>
                                     <p className="text-[11px] text-stone-700 leading-relaxed">{item.detection}</p>
                                 </div>
                             </div>
@@ -426,12 +422,12 @@ export default function SpottingTheSignalLesson() {
                 {/* Smoothing window comparison */}
                 <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-4">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        How smoothing window size alters perceived trend
+                        {t(lang, 's1.spottingTheSignal.windowTitle')}
                     </p>
                     <p className="text-[13px] text-stone-500 leading-relaxed">
-                        Switch between 3-period and 7-period moving averages applied to the same flat random data.
+                        {t(lang, 's1.spottingTheSignal.windowDesc')}
                     </p>
-                    <SmoothingWindowChart />
+                    <SmoothingWindowChart lang={lang} />
                 </div>
 
                 {/* Interactive demo */}
@@ -439,10 +435,10 @@ export default function SpottingTheSignalLesson() {
                     <div className="relative">
                         <span className="absolute top-0 right-0 text-xs font-bold text-stone-300 select-none">1.4</span>
                         <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
-                            Live demo: flat noise vs. smoothed overlay
+                            {t(lang, 's1.spottingTheSignal.demoTitle')}
                         </p>
                         <p className="text-[13px] text-stone-500 mb-4">
-                            The green line is random noise around a flat mean. Toggle the smoothed overlay to see how a moving average manufactures apparent trend.
+                            {t(lang, 's1.spottingTheSignal.demoDesc')}
                         </p>
 
                         <div className="flex justify-center py-3 overflow-x-auto">
@@ -455,7 +451,7 @@ export default function SpottingTheSignalLesson() {
 
                         <div className="flex items-center justify-center gap-3 mt-4">
                             <span className={`text-[13px] font-medium transition-colors ${!withSmoothing ? 'text-stone-800' : 'text-stone-400'}`}>
-                                Raw data (flat noise)
+                                {t(lang, 's1.spottingTheSignal.btnRaw')}
                             </span>
                             <button
                                 onClick={() => setWithSmoothing((v) => !v)}
@@ -465,26 +461,26 @@ export default function SpottingTheSignalLesson() {
                                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${withSmoothing ? 'translate-x-6' : 'translate-x-1'}`} />
                             </button>
                             <span className={`text-[13px] font-medium transition-colors ${withSmoothing ? 'text-stone-800' : 'text-stone-400'}`}>
-                                3-period moving average
+                                {t(lang, 's1.spottingTheSignal.btnSmoothed')}
                             </span>
                         </div>
 
                         <p className="text-center text-[12px] text-stone-400 mt-2">
                             {withSmoothing
-                                ? 'The moving average "reveals" a trend — but the underlying data is flat noise around a mean of 50'
-                                : 'Pure noise around a flat mean of 50 — yet the brain automatically tries to construct a narrative from the jagged line'}
+                                ? t(lang, 's1.spottingTheSignal.demoCapSmoothed')
+                                : t(lang, 's1.spottingTheSignal.demoCapRaw')}
                         </p>
                     </div>
                 </div>
 
                 {/* Research note */}
                 <div className="rounded-xl bg-stone-50 border border-stone-200 p-5">
-                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">Research basis</p>
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">{t(lang, 's1.spottingTheSignal.researchBTitle')}</p>
                     <p className="text-[13px] text-stone-600 leading-relaxed mb-3">
-                        Klaus Conrad coined the term "apophenia" in 1958 to describe the spontaneous perception of connections and meaningfulness in unrelated things. In the context of data visualization, Uri Simonsohn's 2011 "False-Positive Psychology" demonstrated how easily real-seeming results can be extracted from random data using flexible analytical choices — including smoothing windows and time period selection.
+                        {t(lang, 's1.spottingTheSignal.researchB1')}
                     </p>
                     <p className="text-[13px] text-stone-600 leading-relaxed">
-                        The practical implication: any chart showing a trend should disclose whether smoothing was applied, what window size was used, whether the full historical series is shown, and the R² of any fitted trendline. Without these disclosures, the viewer cannot distinguish a genuine trend from an analytically manufactured one.
+                        {t(lang, 's1.spottingTheSignal.researchB2')}
                     </p>
                 </div>
             </div>

@@ -1,14 +1,16 @@
 import { useState } from 'react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import EthicalLevelLesson from './EthicalLevelLesson';
 
-const crossRefs = [
-    { sectionId: 'lab', slug: 'full-lab', label: '3.5 — Full Lab: reproduce Level 5 charts yourself' },
-    { sectionId: 'simulator', slug: 'revenue', label: '4.1 — Revenue Simulator: see manipulated version side-by-side' },
-    { sectionId: 'ethics', slug: 'distortion', label: '5.4 — Level 4: Distortion (previous level)' },
-    { sectionId: 'ethics', slug: 'assessment', label: '5.6 — Assessment: test your ability to identify manipulation levels' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'lab', slug: 'full-lab', label: t(lang, 's8.level5.crossRefs.0.label') },
+    { sectionId: 'simulator', slug: 'revenue', label: t(lang, 's8.level5.crossRefs.1.label') },
+    { sectionId: 'ethics', slug: 'distortion', label: t(lang, 's8.level5.crossRefs.2.label') },
+    { sectionId: 'ethics', slug: 'assessment', label: t(lang, 's8.level5.crossRefs.3.label') },
 ];
 
-function NarrativeAxisToggleDemo() {
+function NarrativeAxisToggleDemo({ lang }: { lang: any }) {
     const [honest, setHonest] = useState(false);
 
     // Q1=61, Q2=62, Q3=64, Q4=65
@@ -28,13 +30,13 @@ function NarrativeAxisToggleDemo() {
         <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm">
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-[13px] font-bold text-stone-700 tracking-wide uppercase">
-                    Narrative Axis Toggle
+                    {t(lang, 's8.level5.demo.title')}
                 </h3>
                 <button
                     onClick={() => setHonest(!honest)}
                     className={`px-4 py-2 rounded-lg text-[12px] font-bold transition-colors ${honest ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}`}
                 >
-                    {honest ? 'Scale: Honest (0 - 80)' : 'Scale: Manipulated (58 - 66)'}
+                    {honest ? t(lang, 's8.level5.demo.btnHonest') : t(lang, 's8.level5.demo.btnManipulated')}
                 </button>
             </div>
 
@@ -73,12 +75,10 @@ function NarrativeAxisToggleDemo() {
                 <div className="flex-1">
                     <div className="bg-stone-50 rounded-lg p-5 border border-stone-100">
                         <h4 className="text-[14px] font-bold text-stone-800 mb-2">
-                            {honest ? "The Truth: Flat Revenue" : "The Lie: Exponential Growth"}
+                            {honest ? t(lang, 's8.level5.demo.honestTitle') : t(lang, 's8.level5.demo.lieTitle')}
                         </h4>
                         <p className="text-[13px] text-stone-600 leading-relaxed">
-                            {honest ?
-                                "With a zero-baseline, the actual magnitude of the data is clear. Revenue has grown from 61 to 65 — a modest ~6.5% increase over four quarters. The trend is stable, but flat." :
-                                "By truncating the Y-axis to start at 58, the tiny 4-point increase is multiplied perceptually. Q4's bar (height: 7) looks mathematically 3.5× larger than Q1's bar (height: 3). The visual implies massive momentum."}
+                            {honest ? t(lang, 's8.level5.demo.honestDesc') : t(lang, 's8.level5.demo.lieDesc')}
                         </p>
                     </div>
                 </div>
@@ -88,13 +88,14 @@ function NarrativeAxisToggleDemo() {
 }
 
 export default function Level5ManipulationLesson() {
+    const { lang } = useLang();
     return (
-        <EthicalLevelLesson levelIndex={4} crossRefs={crossRefs}>
+        <EthicalLevelLesson levelIndex={4} crossRefs={crossRefs(lang)}>
             <div className="space-y-6">
                 <p className="text-[15px] font-semibold text-stone-800 uppercase tracking-widest text-center mt-6">
-                    Hands-on Lab
+                    {t(lang, 's8.level5.labTitle')}
                 </p>
-                <NarrativeAxisToggleDemo />
+                <NarrativeAxisToggleDemo lang={lang} />
             </div>
         </EthicalLevelLesson>
     );

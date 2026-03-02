@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Shield, TrendingUp, Flame, Compass } from 'lucide-react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import BarChart from '../../charts/BarChart';
 import ScoreGauge from '../../ui/ScoreGauge';
@@ -21,7 +23,7 @@ interface SimulatorLessonProps {
 }
 
 // Hardcoded fallback scenarios by domain key
-const FALLBACK_SCENARIOS: Record<string, Scenario> = {
+const FALLBACK_SCENARIOS = (_lang: any): Record<string, Scenario> => ({
     revenue: {
         id: 'fallback-revenue',
         title: 'Monthly Revenue',
@@ -115,20 +117,20 @@ const FALLBACK_SCENARIOS: Record<string, Scenario> = {
         preferredChartTypes: 'bar',
         sortOrder: 5,
     },
-};
+});
 
-const MANIPULATED_PARAMS: ChartParams = {
+const MANIPULATED_PARAMS = (lang: any): ChartParams => ({
     ...DEFAULT_PARAMS,
     axisBaselinePct: 55,
     threeD: true,
     smoothingWindow: 4,
     annotation: {
         enabled: true,
-        text: 'Strong upward trajectory — recommend expansion',
+        text: t(lang, 's5.simulator.manipulatedParams.annotationText'),
         honest: false,
     },
     trendline: 'linear',
-};
+});
 
 const ARCHETYPE_CONFIG: Record<Archetype, {
     icon: typeof Shield;
@@ -150,8 +152,10 @@ const TRUST_COLORS: Record<string, string> = {
 };
 
 export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLessonProps) {
+    const { lang } = useLang();
+    const fallbackScenarios = useMemo(() => FALLBACK_SCENARIOS(lang), [lang]);
     const [scenario, setScenario] = useState<Scenario>(
-        FALLBACK_SCENARIOS[scenarioKey] ?? FALLBACK_SCENARIOS['revenue']
+        fallbackScenarios[scenarioKey] ?? fallbackScenarios['revenue']
     );
     const [isManipulated, setIsManipulated] = useState(false);
     const [templates, setTemplates] = useState<ReturnType<typeof parseTemplatesFromDB>>([]);
@@ -200,7 +204,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scenarioKey]);
 
-    const activeParams = isManipulated ? MANIPULATED_PARAMS : DEFAULT_PARAMS;
+    const activeParams = isManipulated ? MANIPULATED_PARAMS(lang) : DEFAULT_PARAMS;
 
     const chartState: ChartState = useMemo(() => {
         const processedData = transformData(scenario.baseData, activeParams);
@@ -236,9 +240,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-8">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The same dataset can tell radically different stories depending on how it is presented. Toggle
-                    between the honest and manipulated versions of this {scenario.domain} chart to observe how
-                    visual choices shift executive perception — even when the underlying numbers are identical.
+                    {t(lang, 's5.simulator.intro1')} {scenario.domain} {t(lang, 's5.simulator.intro2')}
                 </p>
 
                 {/* Toggle */}
@@ -250,7 +252,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                             : 'text-stone-500 hover:text-stone-700'
                             }`}
                     >
-                        Honest Presentation
+                        {t(lang, 's5.simulator.honestBtn')}
                     </button>
                     <button
                         onClick={() => setIsManipulated(true)}
@@ -259,7 +261,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                             : 'text-stone-500 hover:text-stone-700'
                             }`}
                     >
-                        Manipulated Version
+                        {t(lang, 's5.simulator.manipulatedBtn')}
                     </button>
                 </div>
 
@@ -272,7 +274,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                             </p>
                             {isManipulated && (
                                 <span className="text-xs font-semibold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
-                                    Manipulated
+                                    {t(lang, 's5.simulator.manipulatedBadge')}
                                 </span>
                             )}
                         </div>
@@ -283,7 +285,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
 
                     <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
                         <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-4">
-                            Integrity Evaluation
+                            {t(lang, 's5.simulator.integrityEval')}
                         </p>
                         <ScoreGauge evaluation={evaluation} />
                     </div>
@@ -292,10 +294,10 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                 {/* Executive archetype reaction cards */}
                 <div className="space-y-3">
                     <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
-                        Executive Archetype Reactions
+                        {t(lang, 's5.simulator.archetypeReactions.title')}
                     </p>
                     <p className="text-[13px] text-stone-500">
-                        Click an archetype card to reveal their reaction to this {isManipulated ? 'manipulated' : 'honest'} presentation.
+                        {isManipulated ? t(lang, 's5.simulator.archetypeReactions.descManipulated') : t(lang, 's5.simulator.archetypeReactions.descHonest')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {simulation.reactions.map((reaction) => {
@@ -330,7 +332,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                                             </div>
                                         </div>
                                         <span className="text-xs text-stone-400 shrink-0">
-                                            {isExpanded ? 'Hide' : 'Reveal'}
+                                            {isExpanded ? t(lang, 's5.simulator.archetypeReactions.hide') : t(lang, 's5.simulator.archetypeReactions.reveal')}
                                         </span>
                                     </div>
 
@@ -340,7 +342,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                                                 "{reaction.reactionText}"
                                             </p>
                                             <div className="text-xs text-stone-500">
-                                                <span className="font-medium">Decision tendency:</span>{' '}
+                                                <span className="font-medium">{t(lang, 's5.simulator.archetypeReactions.decisionTendency')}</span>{' '}
                                                 {reaction.decisionTendency}
                                             </div>
                                         </div>
@@ -354,7 +356,7 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                 {/* Decision outcome */}
                 <div className="rounded-xl border border-stone-200 bg-stone-50 p-5">
                     <p className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">
-                        Decision Room Outcome
+                        {t(lang, 's5.simulator.outcomeTitle')}
                     </p>
                     <p className="text-[14px] text-stone-700 leading-relaxed">
                         {simulation.decisionOutcome}
@@ -365,28 +367,28 @@ export default function SimulatorLesson({ scenarioKey, crossRefs }: SimulatorLes
                 {isManipulated && (
                     <div className="rounded-xl border border-red-200 bg-red-50 p-5">
                         <p className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-3">
-                            Active Manipulations
+                            {t(lang, 's5.simulator.manipulationsTitle')}
                         </p>
                         <ul className="space-y-2 text-[13px] text-red-800">
                             <li className="flex items-start gap-2">
                                 <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
-                                Axis baseline truncated to 55% — differences appear 3-5x larger than actual
+                                {t(lang, 's5.simulator.manipulations.0')}
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
-                                3D perspective effect applied — adds ~50% magnitude estimation error
+                                {t(lang, 's5.simulator.manipulations.1')}
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
-                                4-period smoothing — hides short-term variance and volatility
+                                {t(lang, 's5.simulator.manipulations.2')}
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
-                                Misleading annotation: "Strong upward trajectory — recommend expansion" exploits anchoring bias
+                                {t(lang, 's5.simulator.manipulations.3')}
                             </li>
                             <li className="flex items-start gap-2">
                                 <span className="mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-red-500" />
-                                Linear trendline fitted to smoothed data — artificially inflated R²
+                                {t(lang, 's5.simulator.manipulations.4')}
                             </li>
                         </ul>
                     </div>

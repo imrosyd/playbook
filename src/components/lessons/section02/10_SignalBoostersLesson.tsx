@@ -3,6 +3,8 @@ import LessonPage from '../../../components/layout/LessonPage';
 import ChartFrame from '../../../components/ui/ChartFrame';
 import { SECTION_COLORS } from '../../../lib/design-tokens';
 import { Lightbulb, Info } from 'lucide-react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 
 const sectionColor = SECTION_COLORS['02'].base;
 
@@ -11,7 +13,7 @@ const crossRefs = [
     { sectionId: 'mechanics', slug: 'time-series', label: '2.2 — Time Series charts structure' },
 ];
 
-function TurningPointDemo() {
+function TurningPointDemo({ lang }: { lang: any }) {
     const [showEvent, setShowEvent] = useState(false);
     const w = 480, h = 220, pad = { t: 16, r: 20, b: 32, l: 40 };
     // Realistic dataset: Monthly active users (MAU) in thousands
@@ -30,8 +32,8 @@ function TurningPointDemo() {
         <div className="space-y-4 mb-16">
             <div className="flex justify-between items-end">
                 <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-stone-900">1. Highlight the Turning Point</h3>
-                    <p className="text-[13px] text-stone-500 max-w-md">Using vertical markers to anchor narrative events.</p>
+                    <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.signalBoosters.demos.turningPoint.title')}</h3>
+                    <p className="text-[13px] text-stone-500 max-w-md">{t(lang, 's2.signalBoosters.demos.turningPoint.desc')}</p>
                 </div>
                 <button
                     onClick={() => setShowEvent(!showEvent)}
@@ -40,13 +42,13 @@ function TurningPointDemo() {
                         : 'bg-white text-stone-700 border border-stone-200 hover:border-stone-300 hover:shadow-md'
                         }`}
                 >
-                    {showEvent ? 'Hide Event Line' : 'Add Event Context'}
+                    {showEvent ? t(lang, 's2.signalBoosters.demos.turningPoint.btnShow') : t(lang, 's2.signalBoosters.demos.turningPoint.btnHide')}
                 </button>
             </div>
 
             <ChartFrame
-                label="MONTHLY ACTIVE USERS (MAU)"
-                note={showEvent ? "Adding a vertical dashed line instantly provides context for the inflection point. The audience no longer has to guess why the trend reversed in July." : "Without an anchor or event marker, the audience sees a sudden drop starting in July but has no narrative context for what caused it."}
+                label={t(lang, 's2.signalBoosters.demos.turningPoint.chartLabel')}
+                note={showEvent ? t(lang, 's2.signalBoosters.demos.turningPoint.noteShow') : t(lang, 's2.signalBoosters.demos.turningPoint.noteHide')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {/* Gridlines */}
@@ -69,7 +71,7 @@ function TurningPointDemo() {
                     <g style={{ opacity: showEvent ? 1 : 0, transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
                         <line x1={eventX} x2={eventX} y1={pad.t} y2={h - pad.b} stroke="#f97316" strokeWidth={1.5} strokeDasharray="4 3" />
                         <rect x={eventX - 35} y={pad.t} width={70} height={16} rx={4} fill="#fff" stroke="#fdba74" strokeWidth={1} shadow-sm="true" />
-                        <text x={eventX} y={pad.t + 11} fill="#ea580c" fontSize="9" textAnchor="middle">Pricing Update</text>
+                        <text x={eventX} y={pad.t + 11} fill="#ea580c" fontSize="9" textAnchor="middle">{t(lang, 's2.signalBoosters.demos.turningPoint.eventLabel')}</text>
                         <circle cx={scaleX(7)} cy={scaleY(data[7])} r={5} fill="none" stroke="#ea580c" strokeWidth={1.5} />
                     </g>
 
@@ -84,15 +86,15 @@ function TurningPointDemo() {
     );
 }
 
-function LegendInlineDemo() {
+function LegendInlineDemo({ lang }: { lang: any }) {
     const [inline, setInline] = useState(true);
     const w = 480, h = 220, pad = { t: 16, r: inline ? 80 : 20, b: 32, l: 40 };
 
     // Realistic dataset: Source of traffic
     const lines = [
-        { name: 'Organic Search', data: [120, 125, 130, 145, 160, 180, 210, 230], color: '#10b981' },
-        { name: 'Paid Ads', data: [80, 85, 82, 90, 88, 85, 80, 75], color: '#f59e0b' },
-        { name: 'Direct Traffic', data: [50, 52, 55, 53, 58, 60, 62, 65], color: '#6366f1' }
+        { name: t(lang, 's2.signalBoosters.demos.legendInline.labels.0'), data: [120, 125, 130, 145, 160, 180, 210, 230], color: '#10b981' },
+        { name: t(lang, 's2.signalBoosters.demos.legendInline.labels.1'), data: [80, 85, 82, 90, 88, 85, 80, 75], color: '#f59e0b' },
+        { name: t(lang, 's2.signalBoosters.demos.legendInline.labels.2'), data: [50, 52, 55, 53, 58, 60, 62, 65], color: '#6366f1' }
     ];
     const quarters = ['Q1 23', 'Q2 23', 'Q3 23', 'Q4 23', 'Q1 24', 'Q2 24', 'Q3 24', 'Q4 24'];
 
@@ -104,8 +106,8 @@ function LegendInlineDemo() {
         <div className="space-y-4 mb-16">
             <div className="flex justify-between items-end">
                 <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-stone-900">2. Legend Inline vs Box</h3>
-                    <p className="text-[13px] text-stone-500 max-w-md">Reducing eye travel by placing labels near data.</p>
+                    <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.signalBoosters.demos.legendInline.title')}</h3>
+                    <p className="text-[13px] text-stone-500 max-w-md">{t(lang, 's2.signalBoosters.demos.legendInline.desc')}</p>
                 </div>
                 <button
                     onClick={() => setInline(!inline)}
@@ -114,19 +116,19 @@ function LegendInlineDemo() {
                         : 'bg-white text-stone-700 border border-stone-200 hover:border-stone-300 hover:shadow-md'
                         }`}
                 >
-                    {inline ? 'Show Separate Legend' : 'Use Inline Labels'}
+                    {inline ? t(lang, 's2.signalBoosters.demos.legendInline.btnShow') : t(lang, 's2.signalBoosters.demos.legendInline.btnHide')}
                 </button>
             </div>
 
             <ChartFrame
-                label="SESSIONS BY TRAFFIC SOURCE"
-                note={inline ? "Labels placed directly at the end of lines completely eliminate eye travel. The viewer instantly knows which line represents which group." : "A separate legend box forces 'ping-ponging'. The viewer looks at a line, memorizes the color, scans to the legend box, and looks back."}
+                label={t(lang, 's2.signalBoosters.demos.legendInline.chartLabel')}
+                note={inline ? t(lang, 's2.signalBoosters.demos.legendInline.noteShow') : t(lang, 's2.signalBoosters.demos.legendInline.noteHide')}
             >
                 <div className="relative w-full">
                     {/* Separate Legend Box */}
                     <div style={{ opacity: inline ? 0 : 1, pointerEvents: inline ? 'none' : 'auto', transition: 'opacity 0.3s' }}
                         className="absolute top-4 left-16 bg-white border border-stone-200 p-3 rounded-lg shadow-sm flex flex-col gap-2 text-[11px] font-medium z-10 w-36">
-                        <span className="text-stone-400 font-bold text-[9px] uppercase tracking-wider mb-1">Traffic Source</span>
+                        <span className="text-stone-400 font-bold text-[9px] uppercase tracking-wider mb-1">{t(lang, 's2.signalBoosters.demos.legendInline.legendTitle')}</span>
                         {lines.map(l => (
                             <div key={l.name} className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-sm shadow-sm" style={{ backgroundColor: l.color }}></div>
@@ -180,7 +182,7 @@ function LegendInlineDemo() {
     );
 }
 
-function EventAnnotatedDemo() {
+function EventAnnotatedDemo({ lang }: { lang: any }) {
     const w = 480, h = 220, pad = { t: 16, r: 20, b: 32, l: 40 };
     // Realistic data: Conversion rate over weeks
     const data = [2.4, 3.1, 4.5, 2.8, 3.2, 5.8, 6.1, 5.9];
@@ -188,10 +190,10 @@ function EventAnnotatedDemo() {
     const annotations = [
         null,
         null,
-        { label: "Influencer Post", dy: -15 },
+        { label: t(lang, 's2.signalBoosters.demos.eventAnnotated.labels.0'), dy: -15 },
         null,
         null,
-        { label: "Checkout Redesign", dy: -15 },
+        { label: t(lang, 's2.signalBoosters.demos.eventAnnotated.labels.1'), dy: -15 },
         null,
         null
     ];
@@ -202,10 +204,10 @@ function EventAnnotatedDemo() {
 
     return (
         <div className="space-y-4 mb-16">
-            <h3 className="text-xl font-bold text-stone-900">3. Show the Story (Annotations)</h3>
+            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.signalBoosters.demos.eventAnnotated.title')}</h3>
             <ChartFrame
-                label="CONVERSION RATE"
-                note="Instead of just showing vertices and expecting the audience to know 'what happened in Week 3', annotate the peaks directly inside the chart. This turns a simple 'data dump' into a cohesive story."
+                label={t(lang, 's2.signalBoosters.demos.eventAnnotated.chartLabel')}
+                note={t(lang, 's2.signalBoosters.demos.eventAnnotated.note')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {/* Gridlines */}
@@ -232,11 +234,11 @@ function EventAnnotatedDemo() {
                                 <circle cx={scaleX(i)} cy={scaleY(d)} r={ann ? 4 : 2} fill={ann ? '#0f172a' : '#94a3b8'} stroke={ann ? '#fff' : 'none'} strokeWidth={ann ? 1 : 0} />
                                 {ann && (
                                     <g>
-                                        <rect x={scaleX(i) - 35} y={scaleY(d) + ann.dy - 10} width={70} height={14} rx={2} fill="#0f172a" opacity={0.9} />
-                                        <text x={scaleX(i)} y={scaleY(d) + ann.dy} fill="#fff" fontSize="8" textAnchor="middle" letterSpacing="0.2">
+                                        <rect x={scaleX(i) - 46} y={scaleY(d) + ann.dy - 11} width={92} height={16} rx={2} fill="#0f172a" opacity={0.9} />
+                                        <text x={scaleX(i)} y={scaleY(d) + ann.dy + 0.5} fill="#fff" fontSize="8" textAnchor="middle" letterSpacing="0.2">
                                             {ann.label}
                                         </text>
-                                        <line x1={scaleX(i)} x2={scaleX(i)} y1={scaleY(d) - 4} y2={scaleY(d) + ann.dy + 4} stroke="#0f172a" strokeWidth={1.5} />
+                                        <line x1={scaleX(i)} x2={scaleX(i)} y1={scaleY(d) - 4} y2={scaleY(d) + ann.dy + 5} stroke="#0f172a" strokeWidth={1.5} />
                                     </g>
                                 )}
                             </g>
@@ -248,7 +250,7 @@ function EventAnnotatedDemo() {
     );
 }
 
-function ConfidenceBandDemo() {
+function ConfidenceBandDemo({ lang }: { lang: any }) {
     const w = 480, h = 220, pad = { t: 16, r: 20, b: 32, l: 40 };
     // Realistic dataset: Sales forecast with widening uncertainty
     const data = [120, 125, 132, 140, 145, 150, 158, 165];
@@ -275,10 +277,10 @@ function ConfidenceBandDemo() {
 
     return (
         <div className="space-y-4 mb-16">
-            <h3 className="text-xl font-bold text-stone-900">4. Show the Confidence</h3>
+            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.signalBoosters.demos.confidenceBand.title')}</h3>
             <ChartFrame
-                label="MRR FORECAST"
-                note="Visualizing the confidence interval prevents false precision. A single thin line implies absolute certainty. By displaying a widening band, you explicitly communicate increasing risk."
+                label={t(lang, 's2.signalBoosters.demos.confidenceBand.chartLabel')}
+                note={t(lang, 's2.signalBoosters.demos.confidenceBand.note')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {/* Gridlines */}
@@ -311,7 +313,7 @@ function ConfidenceBandDemo() {
     );
 }
 
-function MissingDataDemo() {
+function MissingDataDemo({ lang }: { lang: any }) {
     const w = 480, h = 220, pad = { t: 16, r: 20, b: 32, l: 40 };
     // Realistic dataset: Server uptime/requests with a tracking outage
     const data = [100, 105, 110, null, null, 115, 125, 130];
@@ -326,10 +328,10 @@ function MissingDataDemo() {
 
     return (
         <div className="space-y-4 mb-16">
-            <h3 className="text-xl font-bold text-stone-900">5. Show the Transparency (Missing Data)</h3>
+            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.signalBoosters.demos.missingData.title')}</h3>
             <ChartFrame
-                label="API REQUESTS"
-                note="Connecting missing data with a solid line implies a smooth transition. Leaving a blank gap suggests zero values. The most ethically transparent approach is bridging the gap with a dashed line and an explicit 'Outage' label."
+                label={t(lang, 's2.signalBoosters.demos.missingData.chartLabel')}
+                note={t(lang, 's2.signalBoosters.demos.missingData.note')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {/* Gridlines */}
@@ -355,7 +357,7 @@ function MissingDataDemo() {
                     {/* Explanation Note */}
                     <g>
                         <rect x={scaleX(3.5) - 35} y={pad.t + 10} width={70} height={16} rx={3} fill="#e2e8f0" />
-                        <text x={scaleX(3.5)} y={pad.t + 21} fill="#475569" fontSize="9" textAnchor="middle">Sensor Outage</text>
+                        <text x={scaleX(3.5)} y={pad.t + 21} fill="#475569" fontSize="9" textAnchor="middle">{t(lang, 's2.signalBoosters.demos.missingData.label')}</text>
                     </g>
 
                     {/* X-axis labels */}
@@ -368,7 +370,7 @@ function MissingDataDemo() {
     );
 }
 
-function DifferenceShadingDemo() {
+function DifferenceShadingDemo({ lang }: { lang: any }) {
     const w = 480, h = 220, pad = { t: 16, r: 50, b: 32, l: 40 };
     // Realistic dataset: Target vs Actual Revenue
     const target = [100, 110, 120, 130, 140, 150];
@@ -392,10 +394,10 @@ function DifferenceShadingDemo() {
 
     return (
         <div className="space-y-4 mb-16">
-            <h3 className="text-xl font-bold text-stone-900">6. Show the Difference</h3>
+            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.signalBoosters.demos.differenceShading.title')}</h3>
             <ChartFrame
-                label="REVENUE: TARGET VS ACTUAL"
-                note="When comparing two lines, the most critical piece of information is the gap between them. Shading the area between the lines instantly draws the eye to the deficit or surplus."
+                label={t(lang, 's2.signalBoosters.demos.differenceShading.chartLabel')}
+                note={t(lang, 's2.signalBoosters.demos.differenceShading.note')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {/* Gridlines */}
@@ -415,12 +417,12 @@ function DifferenceShadingDemo() {
                     <path d={pathActual} fill="none" stroke="#1c1917" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
 
                     {/* Inline Labels */}
-                    <text x={scaleX(5) + 6} y={scaleY(target[5]) + 3} fill="#78716c" fontSize="10">Target</text>
-                    <text x={scaleX(5) + 6} y={scaleY(actual[5]) + 3} fill="#1c1917" fontSize="10">Actual</text>
+                    <text x={scaleX(5) + 6} y={scaleY(target[5]) + 3} fill="#78716c" fontSize="10">{t(lang, 's2.signalBoosters.demos.differenceShading.labels.0')}</text>
+                    <text x={scaleX(5) + 6} y={scaleY(actual[5]) + 3} fill="#1c1917" fontSize="10">{t(lang, 's2.signalBoosters.demos.differenceShading.labels.1')}</text>
 
                     {/* Area Annotations */}
-                    <text x={scaleX(1.5)} y={scaleY(116)} fill="#16a34a" fontSize="9">Surplus</text>
-                    <text x={scaleX(4.5)} y={scaleY(135)} fill="#dc2626" fontSize="9">Deficit</text>
+                    <text x={scaleX(1.5)} y={scaleY(116)} fill="#16a34a" fontSize="9">{t(lang, 's2.signalBoosters.demos.differenceShading.labels.2')}</text>
+                    <text x={scaleX(4.5)} y={scaleY(135)} fill="#dc2626" fontSize="9">{t(lang, 's2.signalBoosters.demos.differenceShading.labels.3')}</text>
 
                     {/* X-axis labels */}
                     {months.map((m, i) => (
@@ -432,7 +434,7 @@ function DifferenceShadingDemo() {
     );
 }
 
-function ShadedRegionDemo() {
+function ShadedRegionDemo({ lang }: { lang: any }) {
     const w = 480, h = 220, pad = { t: 16, r: 20, b: 32, l: 40 };
     // Realistic dataset: Daily signups showing a clear spike during a promo
     const data = [120, 125, 118, 122, 280, 310, 290, 140, 135, 128];
@@ -446,10 +448,10 @@ function ShadedRegionDemo() {
 
     return (
         <div className="space-y-4 mb-16">
-            <h3 className="text-xl font-bold text-stone-900">7. Contextual Region Shading</h3>
+            <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.signalBoosters.demos.shadedRegion.title')}</h3>
             <ChartFrame
-                label="DAILY SIGNUPS"
-                note="Shading a vertical region clarifies that a specific spike isn't an organic anomaly, but the direct result of a known external period. It frames the data visually before the numbers are read."
+                label={t(lang, 's2.signalBoosters.demos.shadedRegion.chartLabel')}
+                note={t(lang, 's2.signalBoosters.demos.shadedRegion.note')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {/* Gridlines */}
@@ -466,7 +468,7 @@ function ShadedRegionDemo() {
                     <line x1={scaleX(6.5)} x2={scaleX(6.5)} y1={pad.t} y2={h - pad.b} stroke="#ca8a04" strokeWidth={1} strokeDasharray="2 2" />
 
                     <rect x={scaleX(5) - 30} y={pad.t} width={60} height={16} rx={3} fill="#ca8a04" opacity={0.9} />
-                    <text x={scaleX(5)} y={pad.t + 11} fill="#fff" fontSize="9" textAnchor="middle">Flash Sale</text>
+                    <text x={scaleX(5)} y={pad.t + 11} fill="#fff" fontSize="9" textAnchor="middle">{t(lang, 's2.signalBoosters.demos.shadedRegion.label')}</text>
 
                     {/* Line & Points */}
                     <path d={path} fill="none" stroke="#0ea5e9" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
@@ -485,12 +487,12 @@ function ShadedRegionDemo() {
 }
 
 export default function SignalBoostersLesson() {
+    const { lang } = useLang();
+
     return (
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-6">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Line charts are the ubiquitous default for time-series data. However, a raw line chart often leaves too much interpretation up to the audience. By employing strategic annotations, gap treatments, and context shading, you can dramatically boost the "signal" of your chart — moving it from a raw data display to a guided narrative.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.signalBoosters.intro1') }} />
 
                 {/* Tip Block */}
                 <div
@@ -509,34 +511,30 @@ export default function SignalBoostersLesson() {
                         </div>
                         <div className="space-y-1">
                             <p className="text-xs font-bold uppercase tracking-wider" style={{ color: sectionColor }}>
-                                The Signal Rule
+                                {t(lang, 's2.signalBoosters.signalRule.title')}
                             </p>
-                            <p className="text-[14px] text-stone-700 leading-relaxed">
-                                Every chart should have a clear <em>narrative anchor</em>. If you show a spike or a dip, your job is to explain why it happened visually, not just numerically.
-                            </p>
+                            <p className="text-[14px] text-stone-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.signalBoosters.signalRule.rule') }} />
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-3">
-                    <TurningPointDemo />
-                    <LegendInlineDemo />
-                    <EventAnnotatedDemo />
-                    <ConfidenceBandDemo />
-                    <MissingDataDemo />
-                    <DifferenceShadingDemo />
-                    <ShadedRegionDemo />
+                    <TurningPointDemo lang={lang} />
+                    <LegendInlineDemo lang={lang} />
+                    <EventAnnotatedDemo lang={lang} />
+                    <ConfidenceBandDemo lang={lang} />
+                    <MissingDataDemo lang={lang} />
+                    <DifferenceShadingDemo lang={lang} />
+                    <ShadedRegionDemo lang={lang} />
                 </div>
 
                 {/* Conclusion Block */}
                 <div className="bg-stone-50 rounded-2xl p-8 border border-stone-200 space-y-4">
                     <div className="flex items-center gap-3 text-stone-900">
                         <Info size={20} className="text-stone-400" />
-                        <h4 className="text-lg font-bold">Choosing the Right Booster</h4>
+                        <h4 className="text-lg font-bold">{t(lang, 's2.signalBoosters.conclusion.title')}</h4>
                     </div>
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        Don't use all these techniques at once. A chart with markers, bands, shading, and annotations will create excessive cognitive load. Choose the <em>one</em> booster that supports your primary takeaway. Highlighting a deficit? Use difference shading. Explaining an outage? Use transparency.
-                    </p>
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.signalBoosters.conclusion.text') }} />
                 </div>
             </div>
         </LessonPage>

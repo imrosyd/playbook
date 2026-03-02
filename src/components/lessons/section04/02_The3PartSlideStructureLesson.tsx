@@ -1,24 +1,22 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import TheoryBlock from '../../ui/TheoryBlock';
 
-const crossRefs = [
-    { sectionId: 'storytelling', slug: 'so-what', label: 'Crafting the "So What"' },
-    { sectionId: 'storytelling', slug: 'power-titles', label: 'Power Titles' },
-];
-
 // Pyramid chart (inverted SCQA) using SVG trapezoids
 function PyramidChart() {
+    const { lang } = useLang();
     const layers = [
-        { label: 'Answer / Recommendation', width: 100, color: '#1c1917', textColor: '#fff' },
-        { label: 'Key argument (why?)', width: 74, color: '#44403c', textColor: '#fff' },
-        { label: 'Supporting evidence', width: 50, color: '#78716c', textColor: '#fff' },
-        { label: 'Context & background', width: 28, color: '#d6d3d1', textColor: '#44403c' },
+        { label: t(lang, 's4.slideStructure.pyramid.layers.0'), width: 100, color: '#1c1917', textColor: '#fff' },
+        { label: t(lang, 's4.slideStructure.pyramid.layers.1'), width: 74, color: '#44403c', textColor: '#fff' },
+        { label: t(lang, 's4.slideStructure.pyramid.layers.2'), width: 50, color: '#78716c', textColor: '#fff' },
+        { label: t(lang, 's4.slideStructure.pyramid.layers.3'), width: 28, color: '#d6d3d1', textColor: '#44403c' },
     ];
 
     return (
         <div className="bg-white border border-stone-200 rounded-xl p-5">
             <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-4">
-                The Minto Pyramid — answer first, then justify
+                {t(lang, 's4.slideStructure.pyramid.title')}
             </p>
             <div className="space-y-1.5 flex flex-col items-center">
                 {layers.map((l, i) => (
@@ -38,7 +36,7 @@ function PyramidChart() {
                 ))}
             </div>
             <p className="text-[11px] text-stone-400 mt-4 leading-relaxed">
-                Most presentations build bottom-up (context first, answer last). Executives want top-down (answer first, context as needed).
+                {t(lang, 's4.slideStructure.pyramid.caption')}
             </p>
         </div>
     );
@@ -46,6 +44,7 @@ function PyramidChart() {
 
 // Audience attention span — area chart
 function AttentionChart() {
+    const { lang } = useLang();
     const pts = [98, 82, 65, 55, 48, 42, 38, 36, 40, 45]; // typical attention arc
     const w = 360, h = 100, pad = { l: 20, r: 16, t: 16, b: 28 };
     const toX = (i: number) => pad.l + (i / (pts.length - 1)) * (w - pad.l - pad.r);
@@ -56,7 +55,7 @@ function AttentionChart() {
     return (
         <div className="bg-white border border-stone-200 rounded-xl p-5">
             <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">
-                Audience attention during a presentation (typical arc)
+                {t(lang, 's4.slideStructure.attention.title')}
             </p>
             <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-2xl mx-auto block">
                 <defs>
@@ -68,9 +67,9 @@ function AttentionChart() {
                 <path d={areaD} fill="url(#attn)" />
                 <path d={pathD} fill="none" stroke="#1c1917" strokeWidth={2} strokeLinejoin="round" />
                 {/* Annotations */}
-                <text x={toX(0)} y={toY(98) - 6} fill="#1c1917" fontSize={9} textAnchor="middle">Opening</text>
-                <text x={toX(9)} y={toY(45) - 6} fill="#1c1917" fontSize={9} textAnchor="middle">Ending</text>
-                <text x={toX(5)} y={toY(40) + 12} fill="#a8a29e" fontSize={9} textAnchor="middle">Attention trough</text>
+                <text x={toX(0)} y={toY(98) - 6} fill="#1c1917" fontSize={9} textAnchor="middle">{t(lang, 's4.slideStructure.attention.labels.opening')}</text>
+                <text x={toX(9)} y={toY(45) - 6} fill="#1c1917" fontSize={9} textAnchor="middle">{t(lang, 's4.slideStructure.attention.labels.ending')}</text>
+                <text x={toX(5)} y={toY(40) + 12} fill="#a8a29e" fontSize={9} textAnchor="middle">{t(lang, 's4.slideStructure.attention.labels.trough')}</text>
                 {/* Minutes */}
                 {[0, 2, 5, 8, 10].map((m) => {
                     const idx = Math.round((m / 10) * (pts.length - 1));
@@ -78,18 +77,24 @@ function AttentionChart() {
                 })}
             </svg>
             <p className="text-[11px] text-stone-400 mt-2 leading-relaxed">
-                Audiences pay closest attention at the start and end. The 3-part structure exploits both peaks: conclusion at the top, action at the close.
+                {t(lang, 's4.slideStructure.attention.caption')}
             </p>
         </div>
     );
 }
 
 export default function The3PartSlideStructureLesson() {
+    const { lang } = useLang();
+    const crossRefs = [
+        { sectionId: 'storytelling', slug: 'so-what', label: t(lang, 's4.slideStructure.crossRefs.0.label') },
+        { sectionId: 'storytelling', slug: 'power-titles', label: t(lang, 's4.slideStructure.crossRefs.1.label') },
+    ];
+
     return (
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-8">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Most presentations fail before Slide 2. Not because the data is wrong, but because the structure is backwards. People open with context, build up slowly, and reveal the conclusion at the end — right when executives have already decided to check their phones.
+                    {t(lang, 's4.slideStructure.intro1')}
                 </p>
 
                 <AttentionChart />
@@ -103,46 +108,34 @@ export default function The3PartSlideStructureLesson() {
                 <PyramidChart />
 
                 <div className="space-y-4">
-                    <h3 className="text-base font-bold text-stone-800">The 3-Part Slide Formula</h3>
+                    <h3 className="text-base font-bold text-stone-800">{t(lang, 's4.slideStructure.formulaTitle')}</h3>
                     <div className="space-y-3">
-                        {[
-                            {
-                                num: '01', label: 'Power Headline',
-                                rule: 'State the conclusion, not the topic.',
-                                bad: 'Q3 Revenue Performance',
-                                good: 'Revenue Missed Target by 15% — Churn in SMB is the Primary Driver',
-                            },
-                            {
-                                num: '02', label: 'The Chart',
-                                rule: 'Show only what proves the headline.',
-                                bad: 'A 12-series chart with 3 years of data and 4 benchmarks.',
-                                good: 'One clear line with the drop highlighted and the culprit segment annotated.',
-                            },
-                            {
-                                num: '03', label: 'The Takeaway',
-                                rule: 'End with the exact action needed.',
-                                bad: 'Something must be done about churn.',
-                                good: 'Approve the $80K churn intervention budget today to protect Q4.',
-                            },
-                        ].map(({ num, label, rule, bad, good }) => (
-                            <div key={num} className="rounded-xl border border-stone-200 overflow-hidden">
-                                <div className="flex items-center gap-3 bg-stone-50 border-b border-stone-200 px-5 py-3">
-                                    <span className="text-lg font-black text-stone-300">{num}</span>
-                                    <span className="text-sm font-bold text-stone-800">{label}</span>
-                                    <span className="ml-auto text-[11px] text-stone-400 italic">{rule}</span>
-                                </div>
-                                <div className="grid grid-cols-2 divide-x divide-stone-100 bg-white">
-                                    <div className="p-4">
-                                        <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2">Weak</p>
-                                        <p className="text-[13px] text-stone-500 italic leading-relaxed">{bad}</p>
+                        {[0, 1, 2].map((i) => {
+                            const label = t(lang, `s4.slideStructure.formula.${i}.label`);
+                            const rule = t(lang, `s4.slideStructure.formula.${i}.rule`);
+                            const bad = t(lang, `s4.slideStructure.formula.${i}.bad`);
+                            const good = t(lang, `s4.slideStructure.formula.${i}.good`);
+                            const num = `0${i + 1}`;
+                            return (
+                                <div key={num} className="rounded-xl border border-stone-200 overflow-hidden">
+                                    <div className="flex items-center gap-3 bg-stone-50 border-b border-stone-200 px-5 py-3">
+                                        <span className="text-lg font-black text-stone-300">{num}</span>
+                                        <span className="text-sm font-bold text-stone-800">{label}</span>
+                                        <span className="ml-auto text-[11px] text-stone-400 italic">{rule}</span>
                                     </div>
-                                    <div className="p-4">
-                                        <p className="text-[10px] font-bold text-stone-700 uppercase tracking-wider mb-2">Stronger</p>
-                                        <p className="text-[13px] text-stone-700 leading-relaxed">{good}</p>
+                                    <div className="grid grid-cols-2 divide-x divide-stone-100 bg-white">
+                                        <div className="p-4">
+                                            <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2">{t(lang, 's4.slideStructure.labels.weak')}</p>
+                                            <p className="text-[13px] text-stone-500 italic leading-relaxed">{bad}</p>
+                                        </div>
+                                        <div className="p-4">
+                                            <p className="text-[10px] font-bold text-stone-700 uppercase tracking-wider mb-2">{t(lang, 's4.slideStructure.labels.stronger')}</p>
+                                            <p className="text-[13px] text-stone-700 leading-relaxed">{good}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </div>

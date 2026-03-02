@@ -1,26 +1,26 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import TheoryBlock from '../../ui/TheoryBlock';
 
-const crossRefs = [
-    { sectionId: 'design', slug: 'three-color-rule', label: 'The 3-Color Rule' },
-    { sectionId: 'design', slug: 'colorblind', label: 'Designing for Colorblindness' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'design', slug: 'three-color-rule', label: t(lang, 's6.colorPsychology.crossRefs.0.label') },
+    { sectionId: 'design', slug: 'colorblind', label: t(lang, 's6.colorPsychology.crossRefs.1.label') },
 ];
 
 // Radial bar chart showing color emotion associations
-function ColorEmotionChart() {
-    const colors = [
-        { hue: '#dc2626', label: 'Red', primary: 'Danger / Loss', secondary: 'Urgency, warning', x: 0.85, y: 0.35 },
-        { hue: '#16a34a', label: 'Green', primary: 'Growth / Success', secondary: 'Safe, positive', x: 0.85, y: 0.65 },
-        { hue: '#2563eb', label: 'Blue', primary: 'Trust / Stability', secondary: 'Calm, professional', x: 0.45, y: 0.15 },
-        { hue: '#d97706', label: 'Amber', primary: 'Caution / Energy', secondary: 'Neutral alert', x: 0.15, y: 0.35 },
-        { hue: '#6d28d9', label: 'Purple', primary: 'Premium / Insight', secondary: 'Forecasts, AI', x: 0.15, y: 0.65 },
-        { hue: '#475569', label: 'Grey', primary: 'Neutral / Context', secondary: 'Background, comparison', x: 0.45, y: 0.85 },
-    ];
+function ColorEmotionChart({ lang }: { lang: any }) {
+    const colors = [0, 1, 2, 3, 4, 5].map(i => ({
+        hue: ['#dc2626', '#16a34a', '#2563eb', '#d97706', '#6d28d9', '#475569'][i],
+        label: t(lang, `s6.colorPsychology.emotionChart.colors.${i}.label`),
+        primary: t(lang, `s6.colorPsychology.emotionChart.colors.${i}.primary`),
+        secondary: t(lang, `s6.colorPsychology.emotionChart.colors.${i}.secondary`)
+    }));
 
     return (
         <div className="bg-white border border-stone-200 rounded-xl p-5">
             <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-4">
-                Color emotional associations in a business context
+                {t(lang, 's6.colorPsychology.emotionChart.title')}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {colors.map(c => (
@@ -39,17 +39,20 @@ function ColorEmotionChart() {
 }
 
 // Stacked bar chart showing cultural color meaning differences
-function CulturalChart() {
-    const data = [
-        { color: 'Red', meanings: [{ culture: 'West', meaning: 'Danger/loss', fill: '#fee2e2' }, { culture: 'China', meaning: 'Luck/prosperity', fill: '#fca5a5' }] },
-        { color: 'Green', meanings: [{ culture: 'West', meaning: 'Go/positive', fill: '#dcfce7' }, { culture: 'Middle East', meaning: 'Holy/religion', fill: '#86efac' }] },
-        { color: 'White', meanings: [{ culture: 'West', meaning: 'Purity/clean', fill: '#f5f5f4' }, { culture: 'East Asia', meaning: 'Mourning', fill: '#e7e5e4' }] },
-    ];
+function CulturalChart({ lang }: { lang: any }) {
+    const data = [0, 1, 2].map(i => ({
+        color: t(lang, `s6.colorPsychology.culturalChart.colors.${i}.color`),
+        meanings: [0, 1].map(j => ({
+            culture: t(lang, `s6.colorPsychology.culturalChart.colors.${i}.meanings.${j}.culture`),
+            meaning: t(lang, `s6.colorPsychology.culturalChart.colors.${i}.meanings.${j}.meaning`),
+            fill: [['#fee2e2', '#fca5a5'], ['#dcfce7', '#86efac'], ['#f5f5f4', '#e7e5e4']][i][j]
+        }))
+    }));
 
     return (
         <div className="bg-white border border-stone-200 rounded-xl p-5">
             <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-4">
-                Color conventions differ across cultures — international audiences require care
+                {t(lang, 's6.colorPsychology.culturalChart.title')}
             </p>
             <div className="space-y-3">
                 {data.map(d => (
@@ -75,39 +78,34 @@ function CulturalChart() {
 }
 
 export default function ColorPsychologyLesson() {
+    const { lang } = useLang();
     return (
-        <LessonPage crossRefs={crossRefs}>
+        <LessonPage crossRefs={crossRefs(lang)}>
             <div className="space-y-8">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Red doesn't just mean "stop." It means "danger," "loss," "debt," and "underperformance" — in that sequence — before the viewer has read a single data label. Color is the fastest pre-attentive channel, which means it carries meaning <em>before</em> conscious thought. If the meaning it carries is wrong, no label can override it.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's6.colorPsychology.intro1') }} />
 
                 <TheoryBlock
-                    title="Color as Pre-Attentive Signal"
-                    theory="Faber Birren's Color Psychology + Ecological Valence Theory (Palmer & Schloss, 2010)"
-                    explanation="Ecological Valence Theory holds that color preferences are learned from repeated associations in the environment — red with fire and blood, green with healthy plants, blue with clear skies. These associations are deeply embedded and largely involuntary. Charts that violate them force extra cognitive work to override the first impression."
+                    title={t(lang, 's6.colorPsychology.theory1.title')}
+                    theory={t(lang, 's6.colorPsychology.theory1.subtitle')}
+                    explanation={t(lang, 's6.colorPsychology.theory1.explanation')}
                 />
 
-                <ColorEmotionChart />
+                <ColorEmotionChart lang={lang} />
 
                 <TheoryBlock
-                    title="The Cultural Relativity Problem"
-                    theory="Cross-Cultural Color Studies (Madden, Hewett & Roth, 2000)"
-                    explanation="A 2000 study across 8 countries found that color associations varied significantly for the same hue. Red means luck in China, danger in the US. White means purity in the West, mourning in East Asia. Global dashboards cannot rely on culturally-specific color codes without explicit legends."
+                    title={t(lang, 's6.colorPsychology.theory2.title')}
+                    theory={t(lang, 's6.colorPsychology.theory2.subtitle')}
+                    explanation={t(lang, 's6.colorPsychology.theory2.explanation')}
                 />
 
-                <CulturalChart />
+                <CulturalChart lang={lang} />
 
                 <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 space-y-3">
-                    <p className="text-[12px] font-bold text-stone-700">Use color deliberately — three rules</p>
-                    {[
-                        { rule: 'Never use red and green as the only signal for good/bad.', reason: '8% of men are red-green colorblind. These colors look the same to them.' },
-                        { rule: 'Blue is the safest universal color for "primary" data.', reason: 'It has the fewest conflicting cultural associations and is least affected by common colorblindness types.' },
-                        { rule: 'Use grey as your default. Reserve color for the one thing that matters most.', reason: 'Grey communicates "context." Color communicates "pay attention here." Both should be intentional.' },
-                    ].map((r, i) => (
+                    <p className="text-[12px] font-bold text-stone-700">{t(lang, 's6.colorPsychology.rules.title')}</p>
+                    {[0, 1, 2].map((i) => (
                         <div key={i} className="bg-white border border-stone-200 rounded-lg p-3 space-y-1">
-                            <p className="text-[12px] font-semibold text-stone-800">{r.rule}</p>
-                            <p className="text-[11px] text-stone-400 leading-relaxed">{r.reason}</p>
+                            <p className="text-[12px] font-semibold text-stone-800">{t(lang, `s6.colorPsychology.rules.items.${i}.rule`)}</p>
+                            <p className="text-[11px] text-stone-400 leading-relaxed">{t(lang, `s6.colorPsychology.rules.items.${i}.reason`)}</p>
                         </div>
                     ))}
                 </div>

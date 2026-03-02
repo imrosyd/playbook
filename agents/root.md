@@ -19,6 +19,7 @@
 | `root.md`           | ← Kamu di sini. Master reference & aturan utama |
 | [`ui.md`](./ui.md)           | Desain sistem, warna, tipografi, komponen        |
 | [`architecture.md`](./architecture.md)  | Struktur folder, routing, konvensi kode          |
+| [`i18n.md`](./i18n.md)       | Aturan translasi UI, bahasa kode sumber, dan interaksi agent |
 
 ## Aturan Utama (Tidak Boleh Dilanggar)
 

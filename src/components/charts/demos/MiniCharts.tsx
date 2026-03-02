@@ -946,13 +946,33 @@ export function FunnelMini() {
     const max = stages[0].v;
     const ref = useSvg((g) => {
         const barH = IH / stages.length - 4;
+
+        // Sharper, more proportional funnel shape since labels are now shorter
+        const widthScale = d3.scaleLinear().domain([0, max]).range([IW * 0.25, IW]);
+
         stages.forEach((stage, i) => {
-            const barW = (stage.v / max) * IW;
+            const barW = widthScale(stage.v);
             const bx = (IW - barW) / 2;
             const by = i * (barH + 4);
-            const isSmall = barW < 80;
-            g.append('rect').attr('x', bx).attr('y', by).attr('width', barW).attr('height', barH).attr('fill', COLORS[i]).attr('rx', 3);
-            g.append('text').attr('x', isSmall ? bx + barW + 8 : IW / 2).attr('y', by + barH / 2 + 4).attr('text-anchor', isSmall ? 'start' : 'middle').attr('font-size', 10).attr('fill', isSmall ? '#78716c' : 'white').attr('font-weight', 'bold').text(`${stage.l} (${stage.v})`);
+
+            // Draw the widened funnel bar
+            g.append('rect')
+                .attr('x', bx)
+                .attr('y', by)
+                .attr('width', barW)
+                .attr('height', barH)
+                .attr('fill', COLORS[i])
+                .attr('rx', 3);
+
+            // Centered text neatly inside the bar WITHOUT numbers
+            g.append('text')
+                .attr('x', IW / 2)
+                .attr('y', by + barH / 2 + 4)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', 11)
+                .attr('fill', 'white')
+                .attr('font-weight', 'bold')
+                .text(stage.l);
         });
     });
     return <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full" />;

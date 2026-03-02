@@ -1,25 +1,28 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import TheoryBlock from '../../ui/TheoryBlock';
 
-const crossRefs = [
-    { sectionId: 'design', slug: 'color-psychology', label: 'Color Psychology' },
-    { sectionId: 'storytelling', slug: 'language-authority', label: 'The Language of Authority' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'design', slug: 'color-psychology', label: t(lang, 's6.fontLayout.crossRefs.0.label') },
+    { sectionId: 'storytelling', slug: 'language-authority', label: t(lang, 's6.fontLayout.crossRefs.1.label') },
 ];
 
 // Type hierarchy chart using SVG
-function TypographyHierarchyChart() {
-    const levels = [
-        { role: 'Primary headline', size: '20–24pt', weight: 'Black / 900', example: 'Revenue Down 23%', fs: 20, fw: 900 },
-        { role: 'Sub-headline / insight', size: '14–16pt', weight: 'Bold / 700', example: 'Driven by SMB churn acceleration', fs: 14, fw: 700 },
-        { role: 'Data label', size: '11–13pt', weight: 'Semibold / 600', example: '$1.2M shortfall', fs: 12, fw: 600 },
-        { role: 'Axis labels & ticks', size: '9–11pt', weight: 'Regular / 400', example: 'Q1  Q2  Q3  Q4', fs: 10, fw: 400 },
-        { role: 'Footnote / source', size: '8–9pt', weight: 'Regular / 400', example: 'Source: Finance BI, as of Aug 2025', fs: 9, fw: 400 },
-    ];
+function TypographyHierarchyChart({ lang }: { lang: any }) {
+    const levels = [0, 1, 2, 3, 4].map(i => ({
+        role: t(lang, `s6.fontLayout.hierarchyChart.levels.${i}.role`),
+        size: t(lang, `s6.fontLayout.hierarchyChart.levels.${i}.size`),
+        weight: t(lang, `s6.fontLayout.hierarchyChart.levels.${i}.weight`),
+        example: t(lang, `s6.fontLayout.hierarchyChart.levels.${i}.example`),
+        fs: [20, 14, 12, 10, 9][i],
+        fw: [900, 700, 600, 400, 400][i]
+    }));
 
     return (
         <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-4">
             <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                Typographic hierarchy in data presentations
+                {t(lang, 's6.fontLayout.hierarchyChart.title')}
             </p>
             <div className="space-y-4">
                 {levels.map((l, i) => (
@@ -42,9 +45,9 @@ function TypographyHierarchyChart() {
 }
 
 // Spacing / density comparison — horizontal bar chart avoids label overlap
-function SpacingChart() {
-    const labels = ['Q1 Revenue', 'Q2 Revenue', 'Q3 Revenue', 'Q4 Revenue'];
-    const shortLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
+function SpacingChart({ lang }: { lang: any }) {
+    const labels = [0, 1, 2, 3].map(i => t(lang, `s6.fontLayout.spacingChart.labels.${i}`));
+    const shortLabels = [0, 1, 2, 3].map(i => t(lang, `s6.fontLayout.spacingChart.shortLabels.${i}`));
     const values = [312, 341, 289, 305];
     const maxV = 380;
 
@@ -101,11 +104,11 @@ function SpacingChart() {
         <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
             <div className="grid grid-cols-2 divide-x divide-stone-200">
                 <div className="p-4">
-                    <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-3">Cramped — verbose, low contrast</p>
+                    <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-3">{t(lang, 's6.fontLayout.spacingChart.cramped')}</p>
                     {renderHBars(false, true)}
                 </div>
                 <div className="p-4">
-                    <p className="text-[10px] font-bold text-stone-800 uppercase tracking-wider mb-3">Correct — concise, spacious</p>
+                    <p className="text-[10px] font-bold text-stone-800 uppercase tracking-wider mb-3">{t(lang, 's6.fontLayout.spacingChart.correct')}</p>
                     {renderHBars(true, false)}
                 </div>
             </div>
@@ -114,42 +117,31 @@ function SpacingChart() {
 }
 
 export default function FontLayoutBasicsLesson() {
+    const { lang } = useLang();
     return (
-        <LessonPage crossRefs={crossRefs}>
+        <LessonPage crossRefs={crossRefs(lang)}>
             <div className="space-y-8">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The choice of typeface and type size is not aesthetic — it is functional. Typography carries hierarchy. Hierarchy carries authority. When a data presenter uses the same font size for the headline and the footnote, their brain communicates "all of this is equally important." The audience unconsciously agrees — and stops paying attention to any of it. Typographic hierarchy is the first thing a sophisticated viewer notices about a chart or slide, before reading a single data value: it signals whether the presenter has made decisions about what matters most.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The science behind this comes from eye-tracking research in reading comprehension. When viewers encounter a page with clear typographic hierarchy — large bold headline, smaller sub-headline, small body text — they process information in a <strong>structured sequence</strong>: skimming the headline, pausing at the sub-headline, then deciding whether to invest the attention required to read the body. This "skim-to-decide" pattern is the default behavior of time-constrained decision-makers. A chart that forces an executive to read every line of text before understanding the point has already lost the communication. The hierarchy must do the work of navigation automatically, directing the eye with field and weight before reading begins.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Typeface selection plays a secondary but important role. <strong>Sans-serif fonts</strong> (Inter, Roboto, IBM Plex Sans) are optimal for screens and projected slides: their letterforms are designed for screen rendering at all sizes. <strong>Serif fonts</strong> (Georgia, Merriweather) work in dense print documents where the serifs help guide horizontal reading. The critical mistake is using decorative or novelty fonts ("creative" fonts, script typefaces) in data contexts — they add visual stimulation that competes with the data itself, and signal informality in environments that require credibility. One font family with 3–4 weight steps provides all the hierarchy variation any presentation needs.
-                </p>
-
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's6.fontLayout.intro1') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's6.fontLayout.intro2') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's6.fontLayout.intro3') }} />
 
                 <TheoryBlock
-                    title="Why Hierarchy Aids Comprehension"
-                    theory="Visual Hierarchy Theory (Lidwell, Holden & Butler, Universal Principles of Design)"
-                    explanation="Visual hierarchy allows viewers to extract the most important information first, then progressively acquire supporting details. In typography, this translates to: size signals importance, weight signals urgency, spacing signals grouping. A well-established hierarchy means zero wasted cognitive effort on navigation."
+                    title={t(lang, 's6.fontLayout.theory.title')}
+                    theory={t(lang, 's6.fontLayout.theory.subtitle')}
+                    explanation={t(lang, 's6.fontLayout.theory.explanation')}
                 />
 
-                <TypographyHierarchyChart />
+                <TypographyHierarchyChart lang={lang} />
 
-                <SpacingChart />
+                <SpacingChart lang={lang} />
 
                 <div className="space-y-3">
-                    <h3 className="text-base font-bold text-stone-800">Practical rules</h3>
+                    <h3 className="text-base font-bold text-stone-800">{t(lang, 's6.fontLayout.rules.title')}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {[
-                            { rule: 'Minimum 11pt for any text a decision-maker must read.', note: 'At 10pt and below, reading effort shifts from unconscious to conscious — and attention drops.' },
-                            { rule: 'Maximum 2 font families per deck.', note: 'One for headings, one for body. More than two signals lack of editorial discipline.' },
-                            { rule: 'Left-align body text. Center only chart titles.', note: 'Centered body text creates ragged rhythms that slow reading.' },
-                            { rule: 'Line length: 60–80 characters max for annotations.', note: 'Beyond 80 characters, the eye loses its way returning to the next line.' },
-                        ].map((r, i) => (
+                        {[0, 1, 2, 3].map((i) => (
                             <div key={i} className="bg-stone-50 border border-stone-200 rounded-lg p-3 space-y-1">
-                                <p className="text-[12px] font-semibold text-stone-800">{r.rule}</p>
-                                <p className="text-[11px] text-stone-400 leading-relaxed">{r.note}</p>
+                                <p className="text-[12px] font-semibold text-stone-800">{t(lang, `s6.fontLayout.rules.items.${i}.rule`)}</p>
+                                <p className="text-[11px] text-stone-400 leading-relaxed">{t(lang, `s6.fontLayout.rules.items.${i}.note`)}</p>
                             </div>
                         ))}
                     </div>

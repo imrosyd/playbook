@@ -35,7 +35,7 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
 
     return (
         <aside
-            className={`fixed top-0 h-screen w-64 bg-[#FAFAF8] flex flex-col z-40 select-none transition-transform duration-300 ${dir === 'rtl'
+            className={`fixed top-0 h-screen w-84 bg-[#FAFAF8] flex flex-col z-40 select-none transition-transform duration-300 ${dir === 'rtl'
                 ? `right-0 border-l border-stone-200 ${open ? 'translate-x-0' : 'translate-x-full'}`
                 : `left-0 border-r border-stone-200 ${open ? 'translate-x-0' : '-translate-x-full'}`
                 }`}

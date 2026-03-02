@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import LessonPage from '../../../components/layout/LessonPage';
 import ChartFrame from '../../ui/ChartFrame';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 
 const crossRefs = [
     {
@@ -85,7 +87,7 @@ function ReactionTimeChart() {
 }
 
 // Gestalt proximity demo
-function GestaltDemo() {
+function GestaltDemo({ lang }: { lang: any }) {
     const [mode, setMode] = useState<'spread' | 'grouped'>('spread');
     // Rescaled to 480x220 coordinate space
     const circles = mode === 'grouped'
@@ -116,7 +118,7 @@ function GestaltDemo() {
                             : 'bg-white text-stone-500 border-stone-200 hover:border-stone-400'
                             }`}
                     >
-                        {m === 'spread' ? 'Evenly Spread' : 'Proximity Groups'}
+                        {m === 'spread' ? t(lang, 's1.blinkTest.gestaltSpreadLabel') : t(lang, 's1.blinkTest.gestaltGroupedLabel')}
                     </button>
                 ))}
             </div>
@@ -134,14 +136,15 @@ function GestaltDemo() {
             </svg>
             <p className="text-[11px] text-stone-400 leading-relaxed">
                 {mode === 'grouped'
-                    ? 'Proximity instantly creates 3 perceived groups — no labels needed. This is Gestalt Law of Proximity.'
-                    : 'Spread evenly, the dots are perceived as an undifferentiated field. No grouping structure emerges.'}
+                    ? t(lang, 's1.blinkTest.gestaltGroupedCaption')
+                    : t(lang, 's1.blinkTest.gestaltSpreadCaption')}
             </p>
         </div>
     );
 }
 
 export default function TheBlinkTestLesson() {
+    const { lang } = useLang();
     const [withColor, setWithColor] = useState(false);
     const [targetIndex, setTargetIndex] = useState(19);
     const [targetColor, setTargetColor] = useState(POP_COLORS[0]);
@@ -211,71 +214,71 @@ export default function TheBlinkTestLesson() {
 
                 {/* Main explanation */}
                 <div className="space-y-4">
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        Pre-attentive processing is the first stage of visual perception — it operates in under 200 milliseconds, entirely outside conscious awareness. Your visual cortex processes the entire visual field simultaneously, in parallel, before your conscious mind even begins to form a thought. During this phase, certain visual features — color, size, orientation, and movement — are detected automatically and effortlessly, regardless of how many other objects are in the field.
-                    </p>
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        Anne Treisman and Garry Gelade demonstrated in 1980 that pre-attentive features are detected in <em>constant time</em>: finding a red circle among 4 grey circles takes the same time as finding one among 400. This parallel processing is fundamentally different from <strong>attentive processing</strong>, which requires serial scanning — reading each element one at a time — and scales linearly with the number of items.
-                    </p>
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        For chart designers, this creates both an opportunity and a responsibility. Pre-attentive channels can be used to legitimately guide a viewer's attention to the most important data point. They can also be weaponized to manipulate attention — forcing the viewer to notice an unimportant or misleading element before they can form an independent judgment.
-                    </p>
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.blinkTest.intro1') }} />
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.blinkTest.intro2') }} />
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.blinkTest.intro3') }} />
                 </div>
 
                 {/* Channel cards */}
                 <div className="space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Pre-attentive channels ranked by strength
+                        {t(lang, 's1.blinkTest.rankedChannels')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {[
                             {
-                                channel: 'Color hue',
-                                strength: 'Strongest',
-                                example: 'One red bar among grey bars — found instantly, regardless of array size',
-                                risk: 'Can misdirect attention to an unimportant data point before the viewer consciously scans',
-                                detail: 'Hue difference activates the V4 area of the visual cortex before the signal even reaches the prefrontal cortex for conscious processing.',
+                                id: 'hue',
+                                title: t(lang, 's1.blinkTest.channels.hue.title'),
+                                strength: t(lang, 's1.blinkTest.channels.hue.strength'),
+                                example: t(lang, 's1.blinkTest.channels.hue.example'),
+                                detail: t(lang, 's1.blinkTest.channels.hue.detail'),
+                                risk: t(lang, 's1.blinkTest.channels.hue.risk'),
                             },
                             {
-                                channel: 'Length / size',
-                                strength: 'Strong',
-                                example: 'A taller bar immediately reads as "more" before reading axis labels',
-                                risk: 'Truncated axes exploit this channel — a 4% gain looks like 400% when the axis starts at 96%',
-                                detail: 'Length is rank 2 in Cleveland & McGill\'s accuracy hierarchy. The pre-attentive system uses relative length to estimate relative quantity — a process that breaks when the baseline is dishonest.',
+                                id: 'size',
+                                title: t(lang, 's1.blinkTest.channels.size.title'),
+                                strength: t(lang, 's1.blinkTest.channels.size.strength'),
+                                example: t(lang, 's1.blinkTest.channels.size.example'),
+                                detail: t(lang, 's1.blinkTest.channels.size.detail'),
+                                risk: t(lang, 's1.blinkTest.channels.size.risk'),
                             },
                             {
-                                channel: 'Position',
-                                strength: 'Strong',
-                                example: 'A dot higher on the y-axis reads as a higher value — position is the most accurate encoding',
-                                risk: 'Compressed axes make equal differences look unequal; expanded axes flatten real variation',
-                                detail: 'Position along a common scale is rank 1 in perceptual accuracy (Cleveland & McGill, 1984). This makes it both the most honest encoding and the most deceptive when combined with axis manipulation.',
+                                id: 'position',
+                                title: t(lang, 's1.blinkTest.channels.position.title'),
+                                strength: t(lang, 's1.blinkTest.channels.position.strength'),
+                                example: t(lang, 's1.blinkTest.channels.position.example'),
+                                detail: t(lang, 's1.blinkTest.channels.position.detail'),
+                                risk: t(lang, 's1.blinkTest.channels.position.risk'),
                             },
                             {
-                                channel: 'Orientation',
-                                strength: 'Moderate',
-                                example: 'A diagonal line in a grid of horizontals pops out immediately',
-                                risk: 'Used to draw the eye to a selected trendline or regression overlay in a scatter plot',
-                                detail: 'Orientation differences are detected pre-attentively only when they are sufficiently steep (> ~15° difference). This is why chartmakers angle trendlines by stretching axes.',
+                                id: 'orientation',
+                                title: t(lang, 's1.blinkTest.channels.orientation.title'),
+                                strength: t(lang, 's1.blinkTest.channels.orientation.strength'),
+                                example: t(lang, 's1.blinkTest.channels.orientation.example'),
+                                detail: t(lang, 's1.blinkTest.channels.orientation.detail'),
+                                risk: t(lang, 's1.blinkTest.channels.orientation.risk'),
                             },
                             {
-                                channel: 'Shape',
-                                strength: 'Moderate',
-                                example: 'A square among circles is found quickly — but combined features slow detection drastically',
-                                risk: 'Complex shapes require attentive processing; mixing shape with color creates a "conjunction" that breaks pre-attentive detection',
-                                detail: 'Feature conjunctions — finding a "red square" among red circles and blue squares — require serial scanning because no single feature uniquely identifies the target.',
+                                id: 'shape',
+                                title: t(lang, 's1.blinkTest.channels.shape.title'),
+                                strength: t(lang, 's1.blinkTest.channels.shape.strength'),
+                                example: t(lang, 's1.blinkTest.channels.shape.example'),
+                                detail: t(lang, 's1.blinkTest.channels.shape.detail'),
+                                risk: t(lang, 's1.blinkTest.channels.shape.risk'),
                             },
                             {
-                                channel: 'Motion / flicker',
-                                strength: 'Strongest (when available)',
-                                example: 'Animated elements capture attention before static ones — impossible to ignore',
-                                risk: 'Animation in digital dashboards can be used to anchor attention on a data point the presenter wants emphasized before Q&A begins',
-                                detail: 'Motion was the most important pre-attentive channel evolutionarily — it signaled predators. In business charts, unnecessary animation exploits this hardwired response.',
+                                id: 'motion',
+                                title: t(lang, 's1.blinkTest.channels.motion.title'),
+                                strength: t(lang, 's1.blinkTest.channels.motion.strength'),
+                                example: t(lang, 's1.blinkTest.channels.motion.example'),
+                                detail: t(lang, 's1.blinkTest.channels.motion.detail'),
+                                risk: t(lang, 's1.blinkTest.channels.motion.risk'),
                             },
-                        ].map((item) => (
-                            <div key={item.channel} className="bg-white rounded-xl border border-stone-200 p-4 space-y-2">
+                        ].map((item: any) => (
+                            <div key={item.id} className="bg-white rounded-xl border border-stone-200 p-4 space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-[13px] font-bold text-stone-800">{item.channel}</span>
-                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.strength === 'Strongest' || item.strength === 'Strongest (when available)' ? 'bg-emerald-100 text-emerald-700' : item.strength === 'Strong' ? 'bg-blue-100 text-blue-700' : 'bg-stone-100 text-stone-600'}`}>
+                                    <span className="text-[13px] font-bold text-stone-800">{item.title}</span>
+                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${['Strongest', 'Strongest (when available)', 'Paling Kuat', 'Paling Kuat (jika ada)'].includes(item.strength) ? 'bg-emerald-100 text-emerald-700' : ['Strong', 'Kuat'].includes(item.strength) ? 'bg-blue-100 text-blue-700' : 'bg-stone-100 text-stone-600'}`}>
                                         {item.strength}
                                     </span>
                                 </div>
@@ -292,19 +295,19 @@ export default function TheBlinkTestLesson() {
                 {/* Reaction time chart */}
                 <ChartFrame
                     label="Average detection time by visual channel (Treisman & Gelade, 1980)"
-                    note="Color hue detection (112ms) is 5× faster than shape conjunction search (580ms). Charts that use color to highlight a single point guarantee it will be seen before anything else — including the axis, title, or data source."
+                    note={t(lang, 's1.blinkTest.chartNote')}
                 >
                     <ReactionTimeChart />
                 </ChartFrame>
 
                 {/* Research basis */}
                 <div className="rounded-xl bg-stone-50 border border-stone-200 p-5">
-                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">Research basis</p>
+                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">{t(lang, 's1.blinkTest.researchBasis')}</p>
                     <p className="text-[13px] text-stone-600 leading-relaxed mb-3">
-                        Treisman & Gelade (1980) demonstrated that pre-attentive features are processed in parallel across the entire visual field simultaneously — no serial scanning required. This is why a single red element among thousands of grey ones is found in constant time regardless of the number of distractors: the visual cortex processes the full field in one pass, flagging anything that deviates from the background texture.
+                        {t(lang, 's1.blinkTest.research1')}
                     </p>
                     <p className="text-[13px] text-stone-600 leading-relaxed">
-                        Christopher Healey's subsequent work (1996) established precise thresholds: for color, a minimum difference of around 30° on the hue wheel is required for reliable pre-attentive detection. Below that threshold, detection becomes effortful and serial — the viewer must consciously scan the chart to find the highlighted element, negating the intended directing effect.
+                        {t(lang, 's1.blinkTest.research2')}
                     </p>
                 </div>
 
@@ -312,13 +315,13 @@ export default function TheBlinkTestLesson() {
                 <div className="bg-white rounded-xl border border-stone-200 p-5 shadow-sm space-y-4">
                     <div>
                         <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
-                            Gestalt Law of Proximity
+                            {t(lang, 's1.blinkTest.gestaltLaw')}
                         </p>
                         <p className="text-[13px] text-stone-600 leading-relaxed">
-                            Beyond individual feature detection, the visual system applies Gestalt grouping laws to the pre-attentive output. Elements that are close together are automatically perceived as belonging to the same group. This makes spatial layout as powerful as color for creating category structure in a chart — and equally exploitable.
+                            {t(lang, 's1.blinkTest.gestaltDesc')}
                         </p>
                     </div>
-                    <GestaltDemo />
+                    <GestaltDemo lang={lang} />
                 </div>
 
                 {/* Interactive demo */}
@@ -327,10 +330,10 @@ export default function TheBlinkTestLesson() {
                         <span className="absolute top-0 right-0 text-xs font-bold text-stone-300 select-none">1.1</span>
 
                         <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
-                            Live demo: parallel vs. serial search
+                            {t(lang, 's1.blinkTest.liveDemoTitle')}
                         </p>
                         <p className="text-[13px] text-stone-500 mb-4">
-                            Toggle the switch to see how a single pre-attentive feature (color hue) instantly breaks serial processing limitations.
+                            {t(lang, 's1.blinkTest.liveDemoDesc')}
                         </p>
 
                         <div className="flex justify-center py-3 overflow-x-auto">
@@ -344,7 +347,7 @@ export default function TheBlinkTestLesson() {
 
                         <div className="flex items-center justify-center gap-3 mt-4">
                             <span className={`text-[13px] font-medium transition-colors ${!withColor ? 'text-stone-800' : 'text-stone-400'}`}>
-                                Serial search (all identical)
+                                {t(lang, 's1.blinkTest.serialSearch')}
                             </span>
                             <button
                                 onClick={handleToggle}
@@ -354,23 +357,23 @@ export default function TheBlinkTestLesson() {
                                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${withColor ? 'translate-x-6' : 'translate-x-1'}`} />
                             </button>
                             <span className={`text-[13px] font-medium transition-colors ${withColor ? 'text-stone-800' : 'text-stone-400'}`}>
-                                Parallel pop-out (color)
+                                {t(lang, 's1.blinkTest.parallelPop')}
                             </span>
                         </div>
 
                         <p className="text-center text-[12px] text-stone-400 mt-3 leading-relaxed">
                             {withColor
-                                ? `One highlighted circle among ${total - 1} grey ones — found in under 200ms without searching. Toggle again to move it to a new position.`
-                                : 'All circles are identical — finding any specific one requires serial scanning. Time scales with the number of elements.'}
+                                ? t(lang, 's1.blinkTest.demoCaptionParallel', total - 1)
+                                : t(lang, 's1.blinkTest.demoCaptionSerial')}
                         </p>
                     </div>
                 </div>
 
                 {/* Key takeaway */}
                 <div className="rounded-xl bg-brand-muted border border-brand/30 p-5">
-                    <p className="text-[11px] font-bold text-brand uppercase tracking-wider mb-2">Key Takeaway</p>
+                    <p className="text-[11px] font-bold text-brand uppercase tracking-wider mb-2">{t(lang, 's1.blinkTest.keyTakeawayTitle')}</p>
                     <p className="text-[13px] text-stone-700 leading-relaxed">
-                        Any element that triggers pre-attentive detection will be seen before the viewer consciously decides what to look at. This is an irreversible commitment: once a colored bar or animated segment captures pre-attentive attention, the viewer has already formed an initial impression before reading a single label. Design your charts knowing this — and audit every chart to ask which element your viewers will see first, and whether that element deserves to be seen first.
+                        {t(lang, 's1.blinkTest.keyTakeawayContent')}
                     </p>
                 </div>
             </div>

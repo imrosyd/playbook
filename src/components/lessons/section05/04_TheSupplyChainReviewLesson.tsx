@@ -1,11 +1,14 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import SimulatorLesson from './SimulatorLesson';
 
-const crossRefs = [
-    { sectionId: 'perception', slug: 'cognitive-load', label: '1.2 — Cognitive Load: complexity in multi-category comparisons' },
-    { sectionId: 'lab', slug: 'annotation-trend', label: '3.4 — Annotation & Trend: adding narrative to inventory charts' },
-    { sectionId: 'ethics', slug: 'clarity', label: '5.1 — Clarity: presenting inventory data transparently' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'perception', slug: 'cognitive-load', label: t(lang, 's5.supplyChainReview.crossRefs.0.label') },
+    { sectionId: 'lab', slug: 'annotation-trend', label: t(lang, 's5.supplyChainReview.crossRefs.1.label') },
+    { sectionId: 'ethics', slug: 'clarity', label: t(lang, 's5.supplyChainReview.crossRefs.2.label') },
 ];
 
 export default function TheSupplyChainReviewLesson() {
-    return <SimulatorLesson scenarioKey="inventory" crossRefs={crossRefs} />;
+    const { lang } = useLang();
+    return <SimulatorLesson scenarioKey="inventory" crossRefs={crossRefs(lang)} />;
 }

@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../../components/layout/LessonPage';
 import ChartFrame from '../../../components/ui/ChartFrame';
 
-const crossRefs = [
-    { sectionId: 'mechanics', slug: 'color', label: '2.5 — Color semantics' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'mechanics', slug: 'color', label: t(lang, 's7.context.crossRefs.0.label') },
 ];
 
-function AccessibilityDemo() {
+function AccessibilityDemo({ lang }: { lang: any }) {
     const [mode, setMode] = useState<0 | 1 | 2>(0); // 0 = color only, 1 = simulated colorblind, 2 = color + shape
 
     // 4 categories, 15 points each
@@ -42,20 +44,20 @@ function AccessibilityDemo() {
     return (
         <div className="space-y-4 mb-16">
             <div className="flex flex-col sm:flex-row justify-between sm:items-end mb-2 gap-4">
-                <h3 className="text-xl font-bold text-stone-900">1. Make it Accessible (Dual Encoding)</h3>
+                <h3 className="text-xl font-bold text-stone-900">{t(lang, 's7.context.accessibility.title')}</h3>
                 <div className="flex bg-stone-100 p-1 rounded-lg border border-stone-200 shadow-inner">
-                    <button onClick={() => setMode(0)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 0 ? 'bg-white text-indigo-600 shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}>1. Color Only</button>
-                    <button onClick={() => setMode(1)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 1 ? 'bg-white text-red-600 shadow-sm border border-red-100' : 'text-stone-600 hover:text-stone-800'}`}>2. Colorblind View</button>
-                    <button onClick={() => setMode(2)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 2 ? 'bg-white text-emerald-600 shadow-sm border border-emerald-100' : 'text-stone-600 hover:text-stone-800'}`}>3. Dual Encoding</button>
+                    <button onClick={() => setMode(0)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 0 ? 'bg-white text-indigo-600 shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}>{t(lang, 's7.context.accessibility.btnColorOnly')}</button>
+                    <button onClick={() => setMode(1)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 1 ? 'bg-white text-red-600 shadow-sm border border-red-100' : 'text-stone-600 hover:text-stone-800'}`}>{t(lang, 's7.context.accessibility.btnColorblind')}</button>
+                    <button onClick={() => setMode(2)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${mode === 2 ? 'bg-white text-emerald-600 shadow-sm border border-emerald-100' : 'text-stone-600 hover:text-stone-800'}`}>{t(lang, 's7.context.accessibility.btnDualEncoding')}</button>
                 </div>
             </div>
 
             <ChartFrame
-                label="CUSTOMER SEGMENTS"
+                label={t(lang, 's7.context.accessibility.chartLabel')}
                 note={
-                    mode === 0 ? "Relying purely on hue to distinguish 4 categories makes the chart vulnerable to color vision deficiencies and black-and-white printing." :
-                        mode === 1 ? "In simulated Protanopia (red/green blindness), the red, green, and yellow categories collapse into indistinguishable muddy browns." :
-                            "Dual Encoding pairs color with a secondary visual channel (like shape or pattern). Even if the colors are stripped away, the categories remain distinct."
+                    mode === 0 ? t(lang, 's7.context.accessibility.noteColorOnly') :
+                        mode === 1 ? t(lang, 's7.context.accessibility.noteColorblind') :
+                            t(lang, 's7.context.accessibility.noteDualEncoding')
                 }
             >
                 <div className="flex justify-center p-4 py-8 w-full">
@@ -72,7 +74,7 @@ function AccessibilityDemo() {
     );
 }
 
-function ScatterSmoothingDemo() {
+function ScatterSmoothingDemo({ lang }: { lang: any }) {
     const [isSmoothed, setIsSmoothed] = useState(false);
 
     // noisy trend data
@@ -88,18 +90,18 @@ function ScatterSmoothingDemo() {
     return (
         <div className="space-y-4 mb-16">
             <div className="flex flex-col sm:flex-row justify-between sm:items-end mb-2 gap-4">
-                <h3 className="text-xl font-bold text-stone-900">2. Scatter Smoothing</h3>
+                <h3 className="text-xl font-bold text-stone-900">{t(lang, 's7.context.smoothing.title')}</h3>
                 <div className="flex bg-stone-100 p-1 rounded-lg border border-stone-200 shadow-inner">
-                    <button onClick={() => setIsSmoothed(false)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${!isSmoothed ? 'bg-white text-indigo-600 shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}>Connecting Lines</button>
-                    <button onClick={() => setIsSmoothed(true)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${isSmoothed ? 'bg-white text-emerald-600 shadow-sm border border-emerald-100' : 'text-stone-600 hover:text-stone-800'}`}>Points + Trend</button>
+                    <button onClick={() => setIsSmoothed(false)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${!isSmoothed ? 'bg-white text-indigo-600 shadow-sm' : 'text-stone-600 hover:text-stone-800'}`}>{t(lang, 's7.context.smoothing.btnLines')}</button>
+                    <button onClick={() => setIsSmoothed(true)} className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${isSmoothed ? 'bg-white text-emerald-600 shadow-sm border border-emerald-100' : 'text-stone-600 hover:text-stone-800'}`}>{t(lang, 's7.context.smoothing.btnPoints')}</button>
                 </div>
             </div>
 
             <ChartFrame
-                label="MONTHLY ENGAGEMENT"
+                label={t(lang, 's7.context.smoothing.chartLabel')}
                 note={
-                    !isSmoothed ? "Connecting every single data point in a highly volatile dataset creates a visually overwhelming zigzag pattern ('spaghetti chart'). The intense visual noise completely obscures the underlying trend." :
-                        "By demoting individual observations to faded scatter points and deriving a single smoothed trend line, you eliminate the cognitive load of the noise and clearly reveal the upward trajectory."
+                    !isSmoothed ? t(lang, 's7.context.smoothing.noteLines') :
+                        t(lang, 's7.context.smoothing.notePoints')
                 }
             >
                 <div className="flex justify-center p-4 py-8 w-full">
@@ -127,18 +129,17 @@ function ScatterSmoothingDemo() {
 }
 
 export default function ContextAccessibilityLesson() {
+    const { lang } = useLang();
     return (
-        <LessonPage crossRefs={crossRefs}>
+        <LessonPage crossRefs={crossRefs(lang)}>
             <div className="space-y-8 max-w-4xl mx-auto">
                 <div>
-                    <h2 className="text-2xl font-bold text-stone-800 mb-4">Context & Accessibility</h2>
-                    <p className="text-[15px] text-stone-600 leading-relaxed mb-4">
-                        Data visualizations do not exist in a vacuum. They must be legible to all users regardless of visual impairment, and they must present data in a way that aligns with human cognitive processing rather than raw mathematical plotting.
-                    </p>
+                    <h2 className="text-2xl font-bold text-stone-800 mb-4">{t(lang, 's7.context.introTitle')}</h2>
+                    <p className="text-[15px] text-stone-600 leading-relaxed mb-4" dangerouslySetInnerHTML={{ __html: t(lang, 's7.context.introDesc') }} />
                 </div>
 
-                <AccessibilityDemo />
-                <ScatterSmoothingDemo />
+                <AccessibilityDemo lang={lang} />
+                <ScatterSmoothingDemo lang={lang} />
 
             </div>
         </LessonPage>

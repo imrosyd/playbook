@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import TheoryBlock from '../../ui/TheoryBlock';
 
-const crossRefs = [
-    { sectionId: 'design', slug: 'color-psychology', label: 'Color Psychology' },
-    { sectionId: 'design', slug: 'three-color-rule', label: 'The 3-Color Rule' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'design', slug: 'color-psychology', label: t(lang, 's6.colorblindness.crossRefs.0.label') },
+    { sectionId: 'design', slug: 'three-color-rule', label: t(lang, 's6.colorblindness.crossRefs.1.label') },
 ];
 
 type FilterType = 'normal' | 'deuteranopia' | 'protanopia' | 'tritanopia' | 'monochromacy';
@@ -17,20 +19,20 @@ const FILTERS: Record<FilterType, string> = {
     monochromacy: 'grayscale(1)',
 };
 
-const FILTER_LABELS: Record<FilterType, { label: string; prevalence: string }> = {
-    normal: { label: 'Normal vision', prevalence: '' },
-    deuteranopia: { label: 'Deuteranopia', prevalence: '6% of men' },
-    protanopia: { label: 'Protanopia', prevalence: '2% of men' },
-    tritanopia: { label: 'Tritanopia', prevalence: '0.01%' },
-    monochromacy: { label: 'Monochromacy', prevalence: 'rare' },
-};
+const FILTER_LABELS = (lang: any): Record<FilterType, { label: string; prevalence: string }> => ({
+    normal: { label: t(lang, 's6.colorblindness.filters.normal.label'), prevalence: '' },
+    deuteranopia: { label: t(lang, 's6.colorblindness.filters.deuteranopia.label'), prevalence: t(lang, 's6.colorblindness.filters.deuteranopia.prevalence') },
+    protanopia: { label: t(lang, 's6.colorblindness.filters.protanopia.label'), prevalence: t(lang, 's6.colorblindness.filters.protanopia.prevalence') },
+    tritanopia: { label: t(lang, 's6.colorblindness.filters.tritanopia.label'), prevalence: t(lang, 's6.colorblindness.filters.tritanopia.prevalence') },
+    monochromacy: { label: t(lang, 's6.colorblindness.filters.monochromacy.label'), prevalence: t(lang, 's6.colorblindness.filters.monochromacy.prevalence') },
+});
 
 // A bar chart that uses Red vs Green — the classic failure
-function AccessibilityBarChart({ filter }: { filter: FilterType }) {
+function AccessibilityBarChart({ filter, lang }: { filter: FilterType, lang: any }) {
     const bars = [
-        { label: 'Achieved', value: 85, color: '#16a34a' },
-        { label: 'At risk', value: 62, color: '#d97706' },
-        { label: 'Behind target', value: 38, color: '#dc2626' },
+        { label: t(lang, 's6.colorblindness.chart.bars.0.label'), value: 85, color: '#16a34a' },
+        { label: t(lang, 's6.colorblindness.chart.bars.1.label'), value: 62, color: '#d97706' },
+        { label: t(lang, 's6.colorblindness.chart.bars.2.label'), value: 38, color: '#dc2626' },
     ];
     const maxV = 100;
     const w = 260, h = 120, pad = { l: 48, r: 16, t: 12, b: 28 };
@@ -54,42 +56,42 @@ function AccessibilityBarChart({ filter }: { filter: FilterType }) {
                     </g>
                 );
             })}
-            <text x={pad.l - 4} y={pad.t + (h - pad.t - pad.b) / 2} fill="#a8a29e" fontSize={8} textAnchor="middle" transform={`rotate(-90, ${pad.l - 14}, ${pad.t + (h - pad.t - pad.b) / 2})`}>% of target</text>
+            <text x={pad.l - 4} y={pad.t + (h - pad.t - pad.b) / 2} fill="#a8a29e" fontSize={8} textAnchor="middle" transform={`rotate(-90, ${pad.l - 14}, ${pad.t + (h - pad.t - pad.b) / 2})`}>{t(lang, 's6.colorblindness.chart.yAxis')}</text>
         </svg>
     );
 }
 
-function PaletteShowcase() {
+function PaletteShowcase({ lang }: { lang: any }) {
     const palettes = [
         {
-            name: "The 'Safe' Diverging Palette (Blue/Orange)",
-            description: "Replaces traditional Red/Green for showing positive/negative variance or good/bad states.",
+            name: t(lang, 's6.colorblindness.palettes.0.name'),
+            description: t(lang, 's6.colorblindness.palettes.0.description'),
             colors: [
-                { hex: '#d97706', label: 'Warning / Negative (Orange)', bad: false },
-                { hex: '#2563eb', label: 'Good / Positive (Blue)', bad: false },
-                { hex: '#94a3b8', label: 'Neutral (Slate)', bad: false },
+                { hex: '#d97706', label: t(lang, 's6.colorblindness.palettes.0.colors.0.label'), bad: false },
+                { hex: '#2563eb', label: t(lang, 's6.colorblindness.palettes.0.colors.1.label'), bad: false },
+                { hex: '#94a3b8', label: t(lang, 's6.colorblindness.palettes.0.colors.2.label'), bad: false },
             ]
         },
         {
-            name: "The Okabe-Ito Categorical Palette",
-            description: "A meticulously tested palette designed to be distinguishable by all types of human color vision.",
+            name: t(lang, 's6.colorblindness.palettes.1.name'),
+            description: t(lang, 's6.colorblindness.palettes.1.description'),
             colors: [
-                { hex: '#E69F00', label: 'Orange', bad: false },
-                { hex: '#56B4E9', label: 'Sky Blue', bad: false },
-                { hex: '#009E73', label: 'Bluish Green', bad: false },
-                { hex: '#F0E442', label: 'Yellow', bad: false },
-                { hex: '#0072B2', label: 'Blue', bad: false },
-                { hex: '#D55E00', label: 'Vermilion', bad: false },
-                { hex: '#CC79A7', label: 'Reddish Purple', bad: false },
+                { hex: '#E69F00', label: t(lang, 's6.colorblindness.palettes.1.colors.0.label'), bad: false },
+                { hex: '#56B4E9', label: t(lang, 's6.colorblindness.palettes.1.colors.1.label'), bad: false },
+                { hex: '#009E73', label: t(lang, 's6.colorblindness.palettes.1.colors.2.label'), bad: false },
+                { hex: '#F0E442', label: t(lang, 's6.colorblindness.palettes.1.colors.3.label'), bad: false },
+                { hex: '#0072B2', label: t(lang, 's6.colorblindness.palettes.1.colors.4.label'), bad: false },
+                { hex: '#D55E00', label: t(lang, 's6.colorblindness.palettes.1.colors.5.label'), bad: false },
+                { hex: '#CC79A7', label: t(lang, 's6.colorblindness.palettes.1.colors.6.label'), bad: false },
             ]
         }
     ];
 
     return (
         <div className="space-y-6 mt-8 border-t border-stone-200 pt-8">
-            <h3 className="text-base font-bold text-stone-800">Copy-Paste Accessible Palettes</h3>
+            <h3 className="text-base font-bold text-stone-800">{t(lang, 's6.colorblindness.showcase.title')}</h3>
             <p className="text-[13px] text-stone-600 leading-relaxed mb-4">
-                Stop guessing which colors to use. Standardize your organization's charts around these proven, mathematically tested accessible palettes.
+                {t(lang, 's6.colorblindness.showcase.description')}
             </p>
             <div className="grid md:grid-cols-2 gap-6">
                 {palettes.map((p, i) => (
@@ -115,30 +117,26 @@ function PaletteShowcase() {
 }
 
 export default function DesigningForColorblindnessLesson() {
+    const { lang } = useLang();
     const [filter, setFilter] = useState<FilterType>('normal');
+    const filterLabels = FILTER_LABELS(lang);
 
     return (
-        <LessonPage crossRefs={crossRefs}>
+        <LessonPage crossRefs={crossRefs(lang)}>
             <div className="space-y-8">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Approximately 1 in 12 men and 1 in 200 women have some form of color vision deficiency. In any meeting of 10 people, statistically one person cannot distinguish red from green. Using red for "bad" and green for "good" — as most presentations do — creates a chart that is literally unreadable for a portion of your audience without them ever knowing or telling you, since people with color vision deficiency rarely announce it in professional settings.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The WCAG 2.1 accessibility guidelines — adopted by governments and major institutions worldwide — mandate at Success Criterion 1.4.1 that <strong>color must not be used as the only visual means of conveying information</strong>. This standard was designed for digital interfaces, but its logic applies directly to business charts. A chart that uses only color hue to distinguish between categories fails both ethically (it excludes some viewers) and practically (printed in greyscale or viewed through a projector with color shifting, the chart becomes ambiguous to everyone).
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The solution is not to abandon color but to <strong>add redundant encodings</strong>. Add direct text labels so the category is named, not just colored. Use shapes (circle vs. triangle) in scatter plots. Use line dashing patterns in line charts. Use the Blue + Orange palette instead of Red + Green — blue and orange are distinguishable by all common colorblindness types including both deuteranopia and protanopia. Treating accessibility as a design constraint produces charts that are universally clearer, not just accessible to specific viewers.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's6.colorblindness.intro1') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's6.colorblindness.intro2') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's6.colorblindness.intro3') }} />
 
                 <TheoryBlock
-                    title="Why Color Alone Fails"
-                    theory="Ishihara (1917) + WCAG 2.1 Accessibility Guidelines"
-                    explanation="Color vision deficiency is caused by the absence or dysfunction of one or more cone photoreceptors. The three most common types affect red-green discrimination (deuteranopia, protanopia). WCAG 2.1 Success Criterion 1.4.1 requires that color is not used as the only visual means of conveying information."
+                    title={t(lang, 's6.colorblindness.theory.title')}
+                    theory={t(lang, 's6.colorblindness.theory.subtitle')}
+                    explanation={t(lang, 's6.colorblindness.theory.explanation')}
                 />
 
                 <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-4">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Simulate how this chart looks to different viewers
+                        {t(lang, 's6.colorblindness.demo.title')}
                     </p>
                     <div className="flex flex-wrap gap-2">
                         {(Object.keys(FILTERS) as FilterType[]).map(f => (
@@ -150,46 +148,41 @@ export default function DesigningForColorblindnessLesson() {
                                     : 'bg-white text-stone-500 border-stone-200 hover:border-stone-400'
                                     }`}
                             >
-                                {FILTER_LABELS[f].label}
-                                {FILTER_LABELS[f].prevalence && (
-                                    <span className="ml-1.5 opacity-50 font-normal text-[10px]">({FILTER_LABELS[f].prevalence})</span>
+                                {filterLabels[f].label}
+                                {filterLabels[f].prevalence && (
+                                    <span className="ml-1.5 opacity-50 font-normal text-[10px]">({filterLabels[f].prevalence})</span>
                                 )}
                             </button>
                         ))}
                     </div>
                     <div className="flex justify-center pt-2">
                         <div style={{ maxWidth: 320, width: '100%' }}>
-                            <AccessibilityBarChart filter={filter} />
+                            <AccessibilityBarChart filter={filter} lang={lang} />
                         </div>
                     </div>
                     {filter !== 'normal' && (
                         <p className="text-[12px] text-stone-500 leading-relaxed">
-                            Notice how the bars lose their distinct meaning under color vision deficiency. A person with {FILTER_LABELS[filter].label.toLowerCase()} cannot distinguish performance levels by color alone.
+                            {t(lang, 's6.colorblindness.demo.notice').replace('{type}', filterLabels[filter].label.toLowerCase())}
                         </p>
                     )}
                 </div>
 
                 <div className="space-y-3">
-                    <h3 className="text-base font-bold text-stone-800">How to fix it</h3>
+                    <h3 className="text-base font-bold text-stone-800">{t(lang, 's6.colorblindness.fix.title')}</h3>
                     <div className="space-y-2">
-                        {[
-                            { fix: 'Add direct labels to every bar, line, or segment.', detail: 'The label makes the chart readable even if the color is invisible.' },
-                            { fix: 'Use Blue + Orange instead of Red + Green.', detail: 'This palette is distinguishable by all common colorblindness types.' },
-                            { fix: 'Add pattern fills or line dashing for critical distinctions.', detail: 'Patterns communicate category through texture, not only color.' },
-                            { fix: 'Check your chart in greyscale before publishing.', detail: 'If it is readable in greyscale, it passes the baseline accessibility test.' },
-                        ].map((f, i) => (
+                        {[0, 1, 2, 3].map((i) => (
                             <div key={i} className="flex gap-3 bg-white border border-stone-200 rounded-lg p-3">
                                 <span className="text-[11px] font-bold text-stone-300 shrink-0 mt-0.5">{i + 1}</span>
                                 <div>
-                                    <p className="text-[13px] font-semibold text-stone-800">{f.fix}</p>
-                                    <p className="text-[12px] text-stone-400 leading-relaxed mt-0.5">{f.detail}</p>
+                                    <p className="text-[13px] font-semibold text-stone-800">{t(lang, `s6.colorblindness.fix.items.${i}.fix`)}</p>
+                                    <p className="text-[12px] text-stone-400 leading-relaxed mt-0.5">{t(lang, `s6.colorblindness.fix.items.${i}.detail`)}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                <PaletteShowcase />
+                <PaletteShowcase lang={lang} />
             </div>
         </LessonPage>
     );

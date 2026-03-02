@@ -1,13 +1,11 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import LessonPage from '../../layout/LessonPage';
 import TheoryBlock from '../../ui/TheoryBlock';
 
-const crossRefs = [
-    { sectionId: 'storytelling', slug: 'power-titles', label: 'Power Titles' },
-    { sectionId: 'storytelling', slug: 'jargon-gap', label: 'Bridging the Jargon Gap' },
-];
-
 // Scatter: precision words vs vague words
 function PrecisionChart() {
+    const { lang } = useLang();
     const words = [
         { x: 15, y: 80, label: '"a lot"', precise: false },
         { x: 25, y: 55, label: '"significant"', precise: false },
@@ -26,15 +24,15 @@ function PrecisionChart() {
     return (
         <div className="bg-white border border-stone-200 rounded-xl p-5">
             <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-3">
-                Word precision vs perceived credibility (audience survey)
+                {t(lang, 's4.languageAuthority.chart.title')}
             </p>
             <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-2xl mx-auto block">
                 {/* Axis lines */}
                 <line x1={pad.l} x2={pad.l} y1={pad.t} y2={h - pad.b} stroke="#e7e5e4" strokeWidth={1} />
                 <line x1={pad.l} x2={w - pad.r} y1={h - pad.b} y2={h - pad.b} stroke="#e7e5e4" strokeWidth={1} />
                 {/* Axis labels */}
-                <text x={pad.l - 4} y={pad.t + (h - pad.t - pad.b) / 2} fill="#a8a29e" fontSize={8} textAnchor="end" transform={`rotate(-90, ${pad.l - 12}, ${pad.t + (h - pad.t - pad.b) / 2})`}>Credibility</text>
-                <text x={(pad.l + w - pad.r) / 2} y={h - 6} fill="#a8a29e" fontSize={8} textAnchor="middle">Precision of language used</text>
+                <text x={pad.l - 4} y={pad.t + (h - pad.t - pad.b) / 2} fill="#a8a29e" fontSize={8} textAnchor="end" transform={`rotate(-90, ${pad.l - 12}, ${pad.t + (h - pad.t - pad.b) / 2})`}>{t(lang, 's4.languageAuthority.chart.yAxis')}</text>
+                <text x={(pad.l + w - pad.r) / 2} y={h - 6} fill="#a8a29e" fontSize={8} textAnchor="middle">{t(lang, 's4.languageAuthority.chart.xAxis')}</text>
 
                 {/* Dots + labels */}
                 {words.map((w2, i) => (
@@ -58,19 +56,25 @@ function PrecisionChart() {
                 ))}
             </svg>
             <div className="flex items-center gap-4 mt-2 text-[11px] text-stone-400">
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-stone-300 inline-block" /> Vague language</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-stone-800 inline-block" /> Precise language</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-stone-300 inline-block" /> {t(lang, 's4.languageAuthority.chart.vagueLabel')}</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-stone-800 inline-block" /> {t(lang, 's4.languageAuthority.chart.preciseLabel')}</span>
             </div>
         </div>
     );
 }
 
 export default function TheLanguageOfAuthorityLesson() {
+    const { lang } = useLang();
+    const crossRefs = [
+        { sectionId: 'storytelling', slug: 'power-titles', label: t(lang, 's4.languageAuthority.crossRefs.0.label') },
+        { sectionId: 'storytelling', slug: 'jargon-gap', label: t(lang, 's4.languageAuthority.crossRefs.1.label') },
+    ];
+
     return (
         <LessonPage crossRefs={crossRefs}>
             <div className="space-y-8">
                 <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Two analysts present the same finding. One says: "Revenue has been declining quite significantly over the past few months." The other says: "Revenue declined 23% over 8 months — the fastest drop since 2019." Both are describing the same chart. Which analyst sounds like they know what they're talking about?
+                    {t(lang, 's4.languageAuthority.intro1')}
                 </p>
 
                 <PrecisionChart />
@@ -82,41 +86,37 @@ export default function TheLanguageOfAuthorityLesson() {
                 />
 
                 <div className="space-y-3">
-                    <h3 className="text-base font-bold text-stone-800">Upgrade your language</h3>
+                    <h3 className="text-base font-bold text-stone-800">{t(lang, 's4.languageAuthority.upgradeTitle')}</h3>
                     <div className="rounded-xl border border-stone-200 overflow-hidden">
                         <div className="grid grid-cols-2 bg-stone-50 border-b border-stone-200">
-                            <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider px-5 py-3">Vague (loses authority)</p>
-                            <p className="text-[10px] font-bold text-stone-800 uppercase tracking-wider px-5 py-3">Precise (builds credibility)</p>
+                            <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider px-5 py-3">{t(lang, 's4.languageAuthority.labels.vague')}</p>
+                            <p className="text-[10px] font-bold text-stone-800 uppercase tracking-wider px-5 py-3">{t(lang, 's4.languageAuthority.labels.precise')}</p>
                         </div>
-                        {[
-                            { weak: 'The line goes up in Q3', strong: 'Q3 seasonality drove a 14% lift in active users, breaking the historical trend' },
-                            { weak: 'There is a big gap between the bars', strong: 'Enterprise accounts generated 3x the LTV of SMB accounts this year' },
-                            { weak: 'Revenue fell significantly', strong: 'Revenue fell 23% — the steepest 8-month drop since 2019' },
-                            { weak: 'Customers are very unhappy', strong: 'NPS dropped from 42 to 29 — a 13-point decline over two quarters' },
-                            { weak: 'Our conversion rate is low', strong: 'Conversion sits at 2.1%, putting us in the bottom quartile against industry median (3.8%)' },
-                            { weak: 'Results were mixed', strong: 'Email outperformed target (+18%); while paid social dragged overall metrics (−9%)' },
-                        ].map(({ weak, strong }, i) => (
-                            <div key={i} className="grid grid-cols-2 border-b border-stone-100 last:border-0">
-                                <p className="text-[12px] text-stone-400 px-5 py-3 leading-relaxed italic border-r border-stone-100">{weak}</p>
-                                <p className="text-[12px] text-stone-700 px-5 py-3 leading-relaxed">{strong}</p>
-                            </div>
-                        ))}
+                        {[0, 1, 2, 3, 4, 5].map((i) => {
+                            const weak = t(lang, `s4.languageAuthority.examples.${i}.weak`);
+                            const strong = t(lang, `s4.languageAuthority.examples.${i}.strong`);
+                            return (
+                                <div key={i} className="grid grid-cols-2 border-b border-stone-100 last:border-0">
+                                    <p className="text-[12px] text-stone-400 px-5 py-3 leading-relaxed italic border-r border-stone-100">{weak}</p>
+                                    <p className="text-[12px] text-stone-700 px-5 py-3 leading-relaxed">{strong}</p>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
                 <div className="bg-stone-50 border border-stone-200 rounded-xl p-4">
-                    <p className="text-[12px] font-bold text-stone-600 mb-2">The 3 precision rules</p>
+                    <p className="text-[12px] font-bold text-stone-600 mb-2">{t(lang, 's4.languageAuthority.rulesTitle')}</p>
                     <div className="space-y-2">
-                        {[
-                            'Use a specific number whenever you have one. "23%" beats "about a quarter." "11 days" beats "nearly two weeks."',
-                            'Name the comparison. "Revenue fell" is a statement. "Revenue fell 23% vs. Q3 last year" is evidence.',
-                            'State the implication in the same sentence. Don\'t leave the listener to figure out why the number matters.',
-                        ].map((r, i) => (
-                            <div key={i} className="flex gap-3 text-[12px] text-stone-600 leading-relaxed">
-                                <span className="shrink-0 font-bold text-stone-400">{i + 1}.</span>
-                                <span>{r}</span>
-                            </div>
-                        ))}
+                        {[0, 1, 2].map((i) => {
+                            const r = t(lang, `s4.languageAuthority.rules.${i}`);
+                            return (
+                                <div key={i} className="flex gap-3 text-[12px] text-stone-600 leading-relaxed">
+                                    <span className="shrink-0 font-bold text-stone-400">{i + 1}.</span>
+                                    <span>{r}</span>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

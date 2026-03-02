@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import LessonPage from '../../layout/LessonPage';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import ChartFamilyLesson, { type ChartSpec } from './ChartFamilyLesson';
 import {
     HistogramMini,
@@ -11,136 +13,136 @@ import {
     ECDFMini,
 } from '../../charts/demos/MiniCharts';
 
-const charts: ChartSpec[] = [
+const getCharts = (lang: any): ChartSpec[] => [
     {
         slug: 'histogram',
-        name: 'Histogram',
+        name: t(lang, 's2.howIsItSpread.charts.histogram.name'),
         whenToUse: [
-            'Showing the frequency distribution of a single continuous variable',
-            'Identifying modality (unimodal, bimodal), skewness, and outliers',
-            'Large datasets (> 30 observations) where individual point plotting is impractical',
+            t(lang, 's2.howIsItSpread.charts.histogram.whenToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.histogram.whenToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.histogram.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Small datasets (< 20 points) — a strip plot or dot plot preserves more information',
-            'Comparing two or more distributions — overlapping histograms become visually complex',
-            'When exact values at individual observations need to be recoverable',
+            t(lang, 's2.howIsItSpread.charts.histogram.whenNotToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.histogram.whenNotToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.histogram.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Bin width is a free parameter that dramatically shapes the perceived distribution. A narrow bin width produces a jagged, noisy histogram while a wide bin width can hide bimodality or outliers entirely.',
-        cognitiveRef: 'Pre-attentive: area (via height)',
-        ethicalRef: 'Risk: Bin width manipulation',
+        interpretationRisk: t(lang, 's2.howIsItSpread.charts.histogram.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howIsItSpread.charts.histogram.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howIsItSpread.charts.histogram.ethicalRef'),
         demo: <HistogramMini />,
     },
     {
         slug: 'boxplot',
-        name: 'Box Plot',
+        name: t(lang, 's2.howIsItSpread.charts.boxplot.name'),
         whenToUse: [
-            'Compact comparison of distributional summaries across multiple groups',
-            'Highlighting median, quartiles, and outliers side by side',
-            'When a dashboard or report has limited space but group comparison is needed',
+            t(lang, 's2.howIsItSpread.charts.boxplot.whenToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.boxplot.whenToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.boxplot.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Small samples (< 15 per group) — box plots hide multi-modality and sample size',
-            'When the shape of the distribution (skew, peaks) is the primary message',
-            'Audiences unfamiliar with statistical quartile notation',
+            t(lang, 's2.howIsItSpread.charts.boxplot.whenNotToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.boxplot.whenNotToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.boxplot.whenNotToUse.2'),
         ],
-        interpretationRisk: 'A symmetric box plot can describe both a uniform distribution and a bimodal one with the same quartile boundaries. Box plots are often used to imply normality in data that is actually multi-modal or highly skewed.',
-        cognitiveRef: 'Pre-attentive: length, position',
-        ethicalRef: 'Risk: Hidden bimodality',
+        interpretationRisk: t(lang, 's2.howIsItSpread.charts.boxplot.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howIsItSpread.charts.boxplot.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howIsItSpread.charts.boxplot.ethicalRef'),
         demo: <BoxplotMini />,
     },
     {
         slug: 'violin',
-        name: 'Violin Plot',
+        name: t(lang, 's2.howIsItSpread.charts.violin.name'),
         whenToUse: [
-            'Showing both distributional shape and summary statistics for group comparisons',
-            'When bimodality or asymmetry within groups is part of the story',
-            'Medium-to-large samples (> 50 per group) where KDE estimation is meaningful',
+            t(lang, 's2.howIsItSpread.charts.violin.whenToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.violin.whenToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.violin.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Small samples — the KDE curve misrepresents distributions with few data points',
-            'Audiences who need to read precise values — violins are shape-focused',
-            'When the comparison group count exceeds 6 — violins become narrow and hard to read',
+            t(lang, 's2.howIsItSpread.charts.violin.whenNotToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.violin.whenNotToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.violin.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Kernel density estimation requires a bandwidth (smoothing parameter) choice. Over-smoothed violins hide peaks and bimodality; under-smoothed violins add spurious wiggles that look like real data features.',
-        cognitiveRef: 'Pre-attentive: shape, area',
-        ethicalRef: 'Risk: KDE bandwidth manipulation',
+        interpretationRisk: t(lang, 's2.howIsItSpread.charts.violin.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howIsItSpread.charts.violin.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howIsItSpread.charts.violin.ethicalRef'),
         demo: <ViolinMini />,
     },
     {
         slug: 'strip-plot',
-        name: 'Strip Plot',
+        name: t(lang, 's2.howIsItSpread.charts.stripPlot.name'),
         whenToUse: [
-            'Small-to-medium datasets (< 200 per group) where showing every observation adds transparency',
-            'Supplement to a box plot or bar chart to reveal the underlying data',
-            'When checking for gaps, clusters, or unusual patterns is more important than summarizing',
+            t(lang, 's2.howIsItSpread.charts.stripPlot.whenToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.stripPlot.whenToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.stripPlot.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Large datasets — overplotting makes the chart unreadable without jitter or transparency',
-            'When a clear summary statistic (mean, median) is the primary message',
-            'When exact horizontal position of points would be over-interpreted',
+            t(lang, 's2.howIsItSpread.charts.stripPlot.whenNotToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.stripPlot.whenNotToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.stripPlot.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Random jitter prevents overplotting but creates the false impression that horizontal position encodes meaning. Readers may infer sub-group structure or trends from jitter noise.',
-        cognitiveRef: 'Pre-attentive: position',
-        ethicalRef: 'Risk: Jitter misinterpretation',
+        interpretationRisk: t(lang, 's2.howIsItSpread.charts.stripPlot.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howIsItSpread.charts.stripPlot.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howIsItSpread.charts.stripPlot.ethicalRef'),
         demo: <StripPlotMini />,
     },
     {
         slug: 'rug-plot',
-        name: 'Rug Plot',
+        name: t(lang, 's2.howIsItSpread.charts.rugPlot.name'),
         whenToUse: [
-            'Augmenting a density curve or scatter plot with individual observation locations',
-            'Showing the actual data density along an axis without obscuring the primary chart',
-            'Small-to-medium datasets where the density curve alone would hide important point clustering',
+            t(lang, 's2.howIsItSpread.charts.rugPlot.whenToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.rugPlot.whenToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.rugPlot.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Large datasets (> 500 points) — rug marks stack invisibly along the axis',
-            'As a standalone chart — rug plots are supplementary annotations, not primary displays',
-            'When the exact position of individual points has low analytical value',
+            t(lang, 's2.howIsItSpread.charts.rugPlot.whenNotToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.rugPlot.whenNotToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.rugPlot.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Rug plots appear along the axis margin and can be mistaken for axis ticks. Dense rugs create the impression of a continuous region of data when the points are actually clustered at a few discrete values.',
-        cognitiveRef: 'Pre-attentive: position, density',
+        interpretationRisk: t(lang, 's2.howIsItSpread.charts.rugPlot.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howIsItSpread.charts.rugPlot.cognitiveRef'),
         demo: <RugPlotMini />,
     },
     {
         slug: 'density',
-        name: 'Density Plot (KDE)',
+        name: t(lang, 's2.howIsItSpread.charts.density.name'),
         whenToUse: [
-            'Smooth comparison of two or three distributions on the same axis',
-            'When the continuous shape of the distribution matters more than bin counts',
-            'Overlaying multiple groups where filled areas would obstruct each other',
+            t(lang, 's2.howIsItSpread.charts.density.whenToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.density.whenToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.density.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Very small samples — KDE implies a continuous distribution from too few observations',
-            'Data with hard boundaries (e.g., 0–100 scores) where the KDE extends beyond bounds',
-            'Discrete count data that a histogram would represent more honestly',
+            t(lang, 's2.howIsItSpread.charts.density.whenNotToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.density.whenNotToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.density.whenNotToUse.2'),
         ],
-        interpretationRisk: 'KDE smooths over actual data gaps and extreme values. A density curve between 0 and 100 for a dataset with no values below 30 will still show a tapering tail toward 0, implying values that don\'t exist.',
-        cognitiveRef: 'Pre-attentive: shape, slope',
-        ethicalRef: 'Risk: KDE boundary artifacts',
+        interpretationRisk: t(lang, 's2.howIsItSpread.charts.density.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howIsItSpread.charts.density.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howIsItSpread.charts.density.ethicalRef'),
         demo: <DensityMini />,
     },
     {
         slug: 'ecdf',
-        name: 'ECDF',
+        name: t(lang, 's2.howIsItSpread.charts.ecdf.name'),
         whenToUse: [
-            'Comparing full cumulative distributions of two or more groups without binning choices',
-            'Statistical analysis where percentile positions need to be read directly',
-            'When a bin-free, assumption-free view of distribution is required',
+            t(lang, 's2.howIsItSpread.charts.ecdf.whenToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.ecdf.whenToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.ecdf.whenToUse.2'),
         ],
         whenNotToUse: [
-            'General audiences unfamiliar with cumulative probability — the "S-curve" is counterintuitive',
-            'When the density or shape of the distribution (rather than cumulative probabilities) is the message',
-            'Presentations where the focus is on extremes or outliers — a box plot is more intuitive',
+            t(lang, 's2.howIsItSpread.charts.ecdf.whenNotToUse.0'),
+            t(lang, 's2.howIsItSpread.charts.ecdf.whenNotToUse.1'),
+            t(lang, 's2.howIsItSpread.charts.ecdf.whenNotToUse.2'),
         ],
-        interpretationRisk: 'The step function is read top-to-bottom as a probability that a value is "less than or equal to X." Readers unfamiliar with CDFs frequently read the height at a given x-value as a density or frequency, not a cumulative probability.',
-        cognitiveRef: 'Pre-attentive: slope, position',
-        ethicalRef: 'Risk: CDF vs. PDF confusion',
+        interpretationRisk: t(lang, 's2.howIsItSpread.charts.ecdf.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.howIsItSpread.charts.ecdf.cognitiveRef'),
+        ethicalRef: t(lang, 's2.howIsItSpread.charts.ecdf.ethicalRef'),
         demo: <ECDFMini />,
     },
 ];
 
 // Bin width comparison chart: same data, different histograms
-function BinWidthComparisonChart() {
+function BinWidthComparisonChart({ lang }: { lang: any }) {
     // Simple underlying data: bimodal distribution
     const bins5 = [2, 4, 7, 9, 11, 15, 14, 10, 5, 3]; // narrow bins, bimodality visible
     const bins3 = [6, 24, 26, 21, 8]; // wide bins, bimodality hidden
@@ -174,20 +176,20 @@ function BinWidthComparisonChart() {
 
     return (
         <div className="grid grid-cols-2 gap-4">
-            <BarsChart data={bins5} label="Narrow bins — bimodality visible" note="10 bins" color="#059669" />
-            <BarsChart data={bins3} label="Wide bins — bimodality hidden" note="5 bins" color="#ef4444" />
+            <BarsChart data={bins5} label={t(lang, 's2.howIsItSpread.binWidthDemo.narrowLabel')} note={t(lang, 's2.howIsItSpread.binWidthDemo.narrowNote')} color="#059669" />
+            <BarsChart data={bins3} label={t(lang, 's2.howIsItSpread.binWidthDemo.wideLabel')} note={t(lang, 's2.howIsItSpread.binWidthDemo.wideNote')} color="#ef4444" />
         </div>
     );
 }
 
 // Distribution chart accuracy ranking
-function DistributionAccuracyChart() {
+function DistributionAccuracyChart({ lang }: { lang: any }) {
     const types = [
-        { name: 'ECDF', accuracy: 89, note: 'Bin-free, exact' },
-        { name: 'Histogram', accuracy: 71, note: 'Bin-dependent' },
-        { name: 'Violin (KDE)', accuracy: 62, note: 'Bandwidth-dependent' },
-        { name: 'Box plot', accuracy: 58, note: 'Hides shape' },
-        { name: 'Strip plot', accuracy: 79, note: 'Shows all points' },
+        { name: t(lang, 's2.howIsItSpread.accuracyChart.types.ecdf.name'), accuracy: 89, note: t(lang, 's2.howIsItSpread.accuracyChart.types.ecdf.note') },
+        { name: t(lang, 's2.howIsItSpread.accuracyChart.types.histogram.name'), accuracy: 71, note: t(lang, 's2.howIsItSpread.accuracyChart.types.histogram.note') },
+        { name: t(lang, 's2.howIsItSpread.accuracyChart.types.violin.name'), accuracy: 62, note: t(lang, 's2.howIsItSpread.accuracyChart.types.violin.note') },
+        { name: t(lang, 's2.howIsItSpread.accuracyChart.types.box.name'), accuracy: 58, note: t(lang, 's2.howIsItSpread.accuracyChart.types.box.note') },
+        { name: t(lang, 's2.howIsItSpread.accuracyChart.types.strip.name'), accuracy: 79, note: t(lang, 's2.howIsItSpread.accuracyChart.types.strip.note') },
     ];
     const w = 480, h = 220, pad = { l: 110, r: 70, t: 18, b: 30 };
     const innerW = w - pad.l - pad.r;
@@ -219,14 +221,14 @@ function DistributionAccuracyChart() {
                 );
             })}
             <text x={pad.l + innerW / 2} y={pad.t - 2} fill="#78716c" fontSize={7.5} textAnchor="middle">
-                Perceptual accuracy for distributional shape
+                {t(lang, 's2.howIsItSpread.accuracyChart.label')}
             </text>
         </svg>
     );
 }
 
 // Distribution shape comparison demo (Boxplot vs Violin vs Ridgeline)
-function DistributionShapeComparisonDemo() {
+function DistributionShapeComparisonDemo({ lang }: { lang: any }) {
     const [view, setView] = useState<'boxplot' | 'violin' | 'ridgeline'>('boxplot');
 
     const w = 480;
@@ -262,7 +264,7 @@ function DistributionShapeComparisonDemo() {
         <div className="bg-white rounded-xl border border-stone-200 p-6 space-y-6 shadow-sm">
             <div className="flex justify-between items-center border-b border-stone-100 pb-4">
                 <h3 className="text-[13px] font-bold text-stone-700 tracking-wide">
-                    The Danger of Hiding Shape
+                    {t(lang, 's2.howIsItSpread.shapeDemo.chartTitle')}
                 </h3>
                 <div className="flex bg-stone-100 rounded-lg p-1">
                     {(['boxplot', 'violin', 'ridgeline'] as const).map(m => (
@@ -271,7 +273,7 @@ function DistributionShapeComparisonDemo() {
                             onClick={() => setView(m)}
                             className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${view === m ? 'bg-white text-brand shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}
                         >
-                            {m.charAt(0).toUpperCase() + m.slice(1)}
+                            {m === 'boxplot' ? t(lang, 's2.howIsItSpread.shapeDemo.btnBoxplot') : m === 'violin' ? t(lang, 's2.howIsItSpread.shapeDemo.btnViolin') : t(lang, 's2.howIsItSpread.shapeDemo.btnRidgeline')}
                         </button>
                     ))}
                 </div>
@@ -287,8 +289,8 @@ function DistributionShapeComparisonDemo() {
                     </g>
                 ))}
 
-                <text x={pad.l - 12} y={yA} fill="#57534e" fontSize={12} textAnchor="end" dominantBaseline="middle">Group A</text>
-                <text x={pad.l - 12} y={yB} fill="#57534e" fontSize={12} textAnchor="end" dominantBaseline="middle">Group B</text>
+                <text x={pad.l - 12} y={yA} fill="#57534e" fontSize={12} textAnchor="end" dominantBaseline="middle">{t(lang, 's2.howIsItSpread.shapeDemo.groupA')}</text>
+                <text x={pad.l - 12} y={yB} fill="#57534e" fontSize={12} textAnchor="end" dominantBaseline="middle">{t(lang, 's2.howIsItSpread.shapeDemo.groupB')}</text>
 
                 {view === 'boxplot' && (
                     <>
@@ -324,16 +326,16 @@ function DistributionShapeComparisonDemo() {
 
             <div className="bg-stone-50 rounded-lg p-4 border border-stone-100">
                 <p className="text-[12px] text-stone-600 leading-relaxed text-center">
-                    {view === 'boxplot' && <span>Both groups have the <strong>exact same box plot</strong> (same median, IQR, and range). A viewer would confidently assume the distributions are identical.</span>}
-                    {view === 'violin' && <span>The <strong>Violin Plot</strong> reveals the truth: Group A is polarized (bimodal) while Group B is a normal bell curve. The box plot completely hid this crucial distinction.</span>}
-                    {view === 'ridgeline' && <span>The <strong>Ridgeline Plot</strong> is another excellent alternative, showing the density of groups while maintaining a clean, easily comparable baseline for each curve.</span>}
+                    {view === 'boxplot' && <span dangerouslySetInnerHTML={{ __html: t(lang, 's2.howIsItSpread.shapeDemo.expBoxplot') }} />}
+                    {view === 'violin' && <span dangerouslySetInnerHTML={{ __html: t(lang, 's2.howIsItSpread.shapeDemo.expViolin') }} />}
+                    {view === 'ridgeline' && <span dangerouslySetInnerHTML={{ __html: t(lang, 's2.howIsItSpread.shapeDemo.expRidgeline') }} />}
                 </p>
             </div>
         </div>
     );
 }
 
-function MeanVsMedianDemo() {
+function MeanVsMedianDemo({ lang }: { lang: any }) {
     const [outlier, setOutlier] = useState(false);
 
     // Base data: 9 salaries around 50k
@@ -353,13 +355,13 @@ function MeanVsMedianDemo() {
         <div className="bg-white rounded-xl border border-stone-200 p-6 space-y-6 shadow-sm mt-8">
             <div className="flex justify-between items-center border-b border-stone-100 pb-4 mb-4">
                 <h3 className="text-[13px] font-bold text-stone-700 tracking-wide uppercase">
-                    The Flaw of Averages
+                    {t(lang, 's2.howIsItSpread.meanDemo.title')}
                 </h3>
                 <button
                     onClick={() => setOutlier(!outlier)}
                     className={`px-4 py-2 rounded-lg text-[12px] font-bold transition-all ${outlier ? 'bg-amber-100 text-amber-700' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}`}
                 >
-                    {outlier ? "Remove the CEO" : "Add the CEO (Outlier)"}
+                    {outlier ? t(lang, 's2.howIsItSpread.meanDemo.btnRemoveOutlier') : t(lang, 's2.howIsItSpread.meanDemo.btnAddOutlier')}
                 </button>
             </div>
 
@@ -381,23 +383,23 @@ function MeanVsMedianDemo() {
                 {/* Median marker */}
                 <g className="transition-all duration-500" transform={`translate(${scaleX(median)}, 0)`}>
                     <line x1={0} x2={0} y1={pad.t} y2={h - pad.b} stroke="#2563eb" strokeWidth={2} strokeDasharray="4,2" />
-                    <rect x={-30} y={pad.t - 22} width={60} height={18} fill="#2563eb" rx={2} />
-                    <text x={0} y={pad.t - 9} fill="#fff" fontSize={10} textAnchor="middle">Median: ${Math.round(median)}k</text>
+                    <rect x={-40} y={pad.t - 22} width={80} height={18} fill="#2563eb" rx={2} />
+                    <text x={0} y={pad.t - 9} fill="#fff" fontSize={10} textAnchor="middle">{t(lang, 's2.howIsItSpread.meanDemo.medianLabel')}{Math.round(median)}k</text>
                 </g>
 
                 {/* Mean marker */}
                 <g className="transition-all duration-500" transform={`translate(${scaleX(mean)}, 0)`}>
                     <line x1={0} x2={0} y1={pad.t + 30} y2={h - pad.b} stroke="#f43f5e" strokeWidth={2} strokeDasharray="4,2" />
-                    <rect x={-30} y={pad.t + 30 - 22} width={60} height={18} fill="#f43f5e" rx={2} />
-                    <text x={0} y={pad.t + 30 - 9} fill="#fff" fontSize={10} textAnchor="middle">Mean: ${mean}k</text>
+                    <rect x={-40} y={pad.t + 30 - 22} width={80} height={18} fill="#f43f5e" rx={2} />
+                    <text x={0} y={pad.t + 30 - 9} fill="#fff" fontSize={10} textAnchor="middle">{t(lang, 's2.howIsItSpread.meanDemo.meanLabel')}{mean}k</text>
                 </g>
             </svg>
 
             <div className="bg-stone-50 rounded-lg p-4 border border-stone-100 mt-4">
                 <p className="text-[13px] text-stone-600 leading-relaxed text-center">
                     {outlier ?
-                        <span>When the CEO's $250k salary is added, the <strong>mean shifts dramatically</strong> to ${mean}k, which implies the "average" person makes ${mean}k. Notice how the <strong>median remains completely unchanged</strong> at $51k, accurately reflecting the typical worker's reality.</span> :
-                        <span>In a symmetric distribution, the <strong>mean</strong> and <strong>median</strong> are nearly identical. Both accurately describe the "typical" value.</span>
+                        <span dangerouslySetInnerHTML={{ __html: t(lang, 's2.howIsItSpread.meanDemo.expOutlier').replace('${mean}', mean.toString()) }} /> :
+                        <span dangerouslySetInnerHTML={{ __html: t(lang, 's2.howIsItSpread.meanDemo.expNoOutlier') }} />
                     }
                 </p>
             </div>
@@ -406,6 +408,8 @@ function MeanVsMedianDemo() {
 }
 
 export default function HowIsItSpreadLesson() {
+    const { lang } = useLang();
+
     return (
         <LessonPage
             crossRefs={[
@@ -415,53 +419,47 @@ export default function HowIsItSpreadLesson() {
             ]}
         >
             <div className="space-y-6">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Distribution charts reveal the shape, spread, and center of a dataset — information that summary statistics like mean and standard deviation can entirely conceal. Francis Anscombe's famous 1973 quartet demonstrated this problem definitively: four datasets with <em>identical</em> means, variances, and correlation coefficients look radically different when plotted. The lesson is unambiguous: <strong>always visualize the underlying distribution before reporting any summary statistic</strong>. A mean of 7.5 ± 1.9 could describe a symmetric bell curve, a right-skewed distribution, or data that lies on a perfect line — the summary statistics alone cannot tell you which.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The distribution chart family ranges from the familiar histogram to the statistically precise ECDF (Empirical Cumulative Distribution Function). Each form makes different trade-offs between analytical accuracy and audience accessibility. Histograms are easily understood but depend on a bin-width parameter that can hide or reveal bimodality at the analyst's discretion. Box plots are compact and allow group comparison but cannot reveal whether a distribution is bimodal, asymmetric, or concentrated at a few specific values. The choice of distribution chart should match the analytical question: showing shape requires histograms or violin plots; showing percentiles requires ECDFs; showing all raw data requires strip plots.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The most consequential free parameter in distribution visualization is <strong>bin width for histograms</strong> and <strong>bandwidth for kernel density estimates (KDE)</strong>. These parameters are not derived from data — they are chosen by the analyst, and different choices can make the same dataset appear unimodal or bimodal, concentrated or spread out. A responsible distribution chart should show a range of bin widths or report the bandwidth explicitly. When data shows a suspicious "smooth" single peak, always check whether a narrower bandwidth would reveal multiple modes hiding beneath the smooth curve.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.howIsItSpread.intro1') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.howIsItSpread.intro2') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.howIsItSpread.intro3') }} />
 
                 {/* Bin width demo */}
                 <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Bin width manipulation: same data, different shape
+                        {t(lang, 's2.howIsItSpread.binWidthDemo.title')}
                     </p>
-                    <BinWidthComparisonChart />
+                    <BinWidthComparisonChart lang={lang} />
                     <p className="text-[12px] text-stone-400 leading-relaxed">
-                        The underlying data is identical bimodal data. Narrow bins (left) reveal the two-peak structure. Wide bins (right) merge them into a single peak — hiding the bimodality entirely. Always request the full histogram with multiple bin widths when presented with a "smooth" distribution.
+                        {t(lang, 's2.howIsItSpread.binWidthDemo.desc')}
                     </p>
                 </div>
 
                 {/* Accuracy ranking */}
                 <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Distribution chart accuracy for conveying distributional shape
+                        {t(lang, 's2.howIsItSpread.accuracyChart.title')}
                     </p>
-                    <DistributionAccuracyChart />
+                    <DistributionAccuracyChart lang={lang} />
                     <p className="text-[12px] text-stone-400 leading-relaxed">
-                        ECDF and strip plots are most accurate but require statistical literacy. Histograms balance accessibility with reasonable accuracy when bin width is appropriate. Box plots trade shape information for compactness — use them for comparison, not for characterizing individual distributions.
+                        {t(lang, 's2.howIsItSpread.accuracyChart.desc')}
                     </p>
                 </div>
 
                 {/* Boxplot vs Violin vs Ridgeline Demo */}
                 <div className="space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Revealing the Shape: Violin and Ridgeline alternatives
+                        {t(lang, 's2.howIsItSpread.shapeDemo.title')}
                     </p>
-                    <DistributionShapeComparisonDemo />
+                    <DistributionShapeComparisonDemo lang={lang} />
                 </div>
 
                 {/* Mean vs Median Demo */}
-                <MeanVsMedianDemo />
+                <MeanVsMedianDemo lang={lang} />
             </div>
 
             <ChartFamilyLesson
-                charts={charts}
-                clevelandNote="Distribution charts encode data through area and position — two encodings with different accuracy levels. Histograms (area) are less precisely decoded than ECDFs (position on a common scale), yet histograms are more intuitively understood by general audiences. Choose based on your audience's statistical literacy."
+                charts={getCharts(lang)}
+                clevelandNote={t(lang, 's2.howIsItSpread.clevelandNote')}
             />
         </LessonPage>
     );

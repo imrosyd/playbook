@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import LessonPage from '../../layout/LessonPage';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import ChartFrame from '../../ui/ChartFrame';
 import { SECTION_COLORS } from '../../../lib/design-tokens';
 import { Lightbulb, Info } from 'lucide-react';
@@ -19,190 +21,190 @@ import {
 
 const sectionColor = SECTION_COLORS['02'].base;
 
-const charts: ChartSpec[] = [
+const getCharts = (lang: any): ChartSpec[] => [
     {
         slug: 'line',
-        name: 'Line Chart',
+        name: t(lang, 's2.areWeGrowing.charts.line.name'),
         whenToUse: [
-            'Continuous temporal data where each time point is connected to the next',
-            'Showing trends, momentum, and rate of change over time',
-            'One to four series that need to be compared across the same time axis',
+            t(lang, 's2.areWeGrowing.charts.line.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.line.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.line.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Discrete, unordered categories — use a bar chart where connection implies continuity',
-            'When individual data points need emphasis over the trend — use a dot plot or connected scatter',
-            'Sparse data where interpolation between points would be misleading',
+            t(lang, 's2.areWeGrowing.charts.line.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.line.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.line.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Connecting points with a line implies that interpolated values between observations are valid. When data is sampled infrequently, a smooth line suggests false precision about what happened between measurements.',
-        cognitiveRef: 'Pre-attentive: slope, direction',
-        ethicalRef: 'Risk: Implied interpolation',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.line.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.line.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.line.ethicalRef'),
         demo: <LineMini />,
     },
     {
         slug: 'multi-line',
-        name: 'Multi-Line',
+        name: t(lang, 's2.areWeGrowing.charts.multiLine.name'),
         whenToUse: [
-            'Comparing trends of 2–5 related series on the same scale over time',
-            'When relative ordering and crossover points between series matter',
-            'Longitudinal panel data where individual trajectories are the story',
+            t(lang, 's2.areWeGrowing.charts.multiLine.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.multiLine.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.multiLine.whenToUse.2'),
         ],
         whenNotToUse: [
-            'More than 5–6 lines — lines cross and create a "spaghetti chart" that\'s unreadable',
-            'Series on dramatically different scales — a normalized or indexed view is needed',
-            'When the focus is on a single series — a simple line chart with annotation is clearer',
+            t(lang, 's2.areWeGrowing.charts.multiLine.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.multiLine.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.multiLine.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Color is the primary differentiator. With more than 5 lines, colorblind-safe palettes run out of distinguishable hues, and relying on color alone excludes a significant portion of the audience.',
-        cognitiveRef: 'Pre-attentive: color, slope',
-        ethicalRef: 'Risk: Color accessibility',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.multiLine.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.multiLine.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.multiLine.ethicalRef'),
         demo: <MultiLineMini />,
     },
     {
         slug: 'area',
-        name: 'Area Chart',
+        name: t(lang, 's2.areWeGrowing.charts.area.name'),
         whenToUse: [
-            'Showing magnitude of change over time when the filled area communicates cumulative volume',
-            'When the absolute quantity at each point matters as much as the trend',
-            'Comparing a single series to a reference band or zero baseline',
+            t(lang, 's2.areWeGrowing.charts.area.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.area.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.area.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Multiple overlapping series — filled areas obscure each other; use lines instead',
-            'When precise reading of values at individual points is required',
-            'Data with sharp peaks and valleys where the filled area creates ambiguous shapes',
+            t(lang, 's2.areWeGrowing.charts.area.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.area.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.area.whenNotToUse.2'),
         ],
-        interpretationRisk: 'The shaded area encodes the same information as the line but adds visual weight. Readers often interpret a larger filled area as representing "more total quantity" — this is only valid if the y-axis starts at zero.',
-        cognitiveRef: 'Pre-attentive: area (weak)',
-        ethicalRef: 'Risk: Area quantity confusion',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.area.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.area.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.area.ethicalRef'),
         demo: <AreaMini />,
     },
     {
         slug: 'stacked-area',
-        name: 'Stacked Area',
+        name: t(lang, 's2.areWeGrowing.charts.stackedArea.name'),
         whenToUse: [
-            'Showing how multiple components contribute to a changing total over time',
-            'When both individual series trends and the total are important',
-            '3–5 series with consistent, non-volatile patterns',
+            t(lang, 's2.areWeGrowing.charts.stackedArea.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.stackedArea.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.stackedArea.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Series with high volatility — ripple effects between layers obscure individual trends',
-            'When series cross each other over time — consider small multiples instead',
-            'More than 5 layers — the upper layers become impossible to read accurately',
+            t(lang, 's2.areWeGrowing.charts.stackedArea.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.stackedArea.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.stackedArea.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Upper layers in a stacked area chart use a moving, non-zero baseline. A layer that appears to grow steeply may actually be flat — it\'s simply being pushed up by growth in the layers below it.',
-        cognitiveRef: 'Pre-attentive: area',
-        ethicalRef: 'Risk: Floating baseline',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.stackedArea.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.stackedArea.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.stackedArea.ethicalRef'),
         demo: <StackedAreaMini />,
     },
     {
         slug: 'step',
-        name: 'Step Chart',
+        name: t(lang, 's2.areWeGrowing.charts.step.name'),
         whenToUse: [
-            'Data that changes discretely rather than continuously (prices, policy rates, software versions)',
-            'When the value stays constant between observed change points',
-            'Process or event data where the transition is instantaneous',
+            t(lang, 's2.areWeGrowing.charts.step.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.step.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.step.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Naturally continuous data — a regular line chart better represents smooth change',
-            'Very high-frequency data where step transitions become visually indistinct',
-            'When the timing of transitions is ambiguous or the data is noisy',
+            t(lang, 's2.areWeGrowing.charts.step.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.step.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.step.whenNotToUse.2'),
         ],
-        interpretationRisk: 'The horizontal segments imply that the exact value is known for every point in time between steps. For infrequently sampled data, this may overstate confidence in between-step values.',
-        cognitiveRef: 'Pre-attentive: slope (zero vs. non-zero)',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.step.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.step.cognitiveRef'),
         demo: <StepMini />,
     },
     {
         slug: 'streamgraph',
-        name: 'Streamgraph',
+        name: t(lang, 's2.areWeGrowing.charts.streamgraph.name'),
         whenToUse: [
-            'Artistic or editorial presentations of how multiple categories flow over time',
-            'Showing organic, wave-like trends where exact values are secondary to the visual narrative',
-            'Large datasets with many series where overlapping is unavoidable',
+            t(lang, 's2.areWeGrowing.charts.streamgraph.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.streamgraph.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.streamgraph.whenToUse.2'),
         ],
         whenNotToUse: [
-            'When precise values or baselines need to be read — the wiggle offset makes this impossible',
-            'Analytical dashboards or reports where accuracy is paramount',
-            'Fewer than 5 series — a stacked area chart communicates the same with more clarity',
+            t(lang, 's2.areWeGrowing.charts.streamgraph.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.streamgraph.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.streamgraph.whenNotToUse.2'),
         ],
-        interpretationRisk: 'The wiggle-offset baseline makes it impossible to accurately read individual series values. Streamgraphs are frequently used to make data look more impressive or "alive" at the expense of analytical accuracy.',
-        cognitiveRef: 'Pre-attentive: area (gestalt)',
-        ethicalRef: 'Risk: Decorative over informative',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.streamgraph.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.streamgraph.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.streamgraph.ethicalRef'),
         demo: <StreamgraphMini />,
     },
     {
         slug: 'bump',
-        name: 'Bump Chart',
+        name: t(lang, 's2.areWeGrowing.charts.bump.name'),
         whenToUse: [
-            'Tracking changes in rank or relative position over time for a small set of entities',
-            'League tables, rankings, or competitive standings across discrete time points',
-            'When the crossing and overtaking of entities is the main narrative',
+            t(lang, 's2.areWeGrowing.charts.bump.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.bump.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.bump.whenToUse.2'),
         ],
         whenNotToUse: [
-            'More than 8–10 entities — line crossings become a tangled web',
-            'When absolute values matter — bump charts discard magnitude information entirely',
-            'Continuous time data — bump charts are designed for discrete ranked snapshots',
+            t(lang, 's2.areWeGrowing.charts.bump.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.bump.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.bump.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Bump charts show only ordinal rank, not the magnitude of the underlying metric. A team that moves from rank 1 to rank 2 by a tiny margin and one that drops 50 points look identical if they both drop one rank.',
-        cognitiveRef: 'Pre-attentive: slope, color',
-        ethicalRef: 'Risk: Magnitude loss',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.bump.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.bump.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.bump.ethicalRef'),
         demo: <BumpMini />,
     },
     {
         slug: 'sparkline',
-        name: 'Sparkline',
+        name: t(lang, 's2.areWeGrowing.charts.sparkline.name'),
         whenToUse: [
-            'Embedding trend indicators inline with text, tables, or dashboards',
-            'When the shape of the trend matters more than individual data values',
-            'High-density dashboards displaying many metrics simultaneously',
+            t(lang, 's2.areWeGrowing.charts.sparkline.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.sparkline.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.sparkline.whenToUse.2'),
         ],
         whenNotToUse: [
-            'When specific values need to be read — sparklines have no axes or labels',
-            'Comparisons between sparklines with different scales — the shapes will mislead',
-            'Standalone charts — sparklines are designed as contextual micro-visualizations',
+            t(lang, 's2.areWeGrowing.charts.sparkline.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.sparkline.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.sparkline.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Sparklines auto-scale to fill available space. Two sparklines showing a 5% vs. 50% change can appear identical in shape if the axis scaling is independent, leading readers to equate very different magnitudes.',
-        cognitiveRef: 'Pre-attentive: slope',
-        ethicalRef: 'Risk: Scale normalization',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.sparkline.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.sparkline.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.sparkline.ethicalRef'),
         demo: <SparklineMini />,
     },
     {
         slug: 'candlestick',
-        name: 'Candlestick',
+        name: t(lang, 's2.areWeGrowing.charts.candlestick.name'),
         whenToUse: [
-            'Financial data showing open, high, low, and close prices for a time period',
-            'When the intra-period price range and direction of movement both matter',
-            'Audiences familiar with financial charting conventions',
+            t(lang, 's2.areWeGrowing.charts.candlestick.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.candlestick.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.candlestick.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Non-financial data — the OHLC encoding is a domain-specific convention',
-            'Long date ranges where individual candles become too small to distinguish',
-            'When only closing prices are relevant — a simple line chart is cleaner',
+            t(lang, 's2.areWeGrowing.charts.candlestick.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.candlestick.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.candlestick.whenNotToUse.2'),
         ],
-        interpretationRisk: 'The green/red color convention encodes gain/loss relative to the previous close, but many implementations color against the same-period open. These conventions are not universal and should always be explicitly labeled.',
-        cognitiveRef: 'Pre-attentive: color (hue)',
-        ethicalRef: 'Risk: Ambiguous color convention',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.candlestick.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.candlestick.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.candlestick.ethicalRef'),
         demo: <CandlestickMini />,
     },
     {
         slug: 'ohlc',
-        name: 'OHLC Chart',
+        name: t(lang, 's2.areWeGrowing.charts.ohlc.name'),
         whenToUse: [
-            'Financial data for technically sophisticated audiences who prefer OHLC to candlesticks',
-            'When print or greyscale rendering makes color-dependent candlesticks impractical',
-            'Compact display of price range data where candle bodies would be too wide',
+            t(lang, 's2.areWeGrowing.charts.ohlc.whenToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.ohlc.whenToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.ohlc.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Non-financial audiences — the tick-and-stem encoding is highly domain-specific',
-            'Very short time periods where individual bars have no visual separation',
-            'When simpler encoding (close price only) is sufficient for the decision at hand',
+            t(lang, 's2.areWeGrowing.charts.ohlc.whenNotToUse.0'),
+            t(lang, 's2.areWeGrowing.charts.ohlc.whenNotToUse.1'),
+            t(lang, 's2.areWeGrowing.charts.ohlc.whenNotToUse.2'),
         ],
-        interpretationRisk: 'OHLC bars encode four values in a single glyph using position, length, and tick direction. Readers new to the format frequently misinterpret the opening tick as the low or the closing tick as the high.',
-        cognitiveRef: 'Pre-attentive: position',
-        ethicalRef: 'Risk: Glyph misinterpretation',
+        interpretationRisk: t(lang, 's2.areWeGrowing.charts.ohlc.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.areWeGrowing.charts.ohlc.cognitiveRef'),
+        ethicalRef: t(lang, 's2.areWeGrowing.charts.ohlc.ethicalRef'),
         demo: <OHLCMini />,
     },
 ];
 
 // Aspect ratio banking demo
-function BankingDemo() {
+function BankingDemo({ lang }: { lang: any }) {
     const [narrow, setNarrow] = useState(true);
     const data = [2, 3.5, 3, 5, 4.5, 7, 6, 8.5, 8, 10];
     const w = 480, h = 220;
@@ -221,8 +223,8 @@ function BankingDemo() {
         <div className="space-y-4 mb-16">
             <div className="flex justify-between items-end">
                 <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-stone-900">Aspect Ratio Banking</h3>
-                    <p className="text-[13px] text-stone-500 max-w-md">Cleveland's principle: bank to 45° for optimal slope perception.</p>
+                    <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.areWeGrowing.bankingDemo.title')}</h3>
+                    <p className="text-[13px] text-stone-500 max-w-md">{t(lang, 's2.areWeGrowing.bankingDemo.desc')}</p>
                 </div>
                 <div className="flex gap-2 p-1 bg-stone-100 rounded-xl">
                     {([true, false] as const).map(n => (
@@ -234,20 +236,20 @@ function BankingDemo() {
                                 : 'text-stone-500 hover:text-stone-700'
                                 }`}
                         >
-                            {n ? 'Narrow' : 'Banked (45°)'}
+                            {n ? t(lang, 's2.areWeGrowing.bankingDemo.btnNarrow') : t(lang, 's2.areWeGrowing.bankingDemo.btnBanked')}
                         </button>
                     ))}
                 </div>
             </div>
 
             <ChartFrame
-                label="SLOPE PERCEPTION TEST"
-                note={narrow ? "In this narrow layout, the slopes appear exaggeratedly steep. It's harder to distinguish between 'fast growth' and 'very fast growth' when everything looks like a vertical spike." : "Banked to 45°: When the average slope is roughly 45°, the human eye is most efficient at detecting small differences in the rate of change between segments."}
+                label={t(lang, 's2.areWeGrowing.bankingDemo.label')}
+                note={narrow ? t(lang, 's2.areWeGrowing.bankingDemo.noteNarrow') : t(lang, 's2.areWeGrowing.bankingDemo.noteBanked')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     <rect x={0} y={0} width={panelW} height={h} fill="#f5f5f4" rx={12} stroke="#e7e5e4" strokeWidth={1} />
                     <text x={panelW / 2} y={18} fill="#78716c" fontSize={8} textAnchor="middle" className="tracking-widest uppercase">
-                        {narrow ? 'AMPLIFIED VARIANCE' : 'OPTIMAL DISCRIMINATION'}
+                        {narrow ? t(lang, 's2.areWeGrowing.bankingDemo.amplified') : t(lang, 's2.areWeGrowing.bankingDemo.optimal')}
                     </text>
                     {data.map((v, i) => i > 0 && (
                         <line key={i}
@@ -264,16 +266,16 @@ function BankingDemo() {
                     {!narrow && (
                         <g transform={`translate(${panelW + 20}, ${h / 2 - 10})`}>
                             <text fill={sectionColor} fontSize={10}>
-                                <tspan x={0} y={0}>✔ Avg slope ≈ 45°</tspan>
-                                <tspan x={0} dy={16}>✔ Precise comparison</tspan>
+                                <tspan x={0} y={0}>{t(lang, 's2.areWeGrowing.bankingDemo.check1')}</tspan>
+                                <tspan x={0} dy={16}>{t(lang, 's2.areWeGrowing.bankingDemo.check2')}</tspan>
                             </text>
                         </g>
                     )}
                     {narrow && (
                         <g transform={`translate(${panelW + 20}, ${h / 2 - 10})`}>
                             <text fill="#dc2626" fontSize={10}>
-                                <tspan x={0} y={0}>⚠ Slopes too steep</tspan>
-                                <tspan x={0} dy={16}>⚠ False drama</tspan>
+                                <tspan x={0} y={0}>{t(lang, 's2.areWeGrowing.bankingDemo.warn1')}</tspan>
+                                <tspan x={0} dy={16}>{t(lang, 's2.areWeGrowing.bankingDemo.warn2')}</tspan>
                             </text>
                         </g>
                     )}
@@ -284,13 +286,13 @@ function BankingDemo() {
 }
 
 // Chart type accuracy for time series
-function TimeSeriesAccuracyChart() {
+function TimeSeriesAccuracyChart({ lang }: { lang: any }) {
     const types = [
-        { name: 'Line chart', accuracy: 91, risk: 'Low' },
-        { name: 'Area chart', accuracy: 72, risk: 'Medium' },
-        { name: 'Stacked area', accuracy: 54, risk: 'High' },
-        { name: 'Streamgraph', accuracy: 31, risk: 'Very High' },
-        { name: 'Bump chart', accuracy: 48, risk: 'High' },
+        { name: t(lang, 's2.areWeGrowing.accuracyChart.types.line'), accuracy: 91, risk: 'Low' },
+        { name: t(lang, 's2.areWeGrowing.accuracyChart.types.area'), accuracy: 72, risk: 'Medium' },
+        { name: t(lang, 's2.areWeGrowing.accuracyChart.types.stackedArea'), accuracy: 54, risk: 'High' },
+        { name: t(lang, 's2.areWeGrowing.accuracyChart.types.streamgraph'), accuracy: 31, risk: 'Very High' },
+        { name: t(lang, 's2.areWeGrowing.accuracyChart.types.bump'), accuracy: 48, risk: 'High' },
     ];
     const w = 480, h = 240, pad = { l: 110, r: 80, t: 20, b: 40 };
     const innerW = w - pad.l - pad.r;
@@ -302,12 +304,12 @@ function TimeSeriesAccuracyChart() {
     return (
         <div className="space-y-4 mb-16">
             <div className="space-y-1">
-                <h3 className="text-xl font-bold text-stone-900">Accuracy by Variant</h3>
-                <p className="text-[13px] text-stone-500 max-w-md">Perceptual complexity vs decoding accuracy.</p>
+                <h3 className="text-xl font-bold text-stone-900">{t(lang, 's2.areWeGrowing.accuracyChart.title')}</h3>
+                <p className="text-[13px] text-stone-500 max-w-md">{t(lang, 's2.areWeGrowing.accuracyChart.desc')}</p>
             </div>
             <ChartFrame
-                label="PERCEPTUAL ACCURACY (%)"
-                note="Line charts enable position-based decoding, the most accurate channel. As we move down to stacked areas and streamgraphs, we force the audience to use area-based estimation, which has a much higher error rate."
+                label={t(lang, 's2.areWeGrowing.accuracyChart.label')}
+                note={t(lang, 's2.areWeGrowing.accuracyChart.note')}
             >
                 <svg viewBox={`0 0 ${w} ${h}`} className="w-full block">
                     {[0, 25, 50, 75, 100].map(v => (
@@ -337,6 +339,8 @@ function TimeSeriesAccuracyChart() {
 }
 
 export default function AreWeGrowingLesson() {
+    const { lang } = useLang();
+
     return (
         <LessonPage
             crossRefs={[
@@ -346,9 +350,7 @@ export default function AreWeGrowingLesson() {
             ]}
         >
             <div className="space-y-6">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Time-series charts encode how quantitative variables change across an ordered temporal dimension. The line chart is the canonical form because it exploits the pre-attentive attribute of <strong>slope</strong>.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.areWeGrowing.intro1') }} />
 
                 {/* Tip Block */}
                 <div
@@ -367,35 +369,33 @@ export default function AreWeGrowingLesson() {
                         </div>
                         <div className="space-y-1">
                             <p className="text-xs font-bold uppercase tracking-wider" style={{ color: sectionColor }}>
-                                The Banking Rule
+                                {t(lang, 's2.areWeGrowing.bankingRule')}
                             </p>
-                            <p className="text-[14px] text-stone-700 leading-relaxed">
-                                Maximize slope discrimination by banking segments to an average of <strong>45°</strong>. This prevents data "spikes" from appearing purely decorative and makes trends analytically legible.
-                            </p>
+                            <p className="text-[14px] text-stone-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.areWeGrowing.bankingRuleDesc') }} />
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-3">
-                    <BankingDemo />
-                    <TimeSeriesAccuracyChart />
+                    <BankingDemo lang={lang} />
+                    <TimeSeriesAccuracyChart lang={lang} />
                 </div>
 
                 {/* Conclusion Block */}
                 <div className="bg-stone-50 rounded-2xl p-8 border border-stone-200 space-y-4">
                     <div className="flex items-center gap-3 text-stone-900">
                         <Info size={20} className="text-stone-400" />
-                        <h4 className="text-lg font-bold">Choosing the Right Form</h4>
+                        <h4 className="text-lg font-bold">{t(lang, 's2.areWeGrowing.choicesTitle')}</h4>
                     </div>
                     <p className="text-[15px] text-stone-600 leading-relaxed">
-                        Line charts allow position-based decoding — the most accurate perceptual channel. Use area charts only when the sum of parts is the primary story, and strictly avoid decorative "wiggles" in professional dashboards.
+                        {t(lang, 's2.areWeGrowing.choicesDesc')}
                     </p>
                 </div>
             </div>
 
             <ChartFamilyLesson
-                charts={charts}
-                clevelandNote="Slope perception is strongest when line angles fall between 30° and 60° from horizontal. The 'banking to 45°' principle (adjusting aspect ratio so the average slope is approximately 45°) maximizes slope discrimination."
+                charts={getCharts(lang)}
+                clevelandNote={t(lang, 's2.areWeGrowing.clevelandNote')}
             />
         </LessonPage>
     );

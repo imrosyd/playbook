@@ -27,9 +27,9 @@ import ZoomingInAxisTricksLesson from '../lessons/section03/01_ZoomingInAxisTric
 import HidingTheBadNewsDataTricksLesson from '../lessons/section03/02_HidingTheBadNewsDataTricksLesson';
 import TheSpotlightEffectLesson from '../lessons/section03/03_TheSpotlightEffectLesson';
 import TheMagicWordsLesson from '../lessons/section03/04_TheMagicWordsLesson';
-import FullLabLesson from '../lessons/section03/05_FullLabLesson';
-import SignalVsNoiseLesson from '../lessons/section03/06_SignalVsNoiseLesson';
-import DesignPatternsLesson from '../lessons/section03/07_DesignPatternsLesson';
+import FullLabLesson from '../lessons/section03/07_FullLabLesson';
+import SignalVsNoiseLesson from '../lessons/section03/05_SignalVsNoiseLesson';
+import DesignPatternsLesson from '../lessons/section03/06_DesignPatternsLesson';
 
 // Section 04 — Data Storytelling (new)
 import CraftingTheSoWhatLesson from '../lessons/section04/01_CraftingTheSoWhatLesson';
@@ -97,8 +97,8 @@ const LESSON_MAP: Record<string, Record<string, ComponentType>> = {
         'visual-emphasis': TheSpotlightEffectLesson,
         'annotation-trend': TheMagicWordsLesson,
         'signal-noise': SignalVsNoiseLesson,
-        'full-lab': FullLabLesson,
         'design-patterns': DesignPatternsLesson,
+        'full-lab': FullLabLesson,
     },
     storytelling: {
         'so-what': CraftingTheSoWhatLesson,

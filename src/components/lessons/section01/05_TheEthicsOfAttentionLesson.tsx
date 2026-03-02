@@ -1,6 +1,8 @@
 import { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import LessonPage from '../../../components/layout/LessonPage';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 
 const crossRefs = [
     {
@@ -47,12 +49,12 @@ const W = 480;
 const H = 220;
 
 // Bias interaction multiplicative chart
-function BiasInteractionChart() {
+function BiasInteractionChart({ lang }: { lang: any }) {
     const biases = [
-        { label: 'Anchoring alone', multiplier: 2.4, color: '#f97316' },
-        { label: '+ Color hijack', multiplier: 4.1, color: '#ef4444' },
-        { label: '+ Cognitive overload', multiplier: 6.8, color: '#dc2626' },
-        { label: '+ False pattern', multiplier: 11.2, color: '#991b1b' },
+        { label: t(lang, 's1.ethicsOfAttention.bias1Lbl'), multiplier: 2.4, color: '#f97316' },
+        { label: t(lang, 's1.ethicsOfAttention.bias2Lbl'), multiplier: 4.1, color: '#ef4444' },
+        { label: t(lang, 's1.ethicsOfAttention.bias3Lbl'), multiplier: 6.8, color: '#dc2626' },
+        { label: t(lang, 's1.ethicsOfAttention.bias4Lbl'), multiplier: 11.2, color: '#991b1b' },
     ];
     const maxM = 12;
     const w = 340, h = 140, pad = { l: 130, r: 55, t: 16, b: 24 };
@@ -87,23 +89,23 @@ function BiasInteractionChart() {
             })}
             <text x={pad.l + innerW / 2} y={pad.t - 3}
                 fill="#78716c" fontSize={7.5} textAnchor="middle">
-                Perceived growth multiplier (actual growth: 7%)
+                {t(lang, 's1.ethicsOfAttention.multiplierLbl')}
             </text>
         </svg>
     );
 }
 
 // Manipulation detection checklist mini-chart (visual scoring)
-function ManipulationScorecard() {
+function ManipulationScorecard({ lang }: { lang: any }) {
     const checks = [
-        { item: 'Y-axis starts at zero', ok: true },
-        { item: 'No color emphasis on single bar', ok: false },
-        { item: 'Gridlines ≤ 5', ok: false },
-        { item: 'No smoothing overlay', ok: false },
-        { item: 'Annotations are descriptive, not prescriptive', ok: false },
-        { item: 'Full date range shown', ok: true },
-        { item: 'Data source disclosed', ok: true },
-        { item: 'No 3D perspective effect', ok: true },
+        { item: t(lang, 's1.ethicsOfAttention.chk1'), ok: true },
+        { item: t(lang, 's1.ethicsOfAttention.chk2'), ok: false },
+        { item: t(lang, 's1.ethicsOfAttention.chk3'), ok: false },
+        { item: t(lang, 's1.ethicsOfAttention.chk4'), ok: false },
+        { item: t(lang, 's1.ethicsOfAttention.chk5'), ok: false },
+        { item: t(lang, 's1.ethicsOfAttention.chk6'), ok: true },
+        { item: t(lang, 's1.ethicsOfAttention.chk7'), ok: true },
+        { item: t(lang, 's1.ethicsOfAttention.chk8'), ok: true },
     ];
     const score = checks.filter(c => c.ok).length;
     const total = checks.length;
@@ -119,12 +121,12 @@ function ManipulationScorecard() {
                 </div>
                 <div>
                     <p className="text-[13px] font-bold text-stone-800">
-                        Chart Integrity Score: {score}/{total}
+                        {t(lang, 's1.ethicsOfAttention.scoreLbl')} {score}/{total}
                     </p>
                     <p className="text-[11px] text-stone-400">
-                        {pct < 50 ? 'High manipulation risk — multiple biases active' :
-                            pct < 75 ? 'Moderate risk — some issues present' :
-                                'Good — mostly honest presentation'}
+                        {pct < 50 ? t(lang, 's1.ethicsOfAttention.scoreHighRisk') :
+                            pct < 75 ? t(lang, 's1.ethicsOfAttention.scoreModRisk') :
+                                t(lang, 's1.ethicsOfAttention.scoreGood')}
                     </p>
                 </div>
             </div>
@@ -143,6 +145,7 @@ function ManipulationScorecard() {
 }
 
 export default function TheEthicsOfAttentionLesson() {
+    const { lang } = useLang();
     const [allManipulations, setAllManipulations] = useState(false);
     const svgRef = useRef<SVGSVGElement>(null);
 
@@ -181,7 +184,7 @@ export default function TheEthicsOfAttentionLesson() {
         }
 
         const g = svg.select('.main-group');
-        const t = svg.transition().duration(800).ease(d3.easeCubicOut) as any;
+        const trans = svg.transition().duration(800).ease(d3.easeCubicOut) as any;
 
         const yMin = allManipulations ? 2.85 : 0;
         const yMax = 3.35;
@@ -211,15 +214,15 @@ export default function TheEthicsOfAttentionLesson() {
                     .attr('stroke-width', allManipulations ? 1 : 0.75)
                     .attr('stroke-dasharray', allManipulations ? '2,2' : '0')
                     .attr('opacity', 0)
-                    .call(e => e.transition(t).attr('opacity', 1)),
-                update => update.call(u => u.transition(t)
+                    .call(e => e.transition(trans).attr('opacity', 1)),
+                update => update.call(u => u.transition(trans)
                     .attr('y1', d => yScale(d))
                     .attr('y2', d => yScale(d))
                     .attr('stroke', allManipulations ? '#a8a29e' : '#e7e5e4')
                     .attr('stroke-width', allManipulations ? 1 : 0.75)
                     .attr('stroke-dasharray', allManipulations ? '2,2' : '0')
                 ),
-                exit => exit.call(ex => ex.transition(t).attr('opacity', 0).remove())
+                exit => exit.call(ex => ex.transition(trans).attr('opacity', 0).remove())
             );
 
         // Bars
@@ -234,18 +237,18 @@ export default function TheEthicsOfAttentionLesson() {
                     .attr('height', 0)
                     .attr('fill', '#059669')
                     .attr('rx', 2)
-                    .call(e => e.transition(t)
+                    .call(e => e.transition(trans)
                         .attr('y', d => yScale(d.value))
                         .attr('height', d => innerH - yScale(d.value))
                         .attr('fill', (_d, i) => allManipulations && i === HIGHLIGHT_INDEX ? '#dc2626' : '#059669')
                     ),
-                update => update.call(u => u.transition(t)
+                update => update.call(u => u.transition(trans)
                     .attr('x', d => xScale(d.label)!)
                     .attr('y', d => yScale(d.value))
                     .attr('height', d => innerH - yScale(d.value))
                     .attr('fill', (_d, i) => allManipulations && i === HIGHLIGHT_INDEX ? '#dc2626' : '#059669')
                 ),
-                exit => exit.call(ex => ex.transition(t).attr('height', 0).attr('y', innerH).remove())
+                exit => exit.call(ex => ex.transition(trans).attr('height', 0).attr('y', innerH).remove())
             );
 
         // Smoothed Line
@@ -262,7 +265,7 @@ export default function TheEthicsOfAttentionLesson() {
             .attr('stroke', '#f97316')
             .attr('stroke-width', 2)
             .attr('stroke-dasharray', '5,3')
-            .transition(t)
+            .transition(trans)
             .attr('d', lineGen as any)
             .attr('opacity', allManipulations ? 1 : 0);
 
@@ -271,12 +274,12 @@ export default function TheEthicsOfAttentionLesson() {
         const lastY = yScale(DATA[HIGHLIGHT_INDEX].value);
 
         g.select('.growth-label')
-            .text('Strong growth ↑')
+            .text(t(lang, 's1.ethicsOfAttention.growthManip'))
             .attr('text-anchor', 'end')
             .style('font-size', '10px')
             .style('font-weight', '700')
             .style('fill', '#dc2626')
-            .transition(t)
+            .transition(trans)
             .attr('x', lastX - 30)
             .attr('y', lastY - 24)
             .attr('opacity', allManipulations ? 1 : 0);
@@ -287,8 +290,8 @@ export default function TheEthicsOfAttentionLesson() {
             .style('font-size', '10px')
             .style('fill', '#dc2626')
             .style('font-weight', '600')
-            .text('⚠ axis truncated — starts at $2.85M')
-            .transition(t)
+            .text(t(lang, 's1.ethicsOfAttention.axisWarnManip'))
+            .transition(trans)
             .attr('y', innerH + 26)
             .attr('opacity', allManipulations ? 1 : 0);
 
@@ -298,13 +301,13 @@ export default function TheEthicsOfAttentionLesson() {
             .style('font-size', '11px')
             .style('font-weight', '700')
             .style('fill', '#dc2626')
-            .text('Revenue explodes to record highs')
-            .transition(t)
+            .text(t(lang, 's1.ethicsOfAttention.chartTitleManip'))
+            .transition(trans)
             .attr('opacity', allManipulations ? 1 : 0);
 
         // X Axis
         g.select('.x-axis')
-            .call((ax: any) => ax.transition(t).call(d3.axisBottom(xScale).tickSize(0)))
+            .call((ax: any) => ax.transition(trans).call(d3.axisBottom(xScale).tickSize(0)))
             .call((ax) => ax.select('.domain').attr('stroke', '#d6d3d1'))
             .selectAll('text')
             .style('font-size', '8px')
@@ -312,12 +315,12 @@ export default function TheEthicsOfAttentionLesson() {
 
         // Y Axis
         g.select('.y-axis')
-            .call((ax: any) => ax.transition(t).call(
+            .call((ax: any) => ax.transition(trans).call(
                 d3.axisLeft(yScale)
                     .ticks(allManipulations ? 6 : 4)
                     .tickFormat((d) => `$${Number(d).toFixed(2)}M`)
             ))
-            .call((ax) => ax.select('.domain').transition(t).attr('stroke', allManipulations ? '#dc2626' : '#d6d3d1'))
+            .call((ax) => ax.select('.domain').transition(trans).attr('stroke', allManipulations ? '#dc2626' : '#d6d3d1'))
             .selectAll('text')
             .style('font-size', '8px')
             .style('fill', '#78716c');
@@ -330,57 +333,51 @@ export default function TheEthicsOfAttentionLesson() {
 
                 {/* Main explanation */}
                 <div className="space-y-4">
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        The four cognitive biases covered in this section — pre-attentive attention hijacking, cognitive load saturation, anchoring distortion, and false pattern induction — rarely appear in isolation. In sophisticated chart manipulation, they are deliberately combined to create a <strong>compound distortion</strong> where each individual element is defensible in isolation, but the combined effect produces a perception radically different from the underlying data. Understanding compound manipulation is the final and most important skill in cognitive defense.
-                    </p>
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        The interaction between biases is <em>multiplicative rather than additive</em>. Adding a color highlight to an already-truncated axis does not simply add a color bias to an axis bias — the color hijacks pre-attentive attention to the highlighted bar, which is already encoded as appearing much taller than it really is due to anchoring. The viewer's pre-conscious system processes the "very tall red bar" context before they can consciously correct for the axis. Adding cognitive load via gridlines then prevents the correction from ever happening — working memory is too busy processing non-data ink to detect the manipulation.
-                    </p>
-                    <p className="text-[15px] text-stone-600 leading-relaxed">
-                        In a well-constructed compound manipulation chart, the manipulator often has a <strong>plausible defense for each individual element</strong>: "the truncated axis shows the relevant range to investors," "the highlighted bar represents our breakthrough quarter," "the gridlines help read precise values," "the trendline shows the underlying signal through the noise." Each defense sounds reasonable in isolation. But the combined intent — to present a 0.6% week-over-week gain as explosive growth — is revealed when you apply a compound detection checklist.
-                    </p>
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.ethicsOfAttention.intro1') }} />
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.ethicsOfAttention.intro2') }} />
+                    <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.ethicsOfAttention.intro3') }} />
                 </div>
 
                 {/* Four-bias stack */}
                 <div className="space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        The compound manipulation stack
+                        {t(lang, 's1.ethicsOfAttention.stackTitle')}
                     </p>
                     <div className="space-y-2">
                         {[
                             {
                                 num: '1',
-                                bias: 'Pre-attentive hijack',
-                                how: 'Color one bar red among grey bars',
-                                effect: 'Forces attention to a specific data point before conscious scanning begins. The viewer has already "noticed" the highlighted bar before reading the axis.',
+                                bias: t(lang, 's1.ethicsOfAttention.stack1Name'),
+                                how: t(lang, 's1.ethicsOfAttention.stack1How'),
+                                effect: t(lang, 's1.ethicsOfAttention.stack1Effect'),
                                 severity: 'bg-orange-100 text-orange-700',
                             },
                             {
                                 num: '2',
-                                bias: 'Anchoring distortion',
-                                how: 'Truncate y-axis to start at 85% of the minimum',
-                                effect: 'Creates a false reference frame. The highlighted bar appears to represent a ~5× larger value than it actually does relative to other bars.',
+                                bias: t(lang, 's1.ethicsOfAttention.stack2Name'),
+                                how: t(lang, 's1.ethicsOfAttention.stack2How'),
+                                effect: t(lang, 's1.ethicsOfAttention.stack2Effect'),
                                 severity: 'bg-red-100 text-red-700',
                             },
                             {
                                 num: '3',
-                                bias: 'Cognitive load attack',
-                                how: 'Add 12+ gridlines, dashed overlay, busy annotation',
-                                effect: 'Saturates working memory. The viewer cannot simultaneously process the overloaded chart and correct for the axis manipulation.',
+                                bias: t(lang, 's1.ethicsOfAttention.stack3Name'),
+                                how: t(lang, 's1.ethicsOfAttention.stack3How'),
+                                effect: t(lang, 's1.ethicsOfAttention.stack3Effect'),
                                 severity: 'bg-red-100 text-red-700',
                             },
                             {
                                 num: '4',
-                                bias: 'False pattern induction',
-                                how: 'Apply a smoothing trendline with upward slope',
-                                effect: "Locks in a \"growth story\" narrative. The viewer's pattern-detection system now has a visual \"proof\" of sustained improvement to anchor to.",
+                                bias: t(lang, 's1.ethicsOfAttention.stack4Name'),
+                                how: t(lang, 's1.ethicsOfAttention.stack4How'),
+                                effect: t(lang, 's1.ethicsOfAttention.stack4Effect'),
                                 severity: 'bg-red-200 text-red-800',
                             },
                             {
                                 num: '5',
-                                bias: 'Narrative framing',
-                                how: '"Revenue explodes to record highs" as chart title',
-                                effect: 'Sets the interpretive frame before any data is examined. The word "explodes" anchors magnitude expectations that the chart then appears to confirm.',
+                                bias: t(lang, 's1.ethicsOfAttention.stack5Name'),
+                                how: t(lang, 's1.ethicsOfAttention.stack5How'),
+                                effect: t(lang, 's1.ethicsOfAttention.stack5Effect'),
                                 severity: 'bg-rose-200 text-rose-800',
                             },
                         ].map((item) => (
@@ -403,61 +400,61 @@ export default function TheEthicsOfAttentionLesson() {
                 {/* Bias interaction multiplicative chart */}
                 <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        How stacking biases multiplies perceived distortion
+                        {t(lang, 's1.ethicsOfAttention.multiplyTitle')}
                     </p>
                     <p className="text-[13px] text-stone-500 leading-relaxed">
-                        Each additional bias layer multiplies — not adds to — the perceived growth effect. Actual revenue growth from Wk1 to Wk8 is 7.3%.
+                        {t(lang, 's1.ethicsOfAttention.multiplyDesc1')}
                     </p>
-                    <BiasInteractionChart />
+                    <BiasInteractionChart lang={lang} />
                     <p className="text-[12px] text-stone-400 leading-relaxed">
-                        With all four biases active, a viewer perceiving through the chart believes growth is ~11× greater than it actually is. The compound effect is catastrophic for judgment quality.
+                        {t(lang, 's1.ethicsOfAttention.multiplyDesc2')}
                     </p>
                 </div>
 
                 {/* Manipulation scorecard */}
                 <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Compound manipulation detection checklist
+                        {t(lang, 's1.ethicsOfAttention.scorecardTitle')}
                     </p>
                     <p className="text-[13px] text-stone-500 leading-relaxed">
-                        The manipulated version of the demo chart below scores poorly on this checklist. A chart with multiple failures has a high probability of compound manipulation.
+                        {t(lang, 's1.ethicsOfAttention.scorecardDesc')}
                     </p>
-                    <ManipulationScorecard />
+                    <ManipulationScorecard lang={lang} />
                 </div>
 
                 {/* Real-world case examples */}
                 <div className="space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Real-world compound manipulation cases
+                        {t(lang, 's1.ethicsOfAttention.realCasesTitle')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {[
                             {
-                                context: 'Corporate earnings presentation',
-                                description: 'Revenue chart with 80% axis truncation, one highlighted record quarter in brand color, overlaid 5-period moving average, and the title "Consistent growth trajectory." Actual revenue: flat for 6 quarters with one statistical outlier.',
-                                outcome: 'Board approved headcount expansion. The outlier quarter was later revised down.',
+                                context: t(lang, 's1.ethicsOfAttention.case1Context'),
+                                description: t(lang, 's1.ethicsOfAttention.case1Desc'),
+                                outcome: t(lang, 's1.ethicsOfAttention.case1Out'),
                             },
                             {
-                                context: 'Government statistics report',
-                                description: 'Unemployment chart with 40% axis truncation, employment rate labeled "at historic high" despite being within 0.3% of prior periods, green color coding for all current metrics, and a note "seasonally adjusted" without disclosing adjustment methodology.',
-                                outcome: 'Public perception of welfare improvement. Underlying monthly variation was hidden.',
+                                context: t(lang, 's1.ethicsOfAttention.case2Context'),
+                                description: t(lang, 's1.ethicsOfAttention.case2Desc'),
+                                outcome: t(lang, 's1.ethicsOfAttention.case2Out'),
                             },
                             {
-                                context: 'Startup investor deck',
-                                description: '"Hockey stick" user growth chart using log scale without labeling, moving average applied to daily signups, axis beginning at the month of viral campaign launch, with annotation "exponential growth phase."',
-                                outcome: 'Series A funding. Growth normalized to baseline within 3 months of funding close.',
+                                context: t(lang, 's1.ethicsOfAttention.case3Context'),
+                                description: t(lang, 's1.ethicsOfAttention.case3Desc'),
+                                outcome: t(lang, 's1.ethicsOfAttention.case3Out'),
                             },
                             {
-                                context: 'Healthcare outcome reporting',
-                                description: 'Patient satisfaction chart truncated from 85% to 100%, one period highlighted in green labeled "benchmark exceeded," 12-gridline overlay, and subgroup data cherry-picked to reveal the best-performing unit.',
-                                outcome: 'Quality award submission. Full-facility data showed mixed performance.',
+                                context: t(lang, 's1.ethicsOfAttention.case4Context'),
+                                description: t(lang, 's1.ethicsOfAttention.case4Desc'),
+                                outcome: t(lang, 's1.ethicsOfAttention.case4Out'),
                             },
                         ].map((c, i) => (
                             <div key={i} className="bg-white rounded-xl border border-stone-200 p-4 space-y-2">
                                 <p className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">{c.context}</p>
                                 <p className="text-[12px] text-stone-600 leading-relaxed">{c.description}</p>
                                 <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2">
-                                    <p className="text-[11px] font-semibold text-amber-700 mb-0.5">Outcome</p>
+                                    <p className="text-[11px] font-semibold text-amber-700 mb-0.5">{t(lang, 's1.ethicsOfAttention.outcomeLbl')}</p>
                                     <p className="text-[11px] text-amber-800 leading-relaxed">{c.outcome}</p>
                                 </div>
                             </div>
@@ -468,14 +465,10 @@ export default function TheEthicsOfAttentionLesson() {
                 {/* Interaction effect */}
                 <div className="rounded-xl bg-red-50 border border-red-200 p-5">
                     <p className="text-[11px] font-bold text-red-600 uppercase tracking-wider mb-3">
-                        Why compound effects are disproportionately powerful
+                        {t(lang, 's1.ethicsOfAttention.powerTitle')}
                     </p>
-                    <p className="text-[13px] text-red-800 leading-relaxed mb-3">
-                        When multiple biases are stacked, their effect is <strong>multiplicative</strong>, not additive. The pre-attentive hijack forces attention to the highlighted bar. The truncated axis makes that bar appear dramatically tall. The cognitive overload from gridlines prevents the viewer from stepping back to check the axis. The trendline locks in a "growth" narrative. Each layer makes the others more effective — this is why compound manipulation is disproportionately powerful relative to any single technique.
-                    </p>
-                    <p className="text-[13px] text-red-800 leading-relaxed">
-                        The most dangerous compound manipulation charts are often the ones that look most professional and "data-rich." Dense gridlines, precise labels, multiple series, and overlaid trendlines create the <em>appearance</em> of analytical rigor — while each element is actively working to prevent accurate comprehension.
-                    </p>
+                    <p className="text-[13px] text-red-800 leading-relaxed mb-3" dangerouslySetInnerHTML={{ __html: t(lang, 's1.ethicsOfAttention.power1') }} />
+                    <p className="text-[13px] text-red-800 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.ethicsOfAttention.power2') }} />
                 </div>
 
                 {/* Interactive demo */}
@@ -483,10 +476,10 @@ export default function TheEthicsOfAttentionLesson() {
                     <div className="relative">
                         <span className="absolute top-0 right-0 text-xs font-bold text-stone-300 select-none">1.5</span>
                         <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-1">
-                            Live demo: compound manipulation stack
+                            {t(lang, 's1.ethicsOfAttention.demoTitle')}
                         </p>
                         <p className="text-[13px] text-stone-500 mb-4">
-                            Toggle all five manipulation techniques simultaneously: axis truncation, pre-attentive color hijack, cognitive overload, false smoothing trendline, and misleading chart title.
+                            {t(lang, 's1.ethicsOfAttention.demoDesc')}
                         </p>
 
                         <div className="flex justify-center py-3 overflow-x-auto">
@@ -499,7 +492,7 @@ export default function TheEthicsOfAttentionLesson() {
 
                         <div className="flex items-center justify-center gap-3 mt-4">
                             <span className={`text-[13px] font-medium transition-colors ${!allManipulations ? 'text-stone-800' : 'text-stone-400'}`}>
-                                Honest (5 checks active)
+                                {t(lang, 's1.ethicsOfAttention.btnHonest')}
                             </span>
                             <button
                                 onClick={() => setAllManipulations((v) => !v)}
@@ -509,23 +502,19 @@ export default function TheEthicsOfAttentionLesson() {
                                 <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${allManipulations ? 'translate-x-6' : 'translate-x-1'}`} />
                             </button>
                             <span className={`text-[13px] font-medium transition-colors ${allManipulations ? 'text-stone-800' : 'text-stone-400'}`}>
-                                Manipulated (5 biases active)
+                                {t(lang, 's1.ethicsOfAttention.btnManip')}
                             </span>
                         </div>
 
                         <p className="text-center text-[12px] text-stone-400 mt-2 px-4">
                             {allManipulations
-                                ? 'Truncated axis + red color hijack + gridline overload + false trendline + misleading title — stacked multiplicatively'
-                                : 'Zero baseline, no color emphasis, minimal gridlines — honest presentation of a 7.3% revenue increase over 8 weeks'}
+                                ? t(lang, 's1.ethicsOfAttention.demoCapManip')
+                                : t(lang, 's1.ethicsOfAttention.demoCapHonest')}
                         </p>
 
                         {allManipulations && (
                             <div className="mt-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3">
-                                <p className="text-[12px] text-red-700 font-medium leading-relaxed">
-                                    5 active manipulations: axis truncation (85%), pre-attentive color hijack on Wk 8,
-                                    cognitive overload via 12 gridlines, false smoothing trendline, misleading title framing.
-                                    Actual change from Wk 1 to Wk 8: <strong>+7.3%</strong>. Perceived change: approximately <strong>300–1000%</strong> depending on viewer.
-                                </p>
+                                <p className="text-[12px] text-red-700 font-medium leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's1.ethicsOfAttention.activeManipNotice') }} />
                             </div>
                         )}
                     </div>

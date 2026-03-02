@@ -1,4 +1,6 @@
 import LessonPage from '../../layout/LessonPage';
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import ChartFamilyLesson, { type ChartSpec } from './ChartFamilyLesson';
 import {
     ScatterMini,
@@ -9,134 +11,149 @@ import {
     HeatmapMini,
 } from '../../charts/demos/MiniCharts';
 
-const charts: ChartSpec[] = [
+const getCharts = (lang: any): ChartSpec[] => [
     {
         slug: 'scatter',
-        name: 'Scatter Plot',
+        name: t(lang, 's2.whatsTheRelationship.charts.scatter.name'),
         whenToUse: [
-            'Exploring the relationship, correlation, or clustering between two continuous variables',
-            'Identifying outliers, sub-groups, or non-linear patterns in bivariate data',
-            'As a first-pass exploratory tool before fitting statistical models',
+            t(lang, 's2.whatsTheRelationship.charts.scatter.whenToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.scatter.whenToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.scatter.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Categorical x-axis — a dot plot or strip plot is more appropriate',
-            'When individual point identity matters — label a subset or use an interactive tooltip',
-            'Very large datasets (> 5,000 points) without overplotting mitigation (alpha, hexbin)',
+            t(lang, 's2.whatsTheRelationship.charts.scatter.whenNotToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.scatter.whenNotToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.scatter.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Correlation visible in a scatter plot does not imply causation. The scale ratio of x to y axes determines the apparent steepness of any relationship — a 45° regression line can be achieved with any data by adjusting axis ranges.',
-        cognitiveRef: 'Pre-attentive: position (2D)',
-        ethicalRef: 'Risk: Correlation ≠ causation',
+        interpretationRisk: t(lang, 's2.whatsTheRelationship.charts.scatter.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.whatsTheRelationship.charts.scatter.cognitiveRef'),
+        ethicalRef: t(lang, 's2.whatsTheRelationship.charts.scatter.ethicalRef'),
         demo: <ScatterMini />,
     },
     {
         slug: 'bubble',
-        name: 'Bubble Chart',
+        name: t(lang, 's2.whatsTheRelationship.charts.bubble.name'),
         whenToUse: [
-            'Encoding three quantitative variables simultaneously (x position, y position, area)',
-            'Showing proportional relationships where the size variable is meaningful and large in range',
-            'Exploratory analysis of trivariate relationships in small-to-medium datasets',
+            t(lang, 's2.whatsTheRelationship.charts.bubble.whenToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.bubble.whenToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.bubble.whenToUse.2'),
         ],
         whenNotToUse: [
-            'When size differences are small — human area perception is logarithmic and imprecise',
-            'More than 30–40 bubbles — overlap makes the chart unreadable',
-            'When precise size comparison is needed — people underestimate area differences by 20–30%',
+            t(lang, 's2.whatsTheRelationship.charts.bubble.whenNotToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.bubble.whenNotToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.bubble.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Area is one of the least accurately perceived visual channels. Bubble charts must encode radius linearly (not area) to avoid under-scaling. Many tools default to radius-proportional mapping which makes large values appear much larger than warranted.',
-        cognitiveRef: 'Pre-attentive: area (inaccurate)',
-        ethicalRef: 'Risk: Radius vs. area encoding',
+        interpretationRisk: t(lang, 's2.whatsTheRelationship.charts.bubble.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.whatsTheRelationship.charts.bubble.cognitiveRef'),
+        ethicalRef: t(lang, 's2.whatsTheRelationship.charts.bubble.ethicalRef'),
         demo: <BubbleMini />,
     },
     {
         slug: 'regression',
-        name: 'Scatter + Regression',
+        name: t(lang, 's2.whatsTheRelationship.charts.regression.name'),
         whenToUse: [
-            'Communicating a statistical relationship and its direction in a single view',
-            'After confirming that a linear model is appropriate for the data',
-            'When showing the residuals or confidence interval around the fit is important',
+            t(lang, 's2.whatsTheRelationship.charts.regression.whenToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.regression.whenToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.regression.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Non-linear relationships — a linear regression line misrepresents the pattern',
-            'Small samples (< 10 points) where the regression is highly sensitive to individual points',
-            'When the regression was fitted on different data than is being shown',
+            t(lang, 's2.whatsTheRelationship.charts.regression.whenNotToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.regression.whenNotToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.regression.whenNotToUse.2'),
         ],
-        interpretationRisk: 'A regression line implies a continuous, linear relationship across the full x-axis range. Extrapolating beyond the observed data range — visible when the line extends to axis edges — can lead to nonsensical predictions.',
-        cognitiveRef: 'Pre-attentive: slope',
-        ethicalRef: 'Risk: Extrapolation beyond data',
+        interpretationRisk: t(lang, 's2.whatsTheRelationship.charts.regression.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.whatsTheRelationship.charts.regression.cognitiveRef'),
+        ethicalRef: t(lang, 's2.whatsTheRelationship.charts.regression.ethicalRef'),
         demo: <RegressionMini />,
     },
     {
         slug: 'connected-scatter',
-        name: 'Connected Scatter',
+        name: t(lang, 's2.whatsTheRelationship.charts.connectedScatter.name'),
         whenToUse: [
-            'Showing how two variables co-evolve over time, making time a third implicit dimension',
-            'Exploratory analysis of cyclic or lagged relationships between two quantities',
-            'When the path and direction of change are as important as the endpoints',
+            t(lang, 's2.whatsTheRelationship.charts.connectedScatter.whenToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.connectedScatter.whenToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.connectedScatter.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Long time series with many points — the path becomes tangled and unreadable',
-            'When the temporal sequence isn\'t meaningful or the variables are not time-ordered',
-            'Audiences who need to read precise values — neither axis is easy to read with connecting lines',
+            t(lang, 's2.whatsTheRelationship.charts.connectedScatter.whenNotToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.connectedScatter.whenNotToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.connectedScatter.whenNotToUse.2'),
         ],
-        interpretationRisk: 'The connecting line implies temporal or sequential ordering that may not exist in the underlying data. If points are connected by value rank rather than time, the apparent "path" suggests false directionality.',
-        cognitiveRef: 'Pre-attentive: slope, direction',
-        ethicalRef: 'Risk: Implied directionality',
+        interpretationRisk: t(lang, 's2.whatsTheRelationship.charts.connectedScatter.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.whatsTheRelationship.charts.connectedScatter.cognitiveRef'),
+        ethicalRef: t(lang, 's2.whatsTheRelationship.charts.connectedScatter.ethicalRef'),
         demo: <ConnectedScatterMini />,
     },
     {
         slug: 'hexbin',
-        name: 'Hexbin Plot',
+        name: t(lang, 's2.whatsTheRelationship.charts.hexbin.name'),
         whenToUse: [
-            'Large scatter datasets (> 5,000 points) where individual dots would form opaque blobs',
-            'Showing density of point concentration across a 2D space',
-            'When overplotting obscures genuine patterns in dense data',
+            t(lang, 's2.whatsTheRelationship.charts.hexbin.whenToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.hexbin.whenToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.hexbin.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Small datasets where individual observations are meaningful and should be visible',
-            'Audiences who need to identify specific data points or entities',
-            'Data with meaningful sub-clusters that the hexagonal binning would split or merge',
+            t(lang, 's2.whatsTheRelationship.charts.hexbin.whenNotToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.hexbin.whenNotToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.hexbin.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Hexbin cell size (bandwidth) is a free parameter analogous to histogram bin width. A cell size that is too large merges distinct clusters; one that is too small creates a sparse, noise-dominated grid.',
-        cognitiveRef: 'Pre-attentive: color (saturation)',
-        ethicalRef: 'Risk: Bin size choice',
+        interpretationRisk: t(lang, 's2.whatsTheRelationship.charts.hexbin.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.whatsTheRelationship.charts.hexbin.cognitiveRef'),
+        ethicalRef: t(lang, 's2.whatsTheRelationship.charts.hexbin.ethicalRef'),
         demo: <HexbinMini />,
     },
     {
         slug: 'heatmap',
-        name: 'Heatmap',
+        name: t(lang, 's2.whatsTheRelationship.charts.heatmap.name'),
         whenToUse: [
-            'Matrix data where rows, columns, and the intersection value are all meaningful',
-            'Large correlation matrices, confusion matrices, or co-occurrence tables',
-            'Pattern detection across two categorical dimensions where color gradient aids identification',
+            t(lang, 's2.whatsTheRelationship.charts.heatmap.whenToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.heatmap.whenToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.heatmap.whenToUse.2'),
         ],
         whenNotToUse: [
-            'Precise value reading — color is one of the least accurately decoded channels for quantities',
-            'Diverging data without a meaningful midpoint — diverging color scales require a natural zero',
-            'Sequential data where order should be perceived as continuous rather than gridded',
+            t(lang, 's2.whatsTheRelationship.charts.heatmap.whenNotToUse.0'),
+            t(lang, 's2.whatsTheRelationship.charts.heatmap.whenNotToUse.1'),
+            t(lang, 's2.whatsTheRelationship.charts.heatmap.whenNotToUse.2'),
         ],
-        interpretationRisk: 'Color scale choice determines which differences appear significant. A rainbow (jet) colormap creates false perceptual boundaries at transitions between hue bands; perceptually uniform colormaps (viridis, plasma) should be preferred.',
-        cognitiveRef: 'Pre-attentive: color hue/saturation',
-        ethicalRef: 'Risk: Rainbow colormap',
+        interpretationRisk: t(lang, 's2.whatsTheRelationship.charts.heatmap.interpretationRisk'),
+        cognitiveRef: t(lang, 's2.whatsTheRelationship.charts.heatmap.cognitiveRef'),
+        ethicalRef: t(lang, 's2.whatsTheRelationship.charts.heatmap.ethicalRef'),
         demo: <HeatmapMini />,
     },
 ];
 
 
 // Spurious correlation demo chart
-function SpuriousCorrelationChart() {
+function SpuriousCorrelationChart({ lang }: { lang: any }) {
     // "ice cream sales vs drowning deaths" type spurious correlation
+    const months = [
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.0'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.1'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.2'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.3'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.4'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.5'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.6'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.7'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.8'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.9'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.10'),
+        t(lang, 's2.whatsTheRelationship.spuriousDemo.months.11'),
+    ];
+
     const data = [
-        { month: 'Jan', iceCream: 12, drowning: 8 },
-        { month: 'Feb', iceCream: 18, drowning: 10 },
-        { month: 'Mar', iceCream: 30, drowning: 16 },
-        { month: 'Apr', iceCream: 48, drowning: 22 },
-        { month: 'May', iceCream: 68, drowning: 35 },
-        { month: 'Jun', iceCream: 90, drowning: 52 },
-        { month: 'Jul', iceCream: 98, drowning: 58 },
-        { month: 'Aug', iceCream: 94, drowning: 54 },
-        { month: 'Sep', iceCream: 72, drowning: 38 },
-        { month: 'Oct', iceCream: 42, drowning: 20 },
-        { month: 'Nov', iceCream: 25, drowning: 12 },
-        { month: 'Dec', iceCream: 14, drowning: 9 },
+        { month: months[0], iceCream: 12, drowning: 8 },
+        { month: months[1], iceCream: 18, drowning: 10 },
+        { month: months[2], iceCream: 30, drowning: 16 },
+        { month: months[3], iceCream: 48, drowning: 22 },
+        { month: months[4], iceCream: 68, drowning: 35 },
+        { month: months[5], iceCream: 90, drowning: 52 },
+        { month: months[6], iceCream: 98, drowning: 58 },
+        { month: months[7], iceCream: 94, drowning: 54 },
+        { month: months[8], iceCream: 72, drowning: 38 },
+        { month: months[9], iceCream: 42, drowning: 20 },
+        { month: months[10], iceCream: 25, drowning: 12 },
+        { month: months[11], iceCream: 14, drowning: 9 },
     ];
     const w = 480, h = 220, pad = { l: 20, r: 20, t: 36, b: 40 };
     const innerW = w - pad.l - pad.r;
@@ -151,9 +168,9 @@ function SpuriousCorrelationChart() {
 
     return (
         <svg viewBox={`0 0 ${w} ${h}`} className="w-full max-w-2xl mx-auto block">
-            <text x={pad.l} y={18} fill="#059669" fontSize={11}>Ice cream sales</text>
-            <text x={pad.l + 150} y={18} fill="#dc2626" fontSize={11}>Drowning deaths</text>
-            <text x={pad.l + 380} y={18} fill="#a8a29e" fontSize={10} fontStyle="italic">r = 0.97</text>
+            <text x={pad.l} y={18} fill="#059669" fontSize={11}>{t(lang, 's2.whatsTheRelationship.spuriousDemo.iceCreamSales')}</text>
+            <text x={pad.l + 150} y={18} fill="#dc2626" fontSize={11}>{t(lang, 's2.whatsTheRelationship.spuriousDemo.drowningDeaths')}</text>
+            <text x={pad.l + 380} y={18} fill="#a8a29e" fontSize={10} fontStyle="italic">{t(lang, 's2.whatsTheRelationship.spuriousDemo.correlationValue')}</text>
 
             <path d={iceLine} fill="none" stroke="#059669" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
             <path d={drownLine} fill="none" stroke="#dc2626" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
@@ -166,15 +183,25 @@ function SpuriousCorrelationChart() {
 
             <rect x={pad.l} y={h - 32} width={w - pad.l - pad.r} height={18} rx={4} fill="#fef9c3" opacity={0.9} />
             <text x={w / 2} y={h - 19} fill="#92400e" fontSize={10} textAnchor="middle">
-                Confound: temperature drives BOTH variables. No causal link exists.
+                {t(lang, 's2.whatsTheRelationship.spuriousDemo.confoundNote')}
             </text>
         </svg>
     );
 }
 
-function CategoricalHeatmapDemo() {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-    const times = ['Morning', 'Afternoon', 'Evening'];
+function CategoricalHeatmapDemo({ lang }: { lang: any }) {
+    const days = [
+        t(lang, 's2.whatsTheRelationship.heatmapDemo.days.0'),
+        t(lang, 's2.whatsTheRelationship.heatmapDemo.days.1'),
+        t(lang, 's2.whatsTheRelationship.heatmapDemo.days.2'),
+        t(lang, 's2.whatsTheRelationship.heatmapDemo.days.3'),
+        t(lang, 's2.whatsTheRelationship.heatmapDemo.days.4'),
+    ];
+    const times = [
+        t(lang, 's2.whatsTheRelationship.heatmapDemo.times.0'),
+        t(lang, 's2.whatsTheRelationship.heatmapDemo.times.1'),
+        t(lang, 's2.whatsTheRelationship.heatmapDemo.times.2'),
+    ];
 
     // Density data: 0 to 1
     const rawData = [
@@ -202,7 +229,7 @@ function CategoricalHeatmapDemo() {
         <div className="bg-white rounded-xl border border-stone-200 p-6 space-y-6 shadow-sm mt-8">
             <div className="flex justify-between items-center border-b border-stone-100 pb-4 mb-4">
                 <h3 className="text-[13px] font-bold text-stone-700 tracking-wide uppercase">
-                    2D Density: Categorical Heatmaps
+                    {t(lang, 's2.whatsTheRelationship.heatmapDemo.title')}
                 </h3>
             </div>
 
@@ -234,15 +261,15 @@ function CategoricalHeatmapDemo() {
             </svg>
 
             <div className="bg-stone-50 rounded-lg p-4 border border-stone-100 mt-4">
-                <p className="text-[13px] text-stone-600 leading-relaxed text-center">
-                    A <strong>Categorical Heatmap</strong> replaces the dots of a scatterplot with a matrix of colored tiles. It is the perfect chart for discovering "hotspots" across two categorical dimensions, such as the concentrated burst of activity on Friday evenings vs. Wednesday afternoons.
-                </p>
+                <p className="text-[13px] text-stone-600 leading-relaxed text-center" dangerouslySetInnerHTML={{ __html: t(lang, 's2.whatsTheRelationship.heatmapDemo.desc') }} />
             </div>
         </div>
     );
 }
 
 export default function WhatsTheRelationshipLesson() {
+    const { lang } = useLang();
+
     return (
         <LessonPage
             crossRefs={[
@@ -252,52 +279,33 @@ export default function WhatsTheRelationshipLesson() {
             ]}
         >
             <div className="space-y-6">
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    Relationship charts encode how two or more variables co-vary. The scatter plot is the foundational form, exploiting the most accurate visual encoding — position on a common scale — for both axes simultaneously. It is the most versatile exploratory tool in data visualization: it reveals correlation direction and strength, identifies outliers, exposes non-linear patterns, and reveals sub-groups that aggregate statistics would conceal. Yet the scatter plot is also one of the most commonly misinterpreted charts because of the fundamental confusion between <strong>visual correlation and causal relationship</strong>.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    A regression line on a scatter plot is among the most persuasive visual artifacts in data communication. It implies: (1) a linear relationship exists, (2) it extends across the full range shown, and (3) the relationship is stable enough to support extrapolation. All three implications can be false simultaneously while the line itself is technically "correct" for the observed data. The scale ratio between x and y axes directly controls how steep the regression line appears — a 45° line can be achieved with any data by adjusting axis ranges, making the apparent "strength" of the relationship a design choice as much as a data property.
-                </p>
-                <p className="text-[15px] text-stone-600 leading-relaxed">
-                    The deepest risk in relationship charts is <strong>spurious correlation</strong>: two variables may share a high correlation coefficient (r ≈ 0.95) with zero causal connection because both are driven by a third, unmeasured variable (a "confound"). Ice cream sales and drowning deaths correlate strongly across months — not because one causes the other, but because both are driven by temperature and seasonality. A scatter plot of the two variables would show a tight, apparently causal relationship. Always ask: "What third variable could be driving both of these?" before interpreting a correlation as meaningful.
-                </p>
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.whatsTheRelationship.intro1') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.whatsTheRelationship.intro2') }} />
+                <p className="text-[15px] text-stone-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: t(lang, 's2.whatsTheRelationship.intro3') }} />
 
                 {/* Spurious correlation example */}
                 <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
                     <p className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                        Spurious correlation: r = 0.97, zero causal link
+                        {t(lang, 's2.whatsTheRelationship.spuriousDemo.title')}
                     </p>
-                    <SpuriousCorrelationChart />
+                    <SpuriousCorrelationChart lang={lang} />
                     <p className="text-[12px] text-stone-400 leading-relaxed">
-                        Both variables move in lockstep because summer drives both. A scatter plot of ice cream vs. drowning shows a near-perfect line — yet eating ice cream does not cause drowning. This is the canonical example of a confounded relationship. Always seek the confound.
+                        {t(lang, 's2.whatsTheRelationship.spuriousDemo.desc')}
                     </p>
                 </div>
 
                 {/* Relationship chart risks summary */}
                 <div className="rounded-xl bg-red-50 border border-red-200 p-5">
                     <p className="text-[11px] font-bold text-red-600 uppercase tracking-wider mb-3">
-                        The three most common relationship chart manipulation patterns
+                        {t(lang, 's2.whatsTheRelationship.manipulationPatterns.title')}
                     </p>
                     <div className="space-y-2">
-                        {[
-                            {
-                                pattern: 'Axis range selection',
-                                desc: 'Choosing x/y axis ranges to make a weak correlation appear strong or a strong one appear weak. A 45° regression line looks equally impressive regardless of actual r².',
-                            },
-                            {
-                                pattern: 'Extrapolation beyond data',
-                                desc: 'Extending the regression line beyond the observed data range implies the relationship holds in regions that have not been measured. This is often shown in forecasts.',
-                            },
-                            {
-                                pattern: 'Cherry-picked subgroup',
-                                desc: 'Showing a regression for a specific subpopulation where the relationship is strong, while omitting the full dataset where no relationship exists.',
-                            },
-                        ].map((r, i) => (
+                        {[0, 1, 2].map(i => (
                             <div key={i} className="flex gap-3 text-[12px]">
                                 <span className="text-red-400 shrink-0 font-bold">#{i + 1}</span>
                                 <div>
-                                    <span className="font-bold text-red-800">{r.pattern}: </span>
-                                    <span className="text-red-700">{r.desc}</span>
+                                    <span className="font-bold text-red-800">{t(lang, `s2.whatsTheRelationship.manipulationPatterns.patterns.${i}.name`)}: </span>
+                                    <span className="text-red-700">{t(lang, `s2.whatsTheRelationship.manipulationPatterns.patterns.${i}.desc`)}</span>
                                 </div>
                             </div>
                         ))}
@@ -305,12 +313,12 @@ export default function WhatsTheRelationshipLesson() {
                 </div>
 
                 {/* Categorical Heatmap Demo */}
-                <CategoricalHeatmapDemo />
+                <CategoricalHeatmapDemo lang={lang} />
             </div>
 
             <ChartFamilyLesson
-                charts={charts}
-                clevelandNote="Two-dimensional position encoding (scatter plots) simultaneously uses rank-1 perceptual accuracy on both axes. Bubble charts degrade the third variable to area perception (rank 6), which humans decode with roughly 20–30% systematic underestimation relative to the true ratio."
+                charts={getCharts(lang)}
+                clevelandNote={t(lang, 's2.whatsTheRelationship.clevelandNote')}
             />
         </LessonPage>
     );

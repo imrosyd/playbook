@@ -1,12 +1,15 @@
+import { useLang } from '../../../contexts/LanguageContext';
+import { t } from '../../../lib/i18n';
 import EthicalLevelLesson from './EthicalLevelLesson';
 
-const crossRefs = [
-    { sectionId: 'perception', slug: 'preattentive', label: '1.1 — Pre-attentive: how 3D and axis errors corrupt visual channels' },
-    { sectionId: 'lab', slug: 'axis-scale', label: '3.1 — Axis & Scale lab: observe axis truncation in action' },
-    { sectionId: 'ethics', slug: 'framing', label: '5.3 — Level 3: Framing (previous level)' },
-    { sectionId: 'ethics', slug: 'manipulation', label: '5.5 — Level 5: Manipulation (next level)' },
+const crossRefs = (lang: any) => [
+    { sectionId: 'perception', slug: 'preattentive', label: t(lang, 's8.level4.crossRefs.0.label') },
+    { sectionId: 'lab', slug: 'axis-scale', label: t(lang, 's8.level4.crossRefs.1.label') },
+    { sectionId: 'ethics', slug: 'framing', label: t(lang, 's8.level4.crossRefs.2.label') },
+    { sectionId: 'ethics', slug: 'manipulation', label: t(lang, 's8.level4.crossRefs.3.label') },
 ];
 
 export default function Level4DistortionLesson() {
-    return <EthicalLevelLesson levelIndex={3} crossRefs={crossRefs} />;
+    const { lang } = useLang();
+    return <EthicalLevelLesson levelIndex={3} crossRefs={crossRefs(lang)} />;
 }
